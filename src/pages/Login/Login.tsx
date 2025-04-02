@@ -27,12 +27,9 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0F1729]">
-      <div className="flex flex-col flex-1 w-full max-w-[390px] mx-auto p-3">
-        <h1
-          className="text-[32px] font-bold text-white text-center mt-[200px] mb-[100px]
-          font-dohyeon"
-        >
+    <div className="flex min-h-screen flex-col bg-[#0F1729]">
+      <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
+        <h1 className="font-dohyeon mt-[200px] mb-[100px] text-center text-[32px] font-bold text-white">
           리플레이
         </h1>
 
@@ -46,8 +43,8 @@ export default function Login() {
                   <FormControl>
                     <Input placeholder="이메일을 입력하세요" {...field} />
                   </FormControl>
-                  <FormMessage className="flex items-center gap-1 mt-1 text-red-500">
-                    {form.formState.errors.email && <AlertCircle className="w-4 h-4" />}
+                  <FormMessage className="mt-1 flex items-center gap-1 text-red-500">
+                    {form.formState.errors.email && <AlertCircle className="h-4 w-4" />}
                   </FormMessage>
                 </FormItem>
               )}
@@ -68,16 +65,16 @@ export default function Login() {
 
             <Button
               type="submit"
-              className="w-full h-12 bg-[#374151] hover:bg-[#374151]/90 text-white/60"
+              className="h-12 w-full bg-[#374151] text-white/60 hover:bg-[#374151]/90"
             >
               로그인
             </Button>
           </form>
         </Form>
 
-        <div className="mt-auto mb-8 text-center space-x-1">
-          <span className="text-white/40 text-sm">계정이 없으신가요?</span>
-          <a href="/signup" className="text-white text-sm">
+        <div className="mt-auto mb-8 space-x-1 text-center">
+          <span className="text-sm text-white/40">계정이 없으신가요?</span>
+          <a href="/signup" className="text-sm text-white">
             회원가입
           </a>
         </div>
