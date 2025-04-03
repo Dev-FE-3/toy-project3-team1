@@ -9,6 +9,7 @@ import HashTag from '@/shared/components/HashTag/HashTag'
 import MoreMenu, { MenuItem } from '@/shared/components/MoreMenu/MoreMenu'
 import StatusButton from '@/shared/components/StatusButton/StatusButton'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
+import CommentBox from '@/features/CommentBox/components/CommentBox'
 import { useState } from 'react'
 
 export default function DesignSystem() {
@@ -213,6 +214,10 @@ export default function DesignSystem() {
           </div>
         </div>
       </section>
+
+      <div>
+        <CommentBox />
+      </div>
     </div>
   )
 }
