@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 @import './font.css';
 @import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tailwindcss/theme.css' layer(theme);
 
-@layer base, theme, utilities;
+@layer base, utilities, theme;
 
 @theme {
   /* font */
@@ -36,9 +36,9 @@
   --text-textR--line-height: 140%;
   --text-textR--font-weight: 500;
 
-  --text-textM: 16px;
-  --text-textM--line-height: 140%;
-  --text-textM--font-weight: 600;
+  --text-texttM: 16px;
+  --text-texttM--line-height: 140%;
+  --text-texttM--font-weight: 600;
   /* 캡션 */
   --text-captionM: 14px;
   --text-captionM--line-height: auto;
@@ -54,16 +54,16 @@
   --text-label--font-weight: 600;
 
   /* color */
-  --color-50: #f8fafc;
-  --color-100: #f1f5f9;
-  --color-200: #e2e8f0;
-  --color-300: #cbd5e1;
-  --color-400: #94a3b8;
-  --color-500: #64748b;
-  --color-600: #475569;
-  --color-700: #334155;
-  --color-800: #1e293b;
-  --color-900: #0f172a;
+  --color-c50: #f8fafc;
+  --color-c100: #f1f5f9;
+  --color-c200: #e2e8f0;
+  --color-c300: #cbd5e1;
+  --color-c400: #94a3b8;
+  --color-c500: #64748b;
+  --color-c600: #475569;
+  --color-c700: #334155;
+  --color-c800: #1e293b;
+  --color-c900: #0f172a;
   --color-red: #ff3e3e;
   --color-dark-orange: #cf5d36;
   --color-dark-green: #1d931f;
