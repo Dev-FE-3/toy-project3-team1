@@ -1,13 +1,14 @@
-import Login from '@/pages/Login/Login'
-import DesignSystem from '@/pages/DesignSystem/DesignSystem'
+import { RouterProvider } from 'react-router-dom'
+import router from './router'
+
 function App() {
   return (
-    <div className="flex min-h-screen justify-center bg-white">
-      <div className="contentWrapper relative w-[480px] bg-[#0F172A]">
-        <DesignSystem />
-        {/* <Login /> */}
-      </div>
-    </div>
+    <RouterProvider
+      router={router}
+      future={{
+        v7_startTransition: true,
+      }}
+    />
   )
 }
 

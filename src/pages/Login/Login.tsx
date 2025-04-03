@@ -27,11 +27,9 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0F1729]">
+    <div className="bg-900 flex min-h-screen flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <h1 className="font-dohyeon mt-[200px] mb-[100px] text-center text-[32px] font-bold text-white">
-          리플레이
-        </h1>
+        <h1 className="text-50 text-h2 mt-[200px] mb-[100px] text-center">리플레이</h1>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -43,7 +41,7 @@ export default function Login() {
                   <FormControl>
                     <Input placeholder="이메일을 입력하세요" {...field} />
                   </FormControl>
-                  <FormMessage className="mt-1 flex items-center gap-1 text-red-500">
+                  <FormMessage className="text-red mt-1 flex items-center gap-1">
                     {form.formState.errors.email && <AlertCircle className="h-4 w-4" />}
                   </FormMessage>
                 </FormItem>
@@ -58,23 +56,20 @@ export default function Login() {
                   <FormControl>
                     <Input type="password" placeholder="비밀번호를 입력하세요" {...field} />
                   </FormControl>
-                  <FormMessage className="text-red-500" />
+                  <FormMessage className="text-red" />
                 </FormItem>
               )}
             />
 
-            <Button
-              type="submit"
-              className="h-12 w-full bg-[#374151] text-white/60 hover:bg-[#374151]/90"
-            >
+            <Button type="submit" className="bg-600 text-200 h-12 w-full">
               로그인
             </Button>
           </form>
         </Form>
 
-        <div className="mt-auto mb-8 space-x-1 text-center">
-          <span className="text-sm text-white/40">계정이 없으신가요?</span>
-          <a href="/signup" className="text-sm text-white">
+        <div className="text-captionM mt-auto mb-8 space-x-1 text-center">
+          <span className="text-500">계정이 없으신가요?</span>
+          <a href="/signup" className="text-100">
             회원가입
           </a>
         </div>

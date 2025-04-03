@@ -2,13 +2,7 @@
 module.exports = {
   darkMode: ['class'],
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  theme: {
-    extend: {
-      fontFamily: {
-        dohyeon: ['var(--font-dohyeon)'],
-      },
-    },
-  },
+  theme: {},
   corePlugins: {
     preflight: true,
   },
