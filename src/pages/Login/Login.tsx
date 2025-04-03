@@ -1,98 +1,82 @@
-import { useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { AlertCircle } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
+
+const loginSchema = z.object({
+  email: z.string().email('올바른 이메일을 입력해주세요.'),
+  password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다.'),
+})
+
+type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
 
-  const [errors, setErrors] = useState<{
-    email?: string
-    password?: string
-  }>({})
-
-  const validateForm = () => {
-    const newErrors: { email?: string; password?: string } = {}
-
-    if (!formData.email) {
-      newErrors.email = '이메일 또는 비밀번호가 잘못되었습니다.'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (validateForm()) {
-      console.log('로그인 시도:', formData)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-    // 입력 시 해당 필드의 에러 메시지 제거
-    setErrors((prev) => ({
-      ...prev,
-      [name]: undefined,
-    }))
+  const onSubmit = (data: LoginFormValues) => {
+    console.log('로그인 시도:', data)
   }
 
   return (
-    <div className="flex flex-col min-h-screen p-6">
-      <div className="flex-1 flex flex-col">
-        <h1 className="text-[32px] font-bold text-white text-center mt-[200px] mb-[100px]">
+    <div className="flex flex-col min-h-screen bg-[#0F1729]">
+      <div className="flex flex-col flex-1 w-full max-w-[390px] mx-auto p-3">
+        <h1
+          className="text-[32px] font-bold text-white text-center mt-[200px] mb-[100px]
+          font-dohyeon"
+        >
           리플레이
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Input
-              type="email"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
               name="email"
-              placeholder="이메일을 입력하세요"
-              value={formData.email}
-              onChange={handleChange}
-              className={`h-12 bg-white rounded-md ${
-                errors.email ? 'border-red-500 border-2' : ''
-              }`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="이메일을 입력하세요" {...field} />
+                  </FormControl>
+                  <FormMessage className="flex items-center gap-1 mt-1 text-red-500">
+                    {form.formState.errors.email && <AlertCircle className="w-4 h-4" />}
+                  </FormMessage>
+                </FormItem>
+              )}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                <AlertCircle className="w-4 h-4" />
-                {errors.email}
-              </p>
-            )}
-          </div>
 
-          <div>
-            <Input
-              type="password"
+            <FormField
+              control={form.control}
               name="password"
-              placeholder="비밀번호를 입력하세요"
-              value={formData.password}
-              onChange={handleChange}
-              className={`h-12 bg-white rounded-md ${
-                errors.password ? 'border-red-500 border-2' : ''
-              }`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="password" placeholder="비밀번호를 입력하세요" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
             />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-          </div>
 
-          <Button type="submit" className="w-full" variant="default">
-            로그인
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              className="w-full h-12 bg-[#374151] hover:bg-[#374151]/90 text-white/60"
+            >
+              로그인
+            </Button>
+          </form>
+        </Form>
 
-        <div className="mt-auto mb-8 text-center">
-          <span className="text-[#0EA5E9] text-sm">계정이 없으신가요? </span>
+        <div className="mt-auto mb-8 text-center space-x-1">
+          <span className="text-white/40 text-sm">계정이 없으신가요?</span>
           <a href="/signup" className="text-white text-sm">
             회원가입
           </a>
