@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 @import './font.css';
 @import 'tailwindcss/preflight.css' layer(base);
@@ -119,6 +120,12 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
+=======
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+@layer base {
+>>>>>>> e62cc37e7610c759200e6cd6e96ce7ad34d0d7c6
   :root {
     color: #213547;
     background-color: #ffffff;
