@@ -1,12 +1,14 @@
-import Login from '@/pages/Login/Login'
+import { RouterProvider } from 'react-router-dom'
+import router from './router'
 
 function App() {
   return (
-    <div className="flex justify-center min-h-screen bg-white">
-      <div className="w-[390px] bg-[#0F172A]">
-        <Login />
-      </div>
-    </div>
+    <RouterProvider
+      router={router}
+      future={{
+        v7_startTransition: true,
+      }}
+    />
   )
 }
 
