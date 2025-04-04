@@ -75,6 +75,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Font Settings */
+  --font-family: 'Noto Sans KR', 'Noto Sans KR Local', sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-family);
+  }
 }
 
 /* a {

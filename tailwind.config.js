@@ -2,7 +2,13 @@
 module.exports = {
   darkMode: ['class'],
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  theme: {},
+  theme: {
+    extend: {
+      fontFamily: {
+        noto: ['var(--font-family)'],
+      },
+    },
+  },
   corePlugins: {
     preflight: true,
   },
