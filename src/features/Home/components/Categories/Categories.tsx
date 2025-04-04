@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { CategoriesProps } from '../../types'
 import { Category } from '../Category/Category'
 import { Plus, Search } from 'lucide-react'
+import { CategoriesProps } from '../../types'
 import { userFavoriteGames } from '../../constants'
+
 
 export const Categories = ({ count }: CategoriesProps) => {
   // 초기값을 0으로 설정하여 첫 번째 이미지 카테고리가 선택되도록 함
@@ -39,7 +40,7 @@ export const Categories = ({ count }: CategoriesProps) => {
       ))}
 
       {/* 카테고리 추가 */}
-      {count < 3 && (
+      {count < 0 && (
         <Category onClick={() => handleCategoryClick(gameImages.length)}>
           <Plus size={34} strokeWidth={1.2} className="text-200" />
         </Category>

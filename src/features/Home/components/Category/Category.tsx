@@ -1,5 +1,6 @@
 import { CategoryProps } from "../../types"
 
+
 export const Category = ({ children, isSelected, onClick }: CategoryProps) => {
   return (
     <span
