@@ -40,7 +40,7 @@ export default function CommentInput({ onSubmit }: CommentInputProps) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="댓글 달기"
+            placeholder="댓글 달기..."
             className="w-full rounded-xl bg-slate-700 px-4 py-3 text-white placeholder-slate-400 outline-none"
             aria-label="댓글 입력"
             tabIndex={0}
