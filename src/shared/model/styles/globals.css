@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 @import './font.css';
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/theme.css' layer(theme);
@@ -8,7 +7,7 @@
 
 @theme {
   /* font */
-  --font-family: 'Noto Sans KR', 'Noto Sans KR Local', sans-serif;
+  --font-family: 'Noto Sans KR', sans-serif;
   /* typography */
   /* 제목 */
   --text-h1: 40px;
@@ -69,12 +68,18 @@
   --color-dark-green: #1d931f;
 }
 
+/* System Settings */
 :root {
-  /* System Settings */
-  font-synthesis: none;
+  font-family: 'Noto Sans KR', '맑은 고딕', sans-serif;
+  font-weight: 500;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+p,
+span {
+  font-weight: 400;
 }
 
 /* a {
