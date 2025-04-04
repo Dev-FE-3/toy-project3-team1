@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import BackButton from '@/shared/components/BackButton/BackButton'
 import BottomNav from '@/shared/components/BottomNav/BottomNav'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
@@ -9,8 +10,7 @@ import HashTag from '@/shared/components/HashTag/HashTag'
 import MoreMenu, { MenuItem } from '@/shared/components/MoreMenu/MoreMenu'
 import StatusButton from '@/shared/components/StatusButton/StatusButton'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
-import CommentBox from '@/features/CommentBox/components/CommentBox'
-import { useState } from 'react'
+import CommentInput from '@/features/CommentInput/components/CommentInput'
 
 export default function DesignSystem() {
   const tabs = [
@@ -216,7 +216,7 @@ export default function DesignSystem() {
       </section>
 
       <div>
-        <CommentBox />
+        <CommentInput />
       </div>
     </div>
   )
