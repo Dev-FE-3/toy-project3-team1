@@ -35,9 +35,9 @@
   --text-textR--line-height: 140%;
   --text-textR--font-weight: 500;
 
-  --text-texttM: 16px;
-  --text-texttM--line-height: 140%;
-  --text-texttM--font-weight: 600;
+  --text-textM: 16px;
+  --text-textM--line-height: 140%;
+  --text-textM--font-weight: 600;
   /* 캡션 */
   --text-captionM: 14px;
   --text-captionM--line-height: auto;
@@ -78,6 +78,9 @@
 
   /* Font Settings */
   --font-family: 'Noto Sans KR', 'Noto Sans KR Local', sans-serif;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: hidden;
 }
 
 @layer base {
