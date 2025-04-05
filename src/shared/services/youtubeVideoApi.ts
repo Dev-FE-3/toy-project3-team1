@@ -9,8 +9,11 @@ export const fetchRawYouTubeVideoData = async (
     `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`
   );
 
-  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+  }
 
+  const data = await response.json();
   if (!data.items || data.items.length === 0) {
     throw new Error("비디오를 찾을 수 없습니다.");
   }
