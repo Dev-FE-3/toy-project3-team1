@@ -1,7 +1,7 @@
 import { useYouTubeVideoQuery } from "../queries/useYouTubeVideoQuery";
 
 export const useYouTubeVideo = (videoId: string| null) => {
-  const { data: rawData, isLoading, error } = useYouTubeVideoQuery(videoId?? "");
+  const { data: rawData, isLoading, error } = useYouTubeVideoQuery(videoId ?? "");
 
   const parsedData = rawData
     ? {
