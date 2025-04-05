@@ -59,6 +59,8 @@ export default function DesignSystem() {
           <div>
             <p className="mb-2 text-captionM">Avatar:</p>
             <Avatar />
+            <Avatar size='medium'/>
+            <Avatar size='large'/>
           </div>
 
           <div>
