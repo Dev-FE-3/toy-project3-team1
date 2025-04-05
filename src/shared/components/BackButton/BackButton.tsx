@@ -1,10 +1,9 @@
-import { cn } from '@/shared/model/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 
 interface BackButtonProps {
-  className?: string
+  color?: string
 }
 
-export default function BackButton({ className }: BackButtonProps) {
-  return <ArrowLeft className={cn('h-5 w-5', className)} />
+export default function BackButton({ color = 'text-50' }: BackButtonProps) {
+  return <ArrowLeft size={24} className={color} />
 }

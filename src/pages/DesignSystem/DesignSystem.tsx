@@ -43,7 +43,7 @@ export default function DesignSystem() {
         <div className="flex flex-col gap-4 rounded-lg border bg-c50 p-6">
           <div>
             <p className="mb-2 text-captionM">BackButton:</p>
-            <BackButton />
+            <BackButton color='text-c900'/>
           </div>
 
           <div>
