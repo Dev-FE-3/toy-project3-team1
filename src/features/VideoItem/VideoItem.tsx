@@ -6,18 +6,10 @@ interface VideoItemProps {
   thumbnail: string
   views: string
   date: string
-  duration: string
   onClick?: () => void
 }
 
-export default function VideoItem({
-  title,
-  thumbnail,
-  views,
-  date,
-  duration,
-  onClick,
-}: VideoItemProps) {
+export default function VideoItem({ title, thumbnail, views, date, onClick }: VideoItemProps) {
   return (
     <div className="flex cursor-pointer gap-3 rounded-lg p-2 hover:bg-slate-800" onClick={onClick}>
       {/* 썸네일 */}
@@ -25,9 +17,6 @@ export default function VideoItem({
         <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg">
           <img src={thumbnail} alt={title} className="h-full w-full object-cover" />
         </AspectRatio>
-        <div className="absolute right-1 bottom-1 rounded bg-black/80 px-1 text-xs text-white">
-          {duration}
-        </div>
       </div>
 
       {/* 비디오 정보 */}
