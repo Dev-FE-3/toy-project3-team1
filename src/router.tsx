@@ -8,6 +8,7 @@ import PlaylistCollectionPage from './pages/PlaylistCollection/PlaylistCollectio
 import ProfilePage from './pages/Profile/ProfilePage'
 import LoginPage from './pages/Login/LoginPage'
 import SignupPage from './pages/Signup/SignupPage'
+import DesignSystem from './pages/DesignSystem/DesignSystem'
 
 const routes: RouteObject[] = [
   {
@@ -36,6 +37,10 @@ const routes: RouteObject[] = [
       {
         path: '/profile',
         element: <ProfilePage />,
+      },
+      {
+        path: '/d',
+        element: <DesignSystem />,
       },
     ],
   },

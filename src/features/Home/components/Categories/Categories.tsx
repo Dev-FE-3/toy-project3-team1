@@ -18,10 +18,10 @@ export const Categories = ({ count }: CategoriesProps) => {
   }
 
   return (
-    <div className="bg-900 absolute top-0 flex h-[98px] w-[480px] items-center justify-center gap-4">
+    <div className="bg-c900 absolute left-0 flex h-[98px] w-[480px] items-center justify-center gap-4">
       {/* 검색 */}
       <Category onClick={() => handleCategoryClick(-1)}>
-        <Search size={34} strokeWidth={1.2} className="text-200" />
+        <Search size={34} strokeWidth={1.2} className="text-c200" />
       </Category>
 
       {/* 게임 카테고리 나열 */}
@@ -42,7 +42,7 @@ export const Categories = ({ count }: CategoriesProps) => {
       {/* 카테고리 추가 */}
       {count < 0 && (
         <Category onClick={() => handleCategoryClick(gameImages.length)}>
-          <Plus size={34} strokeWidth={1.2} className="text-200" />
+          <Plus size={34} strokeWidth={1.2} className="text-c200" />
         </Category>
       )}
     </div>
