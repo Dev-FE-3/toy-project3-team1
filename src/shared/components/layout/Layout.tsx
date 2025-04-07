@@ -12,11 +12,13 @@ const Header = () => {
 const Layout = () => {
   return (
     <>
-      <Header />
-      <main className="h-[calc(100vh-66px-66px)] px-[20px] overflow-y-scroll overflow-x-clip">
-        <Outlet />
+      <main className='relative overflow-hidden'>
+        <Header />
+        <div className="h-[calc(100vh-66px-66px)] overflow-x-clip overflow-y-scroll px-[20px]">
+          <Outlet />
+        </div>
+        <BottomNav />
       </main>
-      <BottomNav />
     </>
   )
 }
