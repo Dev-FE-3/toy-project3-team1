@@ -8,7 +8,7 @@ interface LikeIconProps extends React.SVGProps<SVGSVGElement> {
 export default function LikeIcon({ isLiked = false, className, ...props }: LikeIconProps) {
   return (
     <Heart
-      className={cn('h-5 w-5', isLiked ? 'fill-(--400) text-(--400)' : 'text-(--400)', className)}
+      className={cn('h-5 w-5', isLiked ? 'fill-c400 text-c400' : 'text-c400', className)}
       {...props}
     />
   )

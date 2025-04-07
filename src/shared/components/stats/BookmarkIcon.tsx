@@ -14,7 +14,7 @@ export default function BookmarkIcon({
     <Bookmark
       className={cn(
         'h-5 w-5',
-        isBookmarked ? 'fill-(--400) text-(--400)' : 'text-(--400)',
+        isBookmarked ? 'fill-c400 text-c400' : 'text-c400',
         className,
       )}
       {...props}
