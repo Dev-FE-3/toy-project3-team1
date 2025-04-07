@@ -36,9 +36,9 @@ export default function SearchBar({
         placeholder={placeholder}
         value={query}
         onChange={handleChange}
-        className="w-full bg-[#1A2234] pr-4 pl-10 text-white placeholder:text-white/60"
+        className="border-c500 border-1 bg-c800 text-c50 placeholder:text-c500 w-full pr-4 pl-10 focus:bg-c800"
       />
-      <div className="absolute top-1/2 left-3 -translate-y-1/2 text-white/60">
+      <div className="text-c500 absolute top-1/2 left-3 -translate-y-1/2">
         <Search className="h-5 w-5" />
       </div>
     </form>

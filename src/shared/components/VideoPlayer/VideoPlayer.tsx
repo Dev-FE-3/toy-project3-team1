@@ -18,10 +18,10 @@ export default function VideoPlayer({
 
   return (
     <div className={cn('w-full', className)}>
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-gray-200">
+      <div className="bg-c700 relative aspect-[16/9] w-full overflow-hidden rounded-lg">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500" />
+            <div className="border-c600 border-t-c400 h-8 w-8 animate-spin rounded-full border-4" />
           </div>
         )}
         <iframe

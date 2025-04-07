@@ -27,12 +27,12 @@ const PlaylistDetailPage = () => {
 
   // 플레이리스트 정보 가져오기
   const {
-    data: playlistInfo,
+    data: playlistData,
     isLoading: isPlaylistLoading,
     isError: isPlaylistError,
     error: playlistError,
   } = useQuery({
-    queryKey: ['playlistInfo', currentPlaylistId],
+    queryKey: ['playlistData', currentPlaylistId],
     queryFn: () => getPlaylistById(currentPlaylistId),
     staleTime: 5 * 60 * 1000, // 5분 동안 데이터를 "신선"하게 유지
     gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
@@ -105,9 +105,7 @@ const PlaylistDetailPage = () => {
     return (
       <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-4">
         <div className="bg-c500 rounded-xl p-6 text-center">
-          <p className="text-lg font-medium text-red-500">
-            데이터를 불러오는 중 오류가 발생했습니다.
-          </p>
+          <p className="text-red text-lg font-medium">데이터를 불러오는 중 오류가 발생했습니다.</p>
           <p className="mt-2 text-slate-300">
             {error instanceof Error ? error.message : '알 수 없는 오류'}
           </p>
@@ -135,10 +133,10 @@ const PlaylistDetailPage = () => {
             <VideoPlayer videoId={selectedVideo} />
           ) : (
             <AspectRatio ratio={16 / 9}>
-              {playlistInfo?.thumbnail_url ? (
+              {playlistData?.thumbnail_url ? (
                 <img
-                  src={playlistInfo.thumbnail_url}
-                  alt={playlistInfo.title}
+                  src={playlistData.thumbnail_url}
+                  alt={playlistData.title}
                   className="h-full w-full rounded-xl object-cover"
                 />
               ) : (
@@ -148,13 +146,13 @@ const PlaylistDetailPage = () => {
           )}
 
           {/* 비디오 정보 - 플레이리스트 제목과 설명 표시 */}
-          <PlaylistInfo title={playlistInfo?.title} description={playlistInfo?.description} />
+          <PlaylistInfo title={playlistData?.title} description={playlistData?.description} />
 
           {/* 작성자 정보 */}
           <AuthorInfo
             authorName="오리"
-            likeCount={playlistInfo?.likeCount}
-            favoriteCount={playlistInfo?.favoriteCount}
+            likeCount={playlistData?.likeCount}
+            favoriteCount={playlistData?.favoriteCount}
           />
 
           {/* 댓글 트리거 */}

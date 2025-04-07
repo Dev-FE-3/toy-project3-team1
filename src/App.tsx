@@ -1,8 +1,10 @@
 import { RouterProvider } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import router from './router'
-import { queryClient } from './shared/model/lib/query-client'
 import { AuthProvider } from './shared/model/contexts/AuthContext'
+
+const queryClient = new QueryClient()
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           }}
         />
       </AuthProvider>
+
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

@@ -61,7 +61,7 @@ export default function LoginPage() {
               )}
             />
 
-            <Button type="submit" className="bg-c600 text-c200 h-12 w-full">
+            <Button variant={'outline'} type="submit" className="bg-c600 text-c200 h-12 w-full">
               로그인
             </Button>
           </form>
