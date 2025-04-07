@@ -35,7 +35,7 @@ export default function StatusButton({ status, onClick, className }: StatusButto
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       className={cn(
-        'w-full touch-none rounded-lg py-3 text-center font-medium transition-colors',
+        '!text-textM w-full touch-none rounded-lg py-3 text-center transition-colors',
         status === 'active'
           ? isPressed
             ? 'bg-c700 text-c50'
