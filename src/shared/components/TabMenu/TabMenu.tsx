@@ -69,7 +69,7 @@ export default function TabMenu({
                 }}
                 variant="ghost"
                 className={cn(
-                  '!text-h4 relative flex flex-1 items-center justify-center gap-2 rounded-none border-b-[2px] px-8 py-7',
+                  '!text-h4 relative flex flex-1 items-center justify-center gap-2 rounded-none border-b-[2px] py-7 pl-7',
                   'hover:bg-transparent focus:bg-transparent',
                   isActive ? 'text-c50' : 'text-c500',
                 )}
