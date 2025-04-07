@@ -8,6 +8,7 @@ interface StatusButtonProps {
 }
 
 export default function StatusButton({ status, onClick, className }: StatusButtonProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const pressedRef = useRef(false)
   const [isPressed, setIsPressed] = useState(false)
 
@@ -16,24 +17,47 @@ export default function StatusButton({ status, onClick, className }: StatusButto
     setIsPressed(true)
   }
 
+  const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const isInside = buttonRef.current?.contains(event.target as Node)
+    if (pressedRef.current && isInside) onClick?.()
+    pressedRef.current = false
+    setIsPressed(false)
+  }
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const rect = buttonRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    const inside =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom
+
+    if (!inside) {
+      pressedRef.current = false
+      setIsPressed(false)
+    }
+  }
+
   const handlePointerLeave = () => {
     pressedRef.current = false
     setIsPressed(false)
   }
 
-  const handlePointerUp = () => {
-    if (pressedRef.current) {
-      onClick?.()
-    }
+  const handlePointerCancel = () => {
     pressedRef.current = false
     setIsPressed(false)
   }
 
   return (
     <button
+      ref={buttonRef}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
+      onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
+      onPointerCancel={handlePointerCancel}
       className={cn(
         '!text-textM w-full touch-none rounded-lg py-3 text-center transition-colors',
         status === 'active'
