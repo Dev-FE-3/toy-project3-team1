@@ -3,7 +3,7 @@ import BottomNav from '../BottomNav/BottomNav'
 
 const Header = () => {
   return (
-    <header className="border-c800 flex h-[66px] w-[480px] items-center border-b pl-5">
+    <header className="border-c800 flex h-[66px] w-full items-center border-b pl-5">
       <img src="/images/logo.svg"></img>
     </header>
   )
@@ -12,9 +12,9 @@ const Header = () => {
 const Layout = () => {
   return (
     <>
-      <main className='relative overflow-hidden'>
+      <main className="relative overflow-hidden">
         <Header />
-        <div className="h-[calc(100vh-66px-66px)] overflow-x-clip overflow-y-scroll px-[20px]">
+        <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip overflow-y-scroll px-[20px]">
           <Outlet />
         </div>
         <BottomNav />

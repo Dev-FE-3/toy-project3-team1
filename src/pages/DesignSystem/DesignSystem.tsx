@@ -13,7 +13,6 @@ import { useMemo, useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
 
 export default function DesignSystem() {
-
   // TapMenu 상태 관리
   const [activeTab, setActiveTab] = useState<'form1' | 'form2'>('form1')
   const [inputValue, setInputValue] = useState('')
@@ -47,7 +46,7 @@ export default function DesignSystem() {
   const videoId = 'mApblqoutE8'
 
   return (
-    <div className="p-8">
+    <>
       <section className="mb-12">
         <div className="bg-c50 flex flex-col gap-4 rounded-lg border p-6">
           <div>
@@ -91,14 +90,14 @@ export default function DesignSystem() {
             completedTabs={completedTabs} // ✅ 체크 표시용 Set 전달
           />
 
-          <div className="p-6 bg-c700">
+          <div className="bg-c700 p-6">
             {activeTab === 'form1' && (
               <input
                 type="text"
                 placeholder="여기에 입력"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                className="w-full rounded border px-4 py-2 bg-c50"
+                className="bg-c50 w-full rounded border px-4 py-2"
               />
             )}
 
@@ -244,6 +243,6 @@ export default function DesignSystem() {
       <div>
         <CommentBox />
       </div>
-    </div>
+    </>
   )
 }
