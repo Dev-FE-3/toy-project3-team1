@@ -110,7 +110,7 @@ export const getSession = async () => {
 export const refreshSupabaseClient = async () => {
   // 현재 세션 가져오기
   const { data } = await supabase.auth.getSession()
-  console.log('refreshSupabaseClient 호출', data)
+  // console.log('refreshSupabaseClient 호출', data)
   if (data.session) {
     // 세션이 있으면 토큰 갱신
     const { error } = await supabase.auth.refreshSession()

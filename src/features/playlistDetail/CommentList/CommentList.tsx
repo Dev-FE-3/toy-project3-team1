@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getCommentsByPlaylistId, Comment } from '@/shared/model/api/comments'
-import CommentItem from './CommentItem'
+import CommentItem from './components/CommentItem'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 interface CommentListProps {
   playlistId: string

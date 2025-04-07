@@ -10,7 +10,7 @@ import HashTag from '@/shared/components/HashTag/HashTag'
 import MoreMenu, { MenuItem } from '@/shared/components/MoreMenu/MoreMenu'
 import StatusButton from '@/shared/components/StatusButton/StatusButton'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
-import CommentInput from '@/features/CommentInput/components/CommentInput'
+import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 
 export default function DesignSystem() {
   const tabs = [

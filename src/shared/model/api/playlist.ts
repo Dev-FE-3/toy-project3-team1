@@ -7,6 +7,7 @@ export interface Video {
   views: string
   date: string
   duration: string
+  video_id: string
 }
 
 export interface Playlist {
@@ -17,6 +18,8 @@ export interface Playlist {
   is_public: boolean
   created_at: string
   profile_id: string
+  likeCount: number
+  favoriteCount: number
 }
 
 // 플레이리스트 상세 정보 가져오기
@@ -59,6 +62,8 @@ export const getPlaylistById = async (playlistId: string): Promise<Playlist | nu
         is_public: true,
         created_at: new Date().toISOString(),
         profile_id: '3faf9977-36f1-4f3f-a393-fb7e06b5a3ae',
+        likeCount: 332,
+        favoriteCount: 21,
       }
     }
 
@@ -75,6 +80,8 @@ export const getPlaylistById = async (playlistId: string): Promise<Playlist | nu
       is_public: true,
       created_at: new Date().toISOString(),
       profile_id: '3faf9977-36f1-4f3f-a393-fb7e06b5a3ae',
+      likeCount: 332,
+      favoriteCount: 21,
     }
   }
 }
@@ -162,6 +169,7 @@ const convertToVideos = (data: PlaylistItem[]): Video[] => {
           ? new Date(item.created_at).toLocaleDateString('ko-KR')
           : '날짜 정보 없음',
         duration: item.duration || '00:00',
+        video_id: item.video_id || '임시ID',
       }
     } catch (itemError) {
       console.error('아이템 변환 중 오류:', itemError, item)
@@ -172,6 +180,7 @@ const convertToVideos = (data: PlaylistItem[]): Video[] => {
         views: '오류',
         date: '오류',
         duration: '00:00',
+        video_id: '오류',
       }
     }
   })
@@ -188,6 +197,7 @@ const getDummyVideos = (): Video[] => {
       views: '240회',
       date: '2024.12.1',
       duration: '1:42',
+      video_id: '1',
     },
     {
       id: '2',
@@ -196,6 +206,7 @@ const getDummyVideos = (): Video[] => {
       views: '1.2만회',
       date: '2024.11.15',
       duration: '8:42',
+      video_id: '2',
     },
     {
       id: '3',
@@ -204,6 +215,7 @@ const getDummyVideos = (): Video[] => {
       views: '3.5만회',
       date: '2024.10.28',
       duration: '3:11',
+      video_id: '3',
     },
   ]
 }

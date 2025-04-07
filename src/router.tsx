@@ -9,6 +9,7 @@ import ProfilePage from './pages/Profile/ProfilePage'
 import LoginPage from './pages/Login/LoginPage'
 import SignupPage from './pages/Signup/SignupPage'
 import DesignSystem from './pages/DesignSystem/DesignSystem'
+import WatchVideoPage from './pages/WatchVideo/WatchVideoPage'
 
 const routes: RouteObject[] = [
   {
@@ -33,6 +34,10 @@ const routes: RouteObject[] = [
       {
         path: '/playlist/:id',
         element: <PlaylistDetailPage />,
+      },
+      {
+        path: '/watch',
+        element: <WatchVideoPage />,
       },
       {
         path: '/profile',

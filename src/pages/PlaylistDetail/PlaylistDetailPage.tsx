@@ -1,27 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
-import { CommentPopup } from '@/features/CommentPopup/CommentPopup'
-import VideoInfo from '@/features/VideoInfo/VideoInfo'
-import AuthorInfo from '@/features/AuthorInfo/AuthorInfo'
-import CommentTrigger from '@/features/CommentTrigger/CommentTrigger'
-import CommentInput from '@/features/CommentInput/components/CommentInput'
-import CommentList from '@/features/CommentList/CommentList'
-import VideoList from '@/features/VideoList/VideoList'
+import { CommentPopup } from '@/features/playlistDetail/CommentPopup/CommentPopup'
+import PlaylistInfo from '@/features/playlistDetail/PlaylistInfo/PlaylistInfo'
+import AuthorInfo from '@/features/playlistDetail/AuthorInfo/AuthorInfo'
+import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrigger'
+import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
+import CommentList from '@/features/playlistDetail/CommentList/CommentList'
+import VideoList from '@/features/playlistDetail/VideoList/VideoList'
 import { getPlaylistById, getPlaylistVideos } from '@/shared/model/api/playlist'
 import { useAuthContext } from '@/shared/model/contexts/AuthContext'
-import { signInWithEmail, refreshSupabaseClient } from '@/shared/model/api/auth'
-import { useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
+import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
 
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
   const [refreshComments, setRefreshComments] = useState(0)
-  const toyPlaylistId = 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
-  const playlistId = '8575f134-4936-4b6a-a833-395936663775'
   const { profile, isAuthenticated } = useAuthContext()
-  const queryClient = useQueryClient()
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const currentPlaylistId = id || 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
+  const commentPlaylistId = '8575f134-4936-4b6a-a833-395936663775'
 
   // 플레이리스트 정보 가져오기
   const {
@@ -30,8 +32,10 @@ const PlaylistDetailPage = () => {
     isError: isPlaylistError,
     error: playlistError,
   } = useQuery({
-    queryKey: ['playlistInfo', toyPlaylistId],
-    queryFn: () => getPlaylistById(toyPlaylistId),
+    queryKey: ['playlistInfo', currentPlaylistId],
+    queryFn: () => getPlaylistById(currentPlaylistId),
+    staleTime: 5 * 60 * 1000, // 5분 동안 데이터를 "신선"하게 유지
+    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
   })
 
   // 플레이리스트에 속한 비디오 목록 가져오기
@@ -41,55 +45,39 @@ const PlaylistDetailPage = () => {
     isError: isVideosError,
     error: videosError,
   } = useQuery({
-    queryKey: ['playlistVideos', toyPlaylistId],
-    queryFn: () => getPlaylistVideos(toyPlaylistId),
+    queryKey: ['playlistVideos', currentPlaylistId],
+    queryFn: () => getPlaylistVideos(currentPlaylistId),
+    staleTime: 5 * 60 * 1000, // 5분 동안 데이터를 "신선"하게 유지
+    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
+    refetchOnWindowFocus: false, // 윈도우 포커스 시 재요청 방지
   })
 
   const handleOpenCommentPopup = async () => {
-    // 로그인 여부 확인
-    if (!profile || !isAuthenticated) {
-      const email = 'toy3@toy3.com'
-      const password = '1234qwer!'
-
-      try {
-        // 로그인
-        const { error } = await signInWithEmail(email, password)
-        if (!error) {
-          // 로그인 성공 시 클라이언트 재설정
-          await refreshSupabaseClient()
-
-          // 약간의 지연 후 쿼리 무효화하여 재
-          // setTimeout(() => {
-          //   queryClient.invalidateQueries({ queryKey: ['playlistVideos', playlistId] })
-          // }, 500)
-        }
-      } catch (e) {
-        console.error('로그인 처리 중 오류:', e)
-      }
-      return
-    }
-
     // 로그인된 경우 댓글 팝업 열기
     setIsCommentPopupOpen(true)
   }
 
   const handleVideoClick = (videoId: string) => {
     console.log('Video clicked:', videoId)
+
+    setSelectedVideo(videoId)
+
+    // navigate(`/watch?v=${videoId}&list=${currentPlaylistId}`, {
+    //   state: {
+    //     fromPlaylist: true,
+    //     playlistId: currentPlaylistId,
+    //     playlistTitle: playlistInfo?.title,
+    //   },
+    // })
   }
 
   const handleCommentAdded = () => {
     setRefreshComments((prev) => prev + 1)
   }
 
-  // useEffect(() => {
-  //   console.log('playlistInfo', playlistInfo)
-  //   setTimeout(() => {
-  //     refreshSupabaseClient()
-  //   }, 500)
-  // }, [])
-
   // 로딩 상태 처리
   const isLoading = isPlaylistLoading || isVideosLoading
+
   if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
@@ -143,24 +131,31 @@ const PlaylistDetailPage = () => {
     <>
       <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
         <div className="flex-shrink-0">
-          {/* 플레이리스트 썸네일 */}
-          <AspectRatio ratio={16 / 9}>
-            {playlistInfo?.thumbnail_url ? (
-              <img
-                src={playlistInfo.thumbnail_url}
-                alt={playlistInfo.title}
-                className="h-full w-full rounded-xl object-cover"
-              />
-            ) : (
-              <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
-            )}
-          </AspectRatio>
+          {selectedVideo ? (
+            <VideoPlayer videoId={selectedVideo} />
+          ) : (
+            <AspectRatio ratio={16 / 9}>
+              {playlistInfo?.thumbnail_url ? (
+                <img
+                  src={playlistInfo.thumbnail_url}
+                  alt={playlistInfo.title}
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              ) : (
+                <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
+              )}
+            </AspectRatio>
+          )}
 
           {/* 비디오 정보 - 플레이리스트 제목과 설명 표시 */}
-          <VideoInfo title={playlistInfo?.title} description={playlistInfo?.description} />
+          <PlaylistInfo title={playlistInfo?.title} description={playlistInfo?.description} />
 
           {/* 작성자 정보 */}
-          <AuthorInfo />
+          <AuthorInfo
+            authorName="오리"
+            likeCount={playlistInfo?.likeCount}
+            favoriteCount={playlistInfo?.favoriteCount}
+          />
 
           {/* 댓글 트리거 */}
           <CommentTrigger commentCount={100} onClick={handleOpenCommentPopup} />
@@ -178,26 +173,18 @@ const PlaylistDetailPage = () => {
             {profile && isAuthenticated ? (
               <div className="flex flex-col space-y-4">
                 <CommentList
-                  playlistId={playlistId}
+                  playlistId={commentPlaylistId}
                   currentProfileId={profile.id}
                   key={refreshComments}
                 />
                 <CommentInput
-                  playlistId={playlistId}
+                  playlistId={commentPlaylistId}
                   profileId={profile.id}
                   onCommentAdded={handleCommentAdded}
                 />
               </div>
             ) : (
-              <div className="flex flex-col items-center space-y-4 p-4">
-                <p className="text-center text-slate-300">댓글을 작성하려면 로그인이 필요합니다.</p>
-                <button
-                  onClick={handleOpenCommentPopup}
-                  className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
-                >
-                  로그인하기
-                </button>
-              </div>
+              <LoginPrompt onLoginClick={handleOpenCommentPopup} />
             )}
           </CommentPopup.Content>
         </CommentPopup>

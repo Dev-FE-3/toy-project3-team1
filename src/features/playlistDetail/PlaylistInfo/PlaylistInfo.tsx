@@ -1,4 +1,3 @@
-import React from 'react'
 import { Eye, Video, Calendar, Lock } from 'lucide-react'
 
 interface VideoInfoProps {
@@ -6,7 +5,7 @@ interface VideoInfoProps {
   description?: string
 }
 
-export default function VideoInfo({ title, description }: VideoInfoProps) {
+export default function PlaylistInfo({ title, description }: VideoInfoProps) {
   return (
     <article className="mt-3">
       <header className="flex gap-2 text-sm text-slate-400">

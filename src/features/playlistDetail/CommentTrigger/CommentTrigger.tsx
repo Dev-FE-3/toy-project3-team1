@@ -1,5 +1,4 @@
 import React from 'react'
-import { MessageCircle } from 'lucide-react'
 import {
   Avatar as AvatarComponent,
   AvatarFallback,
@@ -23,9 +22,7 @@ export default function CommentTrigger({ commentCount = 0, onClick }: CommentTri
           onClick={onClick}
           className="text-slate-400 hover:text-white"
           aria-label="댓글 더보기"
-        >
-          <MessageCircle size={18} />
-        </button>
+        ></button>
       </div>
 
       <button

@@ -1,8 +1,9 @@
 import React, { useRef, useCallback } from 'react'
-import VideoItem from '@/features/VideoItem/VideoItem'
+import VideoItem from '@/features/playlistDetail/VideoItem/VideoItem'
 
 export interface Video {
   id: string
+  video_id: string
   title: string
   thumbnail: string
   views: string
@@ -85,7 +86,7 @@ export default function VideoList({
               thumbnail={video.thumbnail}
               views={video.views}
               date={video.date}
-              onClick={() => onVideoClick?.(video.id)}
+              onClick={() => onVideoClick?.(video.video_id)}
             />
           ))}
 
