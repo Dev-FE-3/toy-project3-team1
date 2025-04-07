@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRef, useState } from 'react'
 import { cn } from '@/shared/model/lib/utils'
 
 interface StatusButtonProps {
@@ -8,14 +8,39 @@ interface StatusButtonProps {
 }
 
 export default function StatusButton({ status, onClick, className }: StatusButtonProps) {
+  const pressedRef = useRef(false)
+  const [isPressed, setIsPressed] = useState(false)
+
+  const handlePointerDown = () => {
+    pressedRef.current = true
+    setIsPressed(true)
+  }
+
+  const handlePointerLeave = () => {
+    pressedRef.current = false
+    setIsPressed(false)
+  }
+
+  const handlePointerUp = () => {
+    if (pressedRef.current) {
+      onClick?.()
+    }
+    pressedRef.current = false
+    setIsPressed(false)
+  }
+
   return (
     <button
-      onClick={onClick}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
       className={cn(
-        'w-full rounded-lg py-3 text-center font-medium transition-colors',
+        'w-full touch-none rounded-lg py-3 text-center font-medium transition-colors',
         status === 'active'
-          ? 'bg-[#1E293B] text-white hover:bg-[#1E293B]/90'
-          : 'bg-[#CBD5E1] text-[#64748B] hover:bg-[#CBD5E1]/90',
+          ? isPressed
+            ? 'bg-c700 text-c50'
+            : 'bg-c600 text-c50 hover:bg-c800 opacity-100'
+          : 'bg-c600 text-c50 opacity-60',
         className,
       )}
     >
