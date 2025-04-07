@@ -38,6 +38,10 @@ const routes: RouteObject[] = [
         path: '/profile',
         element: <ProfilePage />,
       },
+      {
+        path: '/d',
+        element: <DesignSystem />,
+      },
     ],
   },
 
@@ -48,10 +52,6 @@ const routes: RouteObject[] = [
   {
     path: '/signup',
     element: <SignupPage />,
-  },
-  {
-    path: '/designsystem',
-    element: <DesignSystem />,
   },
 ]
 
