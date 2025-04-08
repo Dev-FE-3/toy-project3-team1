@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { supabase } from './supabase'
 
 export interface Video {
   id: string
@@ -23,113 +23,93 @@ export interface Playlist {
 }
 
 // 플레이리스트 상세 정보 가져오기
-export const getPlaylistById = async (playlistId: string): Promise<Playlist | null> => {
+export const getPlaylistById = async (playlistId: string) => {
   console.log('getPlaylistById 호출, 요청한 플레이리스트 ID:', playlistId)
 
   try {
-    console.log('시작')
-    const { data: authData } = await supabase.auth.getSession()
-    const isLoggedIn = !!authData.session
-    console.log(' getPlaylistVideos ~ isLoggedIn: ', isLoggedIn)
+    console.log('========= getPlaylistById 새 로직 시작 (직접 조회) =========')
 
-    const { data: checkData, error: checkError } = await supabase
-      .from('playlists')
-      .select('*')
-      .eq('id', playlistId)
+    // supabase 인스턴스 사용
+    const client = supabase
+    const startTime = performance.now()
 
-    console.log('테이블 확인 결과:', checkData)
+    const { data, error } = await client.from('playlists').select('*').eq('id', playlistId).single()
 
-    if (checkError) {
-      console.error('테이블 확인 중 오류:', checkError)
-    }
+    const endTime = performance.now()
+    const duration = (endTime - startTime).toFixed(2)
 
-    // 이제 단일 레코드 쿼리 시도
-    const { data, error } = await supabase
-      .from('playlists')
-      .select('*')
-      .eq('id', playlistId)
-      .single()
+    console.log(`플레이리스트 데이터 조회 완료 (${duration}ms)`)
 
     if (error) {
-      console.error('플레이리스트 정보를 가져오는 중 오류 발생:', error)
-
-      // 샘플 데이터로 폴백
-      return {
-        id: playlistId,
-        title: '오버워치 오리사 플레이 모음',
-        description: '오버워치2 오리사 하이라이트 모음입니다. 재미있게 봐주세요!',
-        thumbnail_url: 'https://placehold.co/1280x720/3a4a5a/FFF?text=Orisa+Playlist',
-        is_public: true,
-        created_at: new Date().toISOString(),
-        profile_id: '3faf9977-36f1-4f3f-a393-fb7e06b5a3ae',
-        likeCount: 332,
-        favoriteCount: 21,
-      }
+      console.warn('데이터 조회 중 오류:', error.message)
     }
 
-    return data
+    if (!data) {
+      console.warn('데이터가 없습니다')
+    }
+
+    // 응답 데이터 로깅
+    console.log('조회된 데이터:', {
+      id: data.id,
+      title: data.title,
+      hasDescription: !!data.description,
+      hasThumbUrl: !!data.thumbnail_url,
+    })
+
+    // 안전한 타입 변환
+    const playlist: Playlist = {
+      id: data.id || playlistId,
+      title: data.title || '제목 없음',
+      description: data.description || '설명 없음',
+      thumbnail_url: data.thumbnail_url || '',
+      is_public: !!data.is_public,
+      created_at: data.created_at || new Date().toISOString(),
+      profile_id: data.profile_id || '',
+      likeCount: data.likeCount || 0,
+      favoriteCount: data.favoriteCount || 0,
+    }
+
+    return playlist
   } catch (error) {
     console.error('예상치 못한 오류 발생:', error)
-
-    // 샘플 데이터로 폴백
-    return {
-      id: playlistId,
-      title: '오버워치 오리사 플레이 모음',
-      description: '오버워치2 오리사 하이라이트 모음입니다. 재미있게 봐주세요!',
-      thumbnail_url: 'https://placehold.co/1280x720/3a4a5a/FFF?text=Orisa+Playlist',
-      is_public: true,
-      created_at: new Date().toISOString(),
-      profile_id: '3faf9977-36f1-4f3f-a393-fb7e06b5a3ae',
-      likeCount: 332,
-      favoriteCount: 21,
-    }
   }
 }
 
 // 플레이리스트에 속한 비디오 항목들 가져오기
 export const getPlaylistVideos = async (playlistId: string): Promise<Video[]> => {
-  console.log('요청한 플레이리스트 ID:', playlistId)
+  console.log('getPlaylistVideos 호출, 요청한 플레이리스트 ID:', playlistId)
 
   try {
-    // 수동으로 인증 상태 확인
-    const { data: authData } = await supabase.auth.getSession()
-    const isLoggedIn = !!authData.session
-    console.log(' getPlaylistVideos ~ isLoggedIn: ', isLoggedIn)
+    console.log('========= getPlaylistVideos 새 로직 시작 (직접 조회) =========')
 
-    // 요청 시 타임아웃 설정
-    let requestPromise
+    // supabase 인스턴스 사용
+    const client = supabase
+    const startTime = performance.now()
 
-    if (isLoggedIn) {
-      console.log('로그인 상태에서 요청, 익명 클라이언트 사용')
-      // 익명 클라이언트 사용 (토큰 없이)
-      const { createClient } = await import('@supabase/supabase-js')
-      const anonClient = createClient(
-        import.meta.env.VITE_SUPABASE_URL,
-        import.meta.env.VITE_SUPABASE_ANON_KEY,
-        { auth: { persistSession: false } },
-      )
+    const { data, error } = await client
+      .from('playlist_items')
+      .select('*')
+      .eq('playlist_id', playlistId)
 
-      requestPromise = anonClient.from('playlist_items').select('*').eq('playlist_id', playlistId)
-    } else {
-      console.log('로그아웃 상태에서 요청, 기본 클라이언트 사용')
-      requestPromise = supabase.from('playlist_items').select('*').eq('playlist_id', playlistId)
-    }
+    const endTime = performance.now()
+    const duration = (endTime - startTime).toFixed(2)
 
-    const { data, error } = await requestPromise
+    console.log(`비디오 데이터 조회 완료 (${duration}ms)`)
 
     if (error) {
-      console.error('데이터 조회 오류:', error)
+      console.warn('데이터 조회 중 오류:', error.message)
       return getDummyVideos()
     }
 
     if (!data || data.length === 0) {
-      console.log('데이터 없음')
+      console.warn('데이터가 없거나 비어 있습니다')
       return getDummyVideos()
     }
 
+    console.log(`조회된 비디오 수: ${data.length}`)
     return convertToVideos(data)
   } catch (error) {
-    console.error('예외 발생:', error)
+    console.error('예상치 못한 오류 발생:', error)
     return getDummyVideos()
   }
 }

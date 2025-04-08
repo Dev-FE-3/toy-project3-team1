@@ -71,6 +71,7 @@ export const signOut = async () => {
       console.error('로그아웃 중 오류 발생:', error)
       throw error
     }
+    console.log('signOut success')
     return true
   } catch (error) {
     console.error('로그아웃 프로세스 오류:', error)
