@@ -1,0 +1,99 @@
+// Playlist 인터페이스 수정
+export interface Playlist {
+  id: number
+  title: string
+  description: string
+  imageUrl: string | string[]
+  user: {
+    name: string
+    imageUrl?: string
+  }
+  likes: number
+  bookmarks: number
+  isLiked?: boolean
+  isBookmarked?: boolean
+}
+
+// playlists 데이터에 user 정보 추가
+const playlists: Playlist[] = [
+  {
+    id: 1,
+    title: '롤 챔피언스 코리아',
+    description: 'LCK 선수들의 최애 음악 플레이리스트',
+    imageUrl: [
+      'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
+      'https://i.ytimg.com/vi/8bt_t6R8Tw8/maxresdefault.jpg',
+      'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',
+    ],
+    user: {
+      name: 'Faker',
+      imageUrl:
+        'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/6/60/T1_Faker_2023_Split_1.png',
+    },
+    likes: 1200,
+    bookmarks: 450,
+    isLiked: false,
+    isBookmarked: false,
+  },
+  {
+    id: 2,
+    title: '발로란트 프로게이머',
+    description: '프로게이머들이 선정한 집중력 향상 플레이리스트',
+    imageUrl: [
+      'https://i.ytimg.com/vi/8bt_t6R8Tw8/maxresdefault.jpg',
+      'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
+      'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',
+    ],
+    user: {
+      name: 'TenZ',
+      imageUrl:
+        'https://static.wikia.nocookie.net/valorant_gamepedia_en/images/4/4b/SEN_TenZ_2023_Split_1.png',
+    },
+    likes: 800,
+    bookmarks: 300,
+    isLiked: false,
+    isBookmarked: false,
+  },
+  {
+    id: 3,
+    title: '스타크래프트 레전드',
+    description: '스타크래프트 프로게이머들의 추억의 음악',
+    imageUrl: [
+      'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',
+      'https://i.ytimg.com/vi/JHpNrkKMMUQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAO5GoYuj6iNn8FUu9JcfH02IMmtA',
+      'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
+      'https://i.ytimg.com/vi/8bt_t6R8Tw8/maxresdefault.jpg',
+    ],
+    user: {
+      name: 'Flash',
+      imageUrl:
+        'https://static.wikia.nocookie.net/starcraft_gamepedia/images/5/5e/KT_Flash_2016.png',
+    },
+    likes: 1500,
+    bookmarks: 600,
+    isLiked: false,
+    isBookmarked: false,
+  },
+  {
+    id: 4,
+    title: '배틀그라운드 서바이벌',
+    description: '긴장감 넘치는 배그 플레이어 추천 플레이리스트',
+    imageUrl: [
+      'https://i.ytimg.com/vi/JHpNrkKMMUQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAO5GoYuj6iNn8FUu9JcfH02IMmtA',
+      'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',
+      'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
+      'https://i.ytimg.com/vi/8bt_t6R8Tw8/maxresdefault.jpg',
+    ],
+    user: {
+      name: 'Shroud',
+      imageUrl:
+        'https://static.wikia.nocookie.net/esports_gamepedia_en/images/4/4d/Shroud_2020.png',
+    },
+    likes: 1000,
+    bookmarks: 400,
+    isLiked: false,
+    isBookmarked: false,
+  },
+]
+
+export default playlists
