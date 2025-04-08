@@ -14,7 +14,7 @@ const Layout = () => {
     <>
       <main className="relative h-screen ">
         <Header />
-        <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip overflow-y-scroll px-[20px]">
+        <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip overflow-y-scroll">
           <Outlet />
         </div>
         <BottomNav />
