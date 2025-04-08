@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Category } from '../Category/Category'
+import { Category } from './Category'
 import { Plus, Search } from 'lucide-react'
 import { CategoriesProps } from '../../types'
 import { userFavoriteGames } from '../../constants'

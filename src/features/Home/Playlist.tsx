@@ -1,20 +1,5 @@
-// Playlist 인터페이스 수정
-export interface Playlist {
-  id: number
-  title: string
-  description: string
-  imageUrl: string | string[]
-  user: {
-    name: string
-    imageUrl?: string
-  }
-  likes: number
-  bookmarks: number
-  isLiked?: boolean
-  isBookmarked?: boolean
-}
+import { Playlist } from "./types"
 
-// playlists 데이터에 user 정보 추가
 const playlists: Playlist[] = [
   {
     id: 1,
@@ -28,7 +13,7 @@ const playlists: Playlist[] = [
     user: {
       name: 'Faker',
       imageUrl:
-        'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/6/60/T1_Faker_2023_Split_1.png',
+        'https://i.namu.wiki/i/PlQlAXa7sCntkkyPwQbl2tdJgYgtImAW31C2E2KM3hTEr4lsXfmpd2NtGBaKwosuyVCXAlE2Y8YfhJzEZHzrWO_MtsMElrWym-xT7W7uRc2qRfRrvDkNntX4rqeZIJvP_gXTY70IZoKCYaYbcHMz9g.webp',
     },
     likes: 1200,
     bookmarks: 450,
@@ -47,7 +32,7 @@ const playlists: Playlist[] = [
     user: {
       name: 'TenZ',
       imageUrl:
-        'https://static.wikia.nocookie.net/valorant_gamepedia_en/images/4/4b/SEN_TenZ_2023_Split_1.png',
+        'https://i.namu.wiki/i/PlQlAXa7sCntkkyPwQbl2tdJgYgtImAW31C2E2KM3hTEr4lsXfmpd2NtGBaKwosuyVCXAlE2Y8YfhJzEZHzrWO_MtsMElrWym-xT7W7uRc2qRfRrvDkNntX4rqeZIJvP_gXTY70IZoKCYaYbcHMz9g.webp',
     },
     likes: 800,
     bookmarks: 300,
@@ -67,7 +52,7 @@ const playlists: Playlist[] = [
     user: {
       name: 'Flash',
       imageUrl:
-        'https://static.wikia.nocookie.net/starcraft_gamepedia/images/5/5e/KT_Flash_2016.png',
+        'https://i.namu.wiki/i/PlQlAXa7sCntkkyPwQbl2tdJgYgtImAW31C2E2KM3hTEr4lsXfmpd2NtGBaKwosuyVCXAlE2Y8YfhJzEZHzrWO_MtsMElrWym-xT7W7uRc2qRfRrvDkNntX4rqeZIJvP_gXTY70IZoKCYaYbcHMz9g.webp',
     },
     likes: 1500,
     bookmarks: 600,
@@ -87,7 +72,7 @@ const playlists: Playlist[] = [
     user: {
       name: 'Shroud',
       imageUrl:
-        'https://static.wikia.nocookie.net/esports_gamepedia_en/images/4/4d/Shroud_2020.png',
+        'https://i.namu.wiki/i/PlQlAXa7sCntkkyPwQbl2tdJgYgtImAW31C2E2KM3hTEr4lsXfmpd2NtGBaKwosuyVCXAlE2Y8YfhJzEZHzrWO_MtsMElrWym-xT7W7uRc2qRfRrvDkNntX4rqeZIJvP_gXTY70IZoKCYaYbcHMz9g.webp',
     },
     likes: 1000,
     bookmarks: 400,

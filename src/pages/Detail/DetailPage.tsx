@@ -1,6 +1,6 @@
-import { useLocation, useParams } from 'react-router-dom'
-import { Playlist } from '@/features/Home/Playlist'
+import { useLocation} from 'react-router-dom'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
+import { Playlist } from '@/features/Home/types'
 
 interface LocationState {
   playlist: Playlist
@@ -8,9 +8,8 @@ interface LocationState {
 }
 
 const DetailPage = () => {
-  const { id } = useParams()
   const location = useLocation()
-  const { playlist, currentImageIndex } = location.state as LocationState
+  const { playlist } = location.state as LocationState
 
   return (
     <div className="bg-c900 min-h-screen p-6">

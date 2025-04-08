@@ -14,3 +14,18 @@ export type CategoryProps = {
 export type CategoriesProps = {
   count: number
 }
+
+export interface Playlist {
+  id: number
+  title: string
+  description: string
+  imageUrl: string | string[]
+  user: {
+    name: string
+    imageUrl?: string
+  }
+  likes: number
+  bookmarks: number
+  isLiked?: boolean
+  isBookmarked?: boolean
+}

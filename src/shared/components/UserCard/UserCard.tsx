@@ -12,7 +12,7 @@ export function UserCard({ imageUrl, name, className }: UserCardProps) {
     <div className={cn('flex items-center gap-3', className)}>
       <Avatar className="h-8 w-8">
         {imageUrl ? (
-          <AvatarImage src={imageUrl} alt={name} />
+          <AvatarImage src={imageUrl} alt={name} className="object-cover" />
         ) : (
           <AvatarFallback>
             {name.slice(0, 2).toUpperCase()}
