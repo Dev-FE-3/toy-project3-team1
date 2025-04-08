@@ -18,7 +18,7 @@ export const Categories = ({ count }: CategoriesProps) => {
   }
 
   return (
-    <div className="bg-c900 absolute left-0 flex h-[98px] w-[480px] items-center justify-center gap-4">
+    <div className="bg-c900 flex h-[98px] w-[480px] items-center justify-center gap-4">
       {/* 검색 */}
       <Category onClick={() => handleCategoryClick(-1)}>
         <Search size={34} strokeWidth={1.2} className="text-c200" />
