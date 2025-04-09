@@ -6,6 +6,11 @@ import { PlaylistCardProps } from '@/features/Home/types'
 import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/ko'
+dayjs.extend(relativeTime)
+dayjs.locale('ko')
 
 // PlaylistCard 컴포넌트 수정
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
@@ -27,8 +32,10 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     setBookmarks((prev) => prev + (isBookmarked ? -1 : 1))
     setIsBookmarked((prev) => !prev)
   }
+
+  const uploadedDate = dayjs(playlist.uploadedDate).fromNow()
   return (
-    <div className="relative h-[440px]">
+    <div className={cn("border-y-1 border-c600 relative h-[440px] py-4", isBackground && 'border-none')}>
       {isCarousel ? (
         <CarouselView
           images={playlist.imageUrl as string[]}
@@ -38,7 +45,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         />
       ) : null}
 
-      <div className="absolute left-0 w-full px-[38px] py-5">
+      <div className="absolute left-0 w-full px-[38px] py-2">
         <div className="flex justify-between">
           <h3 className="text-c50 text-h3">{playlist.title}</h3>
           <div className={cn('flex', isBackground && 'opacity-0')}>
@@ -68,8 +75,9 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           ))}
         </div>
 
-        <div className={cn(isBackground && 'opacity-0')}>
-          <UserCard name={playlist.user.name} imageUrl={playlist.user.imageUrl} className="mt-5" />
+        <div className={cn('mt-5 flex gap-4 items-center', isBackground && 'opacity-0')}>
+          <UserCard name={playlist.user.name} imageUrl={playlist.user.imageUrl} />
+          <p className="text-textR text-c500">{uploadedDate}</p>
         </div>
       </div>
     </div>
