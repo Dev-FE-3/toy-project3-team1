@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom'
+import { PrivateRoute, PublicRoute } from './ProtectedRouter'
 
 import Layout from '../shared/components/layout/Layout'
 import HomePage from '../pages/Home/HomePage'
@@ -9,7 +10,6 @@ import ProfilePage from '../pages/Profile/ProfilePage'
 import LoginPage from '../pages/Login/LoginPage'
 import SignupPage from '../pages/Signup/SignupPage'
 import DesignSystem from '../pages/DesignSystem/DesignSystem'
-import ProtectedRoute from './ProtectedRouter'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 // import WatchVideoPage from './pages/WatchVideo/WatchVideoPage'
 
@@ -28,19 +28,35 @@ const routes: RouteObject[] = [
       },
       {
         path: '/playlist/new',
-        element: <PlaylistFormPage />,
+        element: (
+          <PrivateRoute>
+            <PlaylistFormPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/playlist/edit/:id',
-        element: <PlaylistFormPage />,
+        element: (
+          <PrivateRoute>
+            <PlaylistFormPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/playlist/:id',
-        element: <PlaylistDetailPage />,
+        element: (
+          <PrivateRoute>
+            <PlaylistDetailPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/profile',
-        element: <ProfilePage />,
+        element: (
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/d',
@@ -52,17 +68,17 @@ const routes: RouteObject[] = [
   {
     path: '/login',
     element: (
-      <ProtectedRoute>
+      <PublicRoute>
         <LoginPage />
-      </ProtectedRoute>
+      </PublicRoute>
     ),
   },
   {
     path: '/signup',
     element: (
-      <ProtectedRoute>
+      <PublicRoute>
         <SignupPage />
-      </ProtectedRoute>
+      </PublicRoute>
     ),
   },
 ]

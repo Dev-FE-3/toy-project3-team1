@@ -105,6 +105,7 @@ export const getCurrentUser = async () => {
 // 사용자 세션 정보 가져오기
 export const getSession = async () => {
   const storedSession = localStorage.getItem('supabase_auth_token')
+  console.log(' getSession ~ storedSession: ', storedSession)
 
   if (!storedSession) {
     console.error('저장된 세션 없음')
