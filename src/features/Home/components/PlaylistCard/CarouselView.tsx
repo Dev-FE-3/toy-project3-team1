@@ -44,7 +44,6 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
             onScroll={handleScroll}
             className="no-scrollbar flex w-full snap-x snap-mandatory overflow-x-auto"
             style={{
-              paddingTop: '20px',
               marginLeft: '-20px',
               marginRight: '-20px',
               paddingLeft: '50px',
@@ -55,8 +54,8 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
             }}
           >
             {images.map((url, imgIndex) => (
-              <div key={imgIndex} className="relative w-[400px] flex-none snap-center px-2">
-                <div className="aspect-video w-full overflow-hidden rounded-lg">
+              <div key={imgIndex} className="relative w-[400px] flex-none snap-center p-2">
+                <div className="aspect-video w-full overflow-hidden rounded-lg shadow-[0_0_12px_rgba(0,0,0,0.3)]">
                   <motion.div
                     className="h-full w-full"
                     animate={{

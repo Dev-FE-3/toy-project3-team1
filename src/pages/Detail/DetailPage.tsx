@@ -29,12 +29,10 @@ const DetailPage = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="mt-6">
-          <p className="text-c200 text-base">{playlist.description}</p>
+          <p className="text-c200 text-base">{playlist.tag}</p>
         </div>
 
-        {/* Additional content for detail page */}
       </div>
     </div>
   )

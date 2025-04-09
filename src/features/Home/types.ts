@@ -28,6 +28,7 @@ export interface Playlist {
   bookmarks: number
   isLiked?: boolean
   isBookmarked?: boolean
+  uploadedDate: string
 }
 
 export interface PlaylistViewProps {

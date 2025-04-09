@@ -98,7 +98,6 @@ const HomePage = () => {
   const handleTouchEnd = () => {
     setTouchStartY(null)
   }
-
   return (
     <>
       <Categories count={gameCount} />
