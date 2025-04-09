@@ -7,7 +7,6 @@ import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
 import { signUpWithEmail } from '@/shared/model/api/auth'
 import { useNavigate, Link, Navigate } from 'react-router-dom'
-import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 
 const signupSchema = z
   .object({
@@ -24,7 +23,6 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>
 
 export default function SignupPage() {
-  const { isAuthenticated } = useGetAuthState()
   const navigate = useNavigate()
 
   const form = useForm<SignupFormValues>({
@@ -49,10 +47,6 @@ export default function SignupPage() {
         message: '회원가입에 실패했습니다. 다시 시도해주세요.',
       })
     }
-  }
-
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />
   }
 
   return (
