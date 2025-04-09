@@ -138,3 +138,13 @@ export const refreshSupabaseClient = async () => {
     }
   }
 }
+
+// 이메일 중복 체크
+export const checkEmailExists = async (email: string) => {
+  const { data, error } = await supabase.from('profiles').select('email').eq('email', email)
+  if (error) {
+    throw error
+  }
+
+  return data.length > 0
+}

@@ -75,11 +75,21 @@ export default function LoginPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="이메일을 입력하세요" {...field} autoComplete="email" />
+                    <Input
+                      placeholder="이메일을 입력하세요"
+                      {...field}
+                      autoComplete="email"
+                      className={`${form.formState.errors.email ? 'border-red border-2' : ''}`}
+                    />
                   </FormControl>
-                  <FormMessage className="text-red mt-1 flex items-center gap-1">
-                    {form.formState.errors.email && <AlertCircle className="h-4 w-4" />}
-                  </FormMessage>
+                  <div className="text-red mt-1 flex items-center gap-1">
+                    {form.formState.errors.email && (
+                      <>
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{form.formState.errors.email.message}</span>
+                      </>
+                    )}
+                  </div>
                 </FormItem>
               )}
             />
@@ -95,9 +105,17 @@ export default function LoginPage() {
                       placeholder="비밀번호를 입력하세요"
                       {...field}
                       autoComplete="current-password"
+                      className={`${form.formState.errors.password ? 'border-red border-2' : ''}`}
                     />
                   </FormControl>
-                  <FormMessage className="text-red" />
+                  <div className="text-red mt-1 flex items-center gap-1">
+                    {form.formState.errors.password && (
+                      <>
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{form.formState.errors.password.message}</span>
+                      </>
+                    )}
+                  </div>
                 </FormItem>
               )}
             />
