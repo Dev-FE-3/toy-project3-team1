@@ -36,7 +36,6 @@ const PlaylistDetailPage = () => {
     queryKey: ['playlistData', currentPlaylistId],
     queryFn: async () => {
       const result = await getPlaylistById(currentPlaylistId)
-      console.log('11111 queryFn: ~ result: ', result)
 
       if (!result) {
         throw new Error('플레이리스트를 찾을 수 없습니다.')
@@ -44,11 +43,7 @@ const PlaylistDetailPage = () => {
 
       return result
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
-    retry: 3,
-    retryDelay: 1000,
   })
 
   // 플레이리스트에 속한 비디오 목록 가져오기
@@ -68,11 +63,7 @@ const PlaylistDetailPage = () => {
 
       return result
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
-    retry: 3,
-    retryDelay: 1000,
   })
 
   const handleOpenCommentPopup = async () => {
@@ -114,8 +105,6 @@ const PlaylistDetailPage = () => {
 
   const isError = isPlaylistError || isVideosError
   const error = playlistError || videosError
-
-  console.log(' PlaylistDetailPage ~ isError: ', isPlaylistError, isVideosError)
 
   if (isError) {
     return (

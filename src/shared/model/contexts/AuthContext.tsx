@@ -49,8 +49,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('event', event)
-      console.log('session', session)
       setState({
         isAuthenticated: !!session,
         isLoading: false,

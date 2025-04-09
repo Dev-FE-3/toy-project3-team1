@@ -15,7 +15,11 @@ import ErrorPage from '../pages/ErrorPage/ErrorPage'
 
 const routes: RouteObject[] = [
   {
-    element: <Layout />,
+    element: (
+      <PrivateRoute>
+        <Layout />
+      </PrivateRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
@@ -28,35 +32,19 @@ const routes: RouteObject[] = [
       },
       {
         path: '/playlist/new',
-        element: (
-          <PrivateRoute>
-            <PlaylistFormPage />
-          </PrivateRoute>
-        ),
+        element: <PlaylistFormPage />,
       },
       {
         path: '/playlist/edit/:id',
-        element: (
-          <PrivateRoute>
-            <PlaylistFormPage />
-          </PrivateRoute>
-        ),
+        element: <PlaylistFormPage />,
       },
       {
         path: '/playlist/:id',
-        element: (
-          <PrivateRoute>
-            <PlaylistDetailPage />
-          </PrivateRoute>
-        ),
+        element: <PlaylistDetailPage />,
       },
       {
         path: '/profile',
-        element: (
-          <PrivateRoute>
-            <ProfilePage />
-          </PrivateRoute>
-        ),
+        element: <ProfilePage />,
       },
       {
         path: '/d',

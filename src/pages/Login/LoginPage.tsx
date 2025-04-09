@@ -47,12 +47,6 @@ export default function LoginPage() {
     }
   }
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate(from, { replace: true })
-  //   }
-  // }, [isAuthenticated, navigate, from])
-
   return (
     <div className="bg-c900 flex min-h-screen flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
