@@ -6,11 +6,7 @@ import { PlaylistCardProps } from '@/features/Home/types'
 import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/ko'
-dayjs.extend(relativeTime)
-dayjs.locale('ko')
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 
 // PlaylistCard 컴포넌트 수정
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
@@ -33,9 +29,14 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     setIsBookmarked((prev) => !prev)
   }
 
-  const uploadedDate = dayjs(playlist.uploadedDate).fromNow()
+  const uploadedDate = getRelativeTime(playlist.uploadedDate)
   return (
-    <div className={cn("border-y-1 border-c600 relative h-[440px] py-4", isBackground && 'border-none')}>
+    <div
+      className={cn(
+        'border-c600 relative h-[440px] border-y-1 py-4',
+        isBackground && 'border-none',
+      )}
+    >
       {isCarousel ? (
         <CarouselView
           images={playlist.imageUrl as string[]}
@@ -75,7 +76,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           ))}
         </div>
 
-        <div className={cn('mt-5 flex gap-4 items-center', isBackground && 'opacity-0')}>
+        <div className={cn('mt-5 flex items-center gap-4', isBackground && 'opacity-0')}>
           <UserCard name={playlist.user.name} imageUrl={playlist.user.imageUrl} />
           <p className="text-textR text-c500">{uploadedDate}</p>
         </div>
