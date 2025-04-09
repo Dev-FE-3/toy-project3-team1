@@ -1,5 +1,5 @@
-import { useToastStore, ToastType } from '@/shared/store/toastStore'
 import { ToastMessage, ToastMessageType } from '@/shared/components/ToastMessage/ToastMessage'
+import { ToastType, useToastStore } from '@/shared/store/toastStore'
 
 /**
  * PlaylistForm 기능에 특화된 토스트 컨테이너
@@ -15,7 +15,7 @@ export const ToastContainer = () => {
   const mapToastType = (type: ToastType): ToastMessageType => type as ToastMessageType
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
+    <div className="absolute top-1 right-1 z-50 flex flex-col gap-2">
       {toasts.map((toast) => (
         <ToastMessage
           key={toast.id}
