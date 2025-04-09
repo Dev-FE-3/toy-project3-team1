@@ -18,7 +18,7 @@ export function UserCard({ imageUrl, name, className }: UserCardProps) {
           <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
         )}
       </Avatar>
-      <span className="text-c50 text-textR">{name}</span>
+      <span className="text-c300 text-textR">{name}</span>
     </div>
   )
 }

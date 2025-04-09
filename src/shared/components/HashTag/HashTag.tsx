@@ -15,7 +15,7 @@ export default function HashTag({ tag, className, onClick }: HashTagProps) {
     <Badge
       variant="secondary"
       className={cn(
-        ' border-c400 bg-c700 text-c400 rounded-full px-[11px] py-[5px]',
+        ' border-c400 bg-c700 text-c400 rounded-full px-[11px] pt-[4px] pb-[6px] ',
         'cursor-pointer transition-colors',
         className,
       )}
