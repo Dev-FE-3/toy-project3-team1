@@ -10,11 +10,13 @@ import LoginPage from '../pages/Login/LoginPage'
 import SignupPage from '../pages/Signup/SignupPage'
 import DesignSystem from '../pages/DesignSystem/DesignSystem'
 import ProtectedRoute from './ProtectedRouter'
+import ErrorPage from '../pages/ErrorPage/ErrorPage'
 // import WatchVideoPage from './pages/WatchVideo/WatchVideoPage'
 
 const routes: RouteObject[] = [
   {
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
