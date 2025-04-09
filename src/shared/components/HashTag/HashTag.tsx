@@ -9,13 +9,13 @@ interface HashTagProps {
 
 export default function HashTag({ tag, className, onClick }: HashTagProps) {
   // "#" 기호가 이미 포함되어 있는지 확인하고, 없으면 추가
-  const displayText = tag.startsWith('#') ? tag : `#${tag}`
+  const displayText = tag.startsWith('#') ? tag : `# ${tag}`
 
   return (
     <Badge
       variant="secondary"
       className={cn(
-        'rounded-full border-c400 bg-c700 px-4 py-2 text-c400',
+        ' border-c400 bg-c700 text-c400 rounded-full px-[11px] py-[5px]',
         'cursor-pointer transition-colors',
         className,
       )}
