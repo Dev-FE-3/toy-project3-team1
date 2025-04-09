@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { Categories } from '@/features/Home/components/Categories/Categories'
 import { PlaylistView } from '@/features/Home/components/PlaylistView/PlaylistView'
 import { usePlaylistControl } from '@/features/Home/hooks/usePlaylistControl'
@@ -30,17 +30,17 @@ const HomePage = () => {
       setIsScrolling(true)
 
       const delta = e.deltaY
-      const scrollThreshold = 15 // 스크롤 감도 조절
+      const scrollThreshold = 50 // 스크롤 감도 조절
 
       if (Math.abs(delta) > scrollThreshold) {
         if (delta > 0 && focusedIndex < playlists.length - 1) {
           // 아래로 스크롤
-          if (swipeDirection !== 'up') setSwipeDirection('up') // 방향이 바뀌었을 때만 업데이트
+          if (swipeDirection !== 'up') setSwipeDirection('up')
           setFocusedIndex((prev) => prev + 1)
           setCurrentImageIndex(0)
         } else if (delta < 0 && focusedIndex > 0) {
           // 위로 스크롤
-          if (swipeDirection !== 'down') setSwipeDirection('down') // 방향이 바뀌었을 때만 업데이트
+          if (swipeDirection !== 'down') setSwipeDirection('down')
           setFocusedIndex((prev) => prev - 1)
           setCurrentImageIndex(0)
         }
@@ -48,7 +48,7 @@ const HomePage = () => {
 
       setTimeout(() => {
         setIsScrolling(false)
-      }, 300)
+      }, 500)
     },
     [
       focusedIndex,
@@ -70,19 +70,19 @@ const HomePage = () => {
 
     const touchEndY = e.touches[0].clientY
     const delta = touchStartY - touchEndY
-    const scrollThreshold = 50 // 터치 스크롤 감도 조절
+    const scrollThreshold = 130 // 터치 스크롤 감도 조절
 
     if (Math.abs(delta) > scrollThreshold) {
       setIsScrolling(true)
 
       if (delta > 0 && focusedIndex < playlists.length - 1) {
         // 위로 스와이프
-        if (swipeDirection !== 'up') setSwipeDirection('up') // 방향이 바뀌었을 때만 업데이트
+        if (swipeDirection !== 'up') setSwipeDirection('up')
         setFocusedIndex((prev) => prev + 1)
         setCurrentImageIndex(0)
       } else if (delta < 0 && focusedIndex > 0) {
         // 아래로 스와이프
-        if (swipeDirection !== 'down') setSwipeDirection('down') // 방향이 바뀌었을 때만 업데이트
+        if (swipeDirection !== 'down') setSwipeDirection('down')
         setFocusedIndex((prev) => prev - 1)
         setCurrentImageIndex(0)
       }
@@ -91,12 +91,12 @@ const HomePage = () => {
         setIsScrolling(false)
       }, 300)
 
-      setTouchStartY(null) // 터치 시작 위치 초기화
+      setTouchStartY(null)
     }
   }
 
   const handleTouchEnd = () => {
-    setTouchStartY(null) // 터치 시작 위치 초기화
+    setTouchStartY(null)
   }
 
   return (
@@ -104,7 +104,7 @@ const HomePage = () => {
       <Categories count={gameCount} />
       <div
         ref={containerRef}
-        className="bg-c900 from-c900 relative mx-auto h-[calc(100%-98px)] max-w-[480px] overflow-hidden bg-gradient-to-b"
+        className="relative mx-auto h-[calc(100%-98px)] max-w-[480px] overflow-hidden"
         style={{
           perspective: '1200px',
           transformStyle: 'preserve-3d',
@@ -124,6 +124,8 @@ const HomePage = () => {
             setCurrentImageIndex={setCurrentImageIndex}
           />
         </AnimatePresence>
+        <div className="from-c900 pointer-events-none absolute top-0 z-10 h-60 w-full bg-gradient-to-b via-transparent to-transparent" />
+        <div className="from-c900 pointer-events-none absolute bottom-0 z-10 h-60 w-full bg-gradient-to-t via-transparent to-transparent" />
       </div>
     </>
   )

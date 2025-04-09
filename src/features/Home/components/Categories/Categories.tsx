@@ -4,7 +4,6 @@ import { Plus, Search } from 'lucide-react'
 import { CategoriesProps } from '../../types'
 import { userFavoriteGames } from '../../constants'
 
-
 export const Categories = ({ count }: CategoriesProps) => {
   // 초기값을 0으로 설정하여 첫 번째 이미지 카테고리가 선택되도록 함
   const [selectedIndex, setSelectedIndex] = useState<number>(0)

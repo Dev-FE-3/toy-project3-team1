@@ -18,7 +18,7 @@ export type CategoriesProps = {
 export interface Playlist {
   id: number
   title: string
-  description: string
+  tag: string[]
   imageUrl: string | string[]
   user: {
     name: string
@@ -28,4 +28,22 @@ export interface Playlist {
   bookmarks: number
   isLiked?: boolean
   isBookmarked?: boolean
+}
+
+export interface PlaylistViewProps {
+  playlists: Playlist[]
+  focusedIndex: number
+  currentImageIndex: number
+  carouselRef: React.RefObject<HTMLDivElement>
+}
+export interface PlaylistCardProps {
+  playlist: Playlist
+  carouselRef: React.RefObject<HTMLDivElement>
+  isBackground?: boolean
+}
+export interface CarouselViewProps {
+  images: string[]
+  title: string
+  carouselRef: React.RefObject<HTMLDivElement>
+  isBackground?: boolean
 }
