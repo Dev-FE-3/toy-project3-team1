@@ -1,19 +1,19 @@
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Form } from '@/shared/components/ui/form'
-import { Button } from '@/shared/components/ui/button'
 import {
-  Tabs,
-  TabItem,
-  PlaylistInfoForm,
-  VideoListForm,
   FormHeader,
+  PlaylistInfoForm,
+  TabItem,
+  Tabs,
+  VideoListForm,
 } from '@/pages/PlaylistForm/components'
 import { ToastContainer } from '@/pages/PlaylistForm/components/ToastContainer'
-import { useToast } from '@/shared/store/toastStore'
-import { useSubmitPlaylist, useFormNavigation } from '@/pages/PlaylistForm/hooks'
+import { useFormNavigation, useSubmitPlaylist } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
+import { Button } from '@/shared/components/ui/button'
+import { Form } from '@/shared/components/ui/form'
+import { useToast } from '@/shared/store/toastStore'
 
 type FormTab = 'content' | 'video'
 
@@ -104,7 +104,7 @@ const PlaylistFormPage = () => {
                   />
                 </div>
 
-                <div className="max-h-full min-h-0 flex-1 overflow-auto py-4">
+                <div className="max-h-full min-h-0 flex-1 overflow-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 
