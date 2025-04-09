@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { AlertCircle } from 'lucide-react'
@@ -6,9 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
 import { signInWithEmail } from '@/shared/model/api/auth'
-import { useNavigate, useLocation, Link, Navigate } from 'react-router-dom'
-import { useAuthContext } from '@/shared/model/contexts/AuthContext'
-import { useEffect } from 'react'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 
 const loginSchema = z.object({
   email: z.string().email('올바른 이메일을 입력해주세요.'),
@@ -18,12 +17,9 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
-  const navigate = useNavigate()
   const location = useLocation()
-  const { isAuthenticated, isLoading } = useAuthContext()
-
-  // 이전 페이지 또는 쿼리 파라미터에서 리다이렉트 경로 가져오기
-  const from = location.state?.from || '/'
+  const navigate = useNavigate()
+  const fromTo = location.state?.from || '/'
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -40,7 +36,7 @@ export default function LoginPage() {
       await signInWithEmail(data.email, data.password)
 
       // 로그인 성공 시 이전 페이지나 홈으로 리다이렉트
-      navigate(from, { replace: true })
+      navigate(fromTo, { replace: true })
     } catch (err) {
       console.error('로그인 실패:', err)
       // 서버에서 반환된 에러를 form error에 설정
@@ -51,27 +47,11 @@ export default function LoginPage() {
     }
   }
 
-  // 로그인 상태 확인 후 홈으로 리다이렉트
-  useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      console.log('이미 로그인 상태입니다. 홈으로 리다이렉트합니다.')
-      navigate('/', { replace: true })
-    }
-  }, [isAuthenticated, isLoading, navigate])
-
-  // 로그인 상태면 홈으로 즉시 리다이렉트
-  if (isAuthenticated && !isLoading) {
-    return <Navigate to="/" replace />
-  }
-
-  // 로딩 중이면 로딩 화면 표시
-  if (isLoading) {
-    return (
-      <div className="bg-c900 flex min-h-screen items-center justify-center">
-        <p className="text-c50">로딩 중...</p>
-      </div>
-    )
-  }
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate(from, { replace: true })
+  //   }
+  // }, [isAuthenticated, navigate, from])
 
   return (
     <div className="bg-c900 flex min-h-screen flex-col">

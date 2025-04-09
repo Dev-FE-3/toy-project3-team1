@@ -20,13 +20,22 @@ export const signInWithEmail = async (email: string, password: string) => {
   }
 }
 
-// 이메일 회원가입 함수
-export const signUpWithEmail = async (email: string, password: string) => {
+type SignupFormValues = {
+  email: string
+  password: string
+  nickname: string
+}
+
+// 회원가입(email)
+export const signUpWithEmail = async ({ email, password, nickname }: SignupFormValues) => {
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        data: {
+          nickname,
+        },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
@@ -95,6 +104,13 @@ export const getCurrentUser = async () => {
 
 // 사용자 세션 정보 가져오기
 export const getSession = async () => {
+  const storedSession = localStorage.getItem('supabase_auth_token')
+
+  if (!storedSession) {
+    console.error('저장된 세션 없음')
+    return null
+  }
+
   try {
     const { data, error } = await supabase.auth.getSession()
     if (error) {

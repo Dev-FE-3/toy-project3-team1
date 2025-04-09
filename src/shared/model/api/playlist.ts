@@ -24,21 +24,11 @@ export interface Playlist {
 
 // 플레이리스트 상세 정보 가져오기
 export const getPlaylistById = async (playlistId: string) => {
-  console.log('getPlaylistById 호출, 요청한 플레이리스트 ID:', playlistId)
-
   try {
-    console.log('========= getPlaylistById 새 로직 시작 (직접 조회) =========')
-
     // supabase 인스턴스 사용
     const client = supabase
-    const startTime = performance.now()
 
     const { data, error } = await client.from('playlists').select('*').eq('id', playlistId).single()
-
-    const endTime = performance.now()
-    const duration = (endTime - startTime).toFixed(2)
-
-    console.log(`플레이리스트 데이터 조회 완료 (${duration}ms)`)
 
     if (error) {
       console.warn('데이터 조회 중 오류:', error.message)

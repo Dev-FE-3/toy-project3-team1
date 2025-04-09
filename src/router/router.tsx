@@ -1,14 +1,15 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom'
 
-import Layout from './shared/components/layout/Layout'
-import HomePage from './pages/Home/HomePage'
-import PlaylistDetailPage from './pages/PlaylistDetail/PlaylistDetailPage'
-import PlaylistFormPage from './pages/PlaylistForm/PlaylistFormPage'
-import PlaylistCollectionPage from './pages/PlaylistCollection/PlaylistCollectionpage'
-import ProfilePage from './pages/Profile/ProfilePage'
-import LoginPage from './pages/Login/LoginPage'
-import SignupPage from './pages/Signup/SignupPage'
-import DesignSystem from './pages/DesignSystem/DesignSystem'
+import Layout from '../shared/components/layout/Layout'
+import HomePage from '../pages/Home/HomePage'
+import PlaylistDetailPage from '../pages/PlaylistDetail/PlaylistDetailPage'
+import PlaylistFormPage from '../pages/PlaylistForm/PlaylistFormPage'
+import PlaylistCollectionPage from '../pages/PlaylistCollection/PlaylistCollectionpage'
+import ProfilePage from '../pages/Profile/ProfilePage'
+import LoginPage from '../pages/Login/LoginPage'
+import SignupPage from '../pages/Signup/SignupPage'
+import DesignSystem from '../pages/DesignSystem/DesignSystem'
+import ProtectedRoute from './ProtectedRouter'
 // import WatchVideoPage from './pages/WatchVideo/WatchVideoPage'
 
 const routes: RouteObject[] = [
@@ -48,11 +49,19 @@ const routes: RouteObject[] = [
 
   {
     path: '/login',
-    element: <LoginPage />,
+    element: (
+      <ProtectedRoute>
+        <LoginPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/signup',
-    element: <SignupPage />,
+    element: (
+      <ProtectedRoute>
+        <SignupPage />
+      </ProtectedRoute>
+    ),
   },
 ]
 

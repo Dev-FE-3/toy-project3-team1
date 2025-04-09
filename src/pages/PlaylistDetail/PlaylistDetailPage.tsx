@@ -10,16 +10,17 @@ import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrig
 import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import CommentList from '@/features/playlistDetail/CommentList/CommentList'
 import VideoList from '@/features/playlistDetail/VideoList/VideoList'
-import { useAuthContext } from '@/shared/model/contexts/AuthContext'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
 import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
 import { supabase } from '@/shared/model/api/supabase'
+import { getPlaylistById, getPlaylistVideos } from '@/shared/model/api/playlist'
 
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
   const [refreshComments, setRefreshComments] = useState(0)
-  const { profile, isAuthenticated } = useAuthContext()
+  const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
   const currentPlaylistId = id || 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
@@ -34,25 +35,18 @@ const PlaylistDetailPage = () => {
   } = useQuery({
     queryKey: ['playlistData', currentPlaylistId],
     queryFn: async () => {
-      console.log('start 플레이리스트 데이터 요청 시작:', currentPlaylistId)
-      // 인증 상태 확인
-      // await refreshAuth()
+      const result = await getPlaylistById(currentPlaylistId)
+      console.log('11111 queryFn: ~ result: ', result)
 
-      // const result = await getPlaylistById(currentPlaylistId)
-      const { data, error } = await supabase
-        .from('playlists')
-        .select('*')
-        .eq('id', currentPlaylistId)
-        .single()
-
-      if (error) {
-        console.error('플레이리스트 조회 오류:', error)
-        throw error
+      if (!result) {
+        throw new Error('플레이리스트를 찾을 수 없습니다.')
       }
 
-      console.log('end 플레이리스트 데이터 응답:', data)
-      return data
+      return result
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
     retry: 3,
     retryDelay: 1000,
   })
@@ -66,18 +60,17 @@ const PlaylistDetailPage = () => {
   } = useQuery({
     queryKey: ['playlistVideos', currentPlaylistId],
     queryFn: async () => {
-      console.log('비디오 목록 요청 시작:', currentPlaylistId)
-      // 인증 상태 확인
-      // await refreshAuth()
-      // const result = await getPlaylistVideos(currentPlaylistId)
-      const result = true
-      console.log('#2 playlistVideos 비디오 목록 응답:', result)
+      const result = await getPlaylistVideos(currentPlaylistId)
+
+      if (!result) {
+        throw new Error('비디오를 찾을 수 없습니다.')
+      }
 
       return result
     },
-    // staleTime: 5 * 60 * 1000,
-    // gcTime: 30 * 60 * 1000,
-    // refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
     retry: 3,
     retryDelay: 1000,
   })
@@ -87,14 +80,12 @@ const PlaylistDetailPage = () => {
     setIsCommentPopupOpen(true)
   }
 
+  // 비디오 클릭 시 비디오 재생
   const handleVideoClick = (videoId: string) => {
-    console.log('Video clicked:', videoId)
     setSelectedVideo(videoId)
-
-    // 비디오 시청 페이지로 이동
-    // navigate(`/watch/${videoId}?list=${currentPlaylistId}`)
   }
 
+  // 댓글 추가 시 댓글 목록 새로고침
   const handleCommentAdded = () => {
     setRefreshComments((prev) => prev + 1)
   }
@@ -123,6 +114,9 @@ const PlaylistDetailPage = () => {
 
   const isError = isPlaylistError || isVideosError
   const error = playlistError || videosError
+
+  console.log(' PlaylistDetailPage ~ isError: ', isPlaylistError, isVideosError)
+
   if (isError) {
     return (
       <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-4">
@@ -185,7 +179,7 @@ const PlaylistDetailPage = () => {
         </div>
 
         {/* 플레이리스트 비디오 목록 */}
-        {/* <VideoList videos={videoItems} onVideoClick={handleVideoClick} /> */}
+        <VideoList videos={videoItems} onVideoClick={handleVideoClick} />
 
         {/* 댓글 팝업 */}
         <CommentPopup open={isCommentPopupOpen} onOpenChange={setIsCommentPopupOpen}>

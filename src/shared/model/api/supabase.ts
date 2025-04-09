@@ -3,8 +3,6 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-console.log('Supabase 모듈 로드됨')
-
 // 클라이언트 초기화 상태 추적
 let isInitialized = false
 let clientId = Math.random().toString(36).substring(2, 10)
@@ -15,11 +13,6 @@ let supabaseInstance: SupabaseClient | null = null
 
 // 클라이언트 생성 함수
 const createSupabaseClient = (): SupabaseClient => {
-  createCount++
-  clientId = Math.random().toString(36).substring(2, 10)
-
-  console.log(`새 Supabase 클라이언트 생성 (ID: ${clientId}, 생성 횟수: ${createCount})`)
-
   // 항상 새 클라이언트 생성
   const client = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
@@ -27,22 +20,6 @@ const createSupabaseClient = (): SupabaseClient => {
       persistSession: true,
       detectSessionInUrl: true,
       storageKey: 'supabase_auth_token',
-    },
-    global: {
-      headers: {
-        'x-client-id': clientId,
-      },
-      fetch: (...args) => {
-        // 요청 시작 로깅
-        try {
-          const url = args[0]?.toString() || '알 수 없는 URL'
-          const method = args[1]?.method || 'GET'
-          console.log(`[${clientId}] Supabase 요청: ${method} ${url}`)
-        } catch (e) {
-          console.error('요청 로깅 중 오류:', e)
-        }
-        return fetch(...args)
-      },
     },
   })
 
