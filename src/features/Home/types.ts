@@ -35,7 +35,9 @@ export interface PlaylistViewProps {
   playlists: Playlist[]
   focusedIndex: number
   currentImageIndex: number
-  carouselRef: React.RefObject<HTMLDivElement>
+  carouselRef: React.RefObject<HTMLDivElement | null>
+  swipeDirection: 'up' | 'down'
+  setCurrentImageIndex: React.Dispatch<React.SetStateAction<number>>
 }
 export interface PlaylistCardProps {
   playlist: Playlist
