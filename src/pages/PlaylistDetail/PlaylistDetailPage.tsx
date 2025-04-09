@@ -171,7 +171,7 @@ const PlaylistDetailPage = () => {
           <AuthorInfo
             authorName="오리"
             likeCount={playlistData?.likeCount || 0}
-            favoriteCount={playlistData?.favoriteCount || 0}
+            subscriberCount={playlistData?.subscriberCount || 0}
           />
 
           {/* 댓글 트리거 */}

@@ -24,8 +24,7 @@ const signupSchema = z
     email: z.string().email('올바른 이메일을 입력하세요'),
     password: z
       .string()
-      .min(6, '비밀번호를 최소 6자 이상 입력해주세요.')
-      .max(10, '비밀번호는 최대 10자여야 합니다.')
+      .min(8, '비밀번호를 최소 8자 이상 입력해주세요.')
       .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
         message: '특수문자를 포함해야 합니다.',
       }),
@@ -74,7 +73,9 @@ export default function SignupPage() {
   return (
     <div className="bg-c900 flex min-h-screen flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <h1 className="text-c50 text-h2 mt-[200px] mb-[100px] text-center">리플레이</h1>
+        <h1 className="text-c50 text-h2 mt-[200px] mb-[100px] text-center">
+          <img className="mx-auto h-[52px]" src="/images/logo.svg" />
+        </h1>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -154,7 +155,7 @@ export default function SignupPage() {
                     <Input
                       type="password"
                       placeholder="비밀번호를 입력하세요"
-                      maxLength={10}
+                      minLength={8}
                       {...field}
                       autoComplete="new-password"
                     />
@@ -162,7 +163,7 @@ export default function SignupPage() {
                   <div
                     className={`text-captionM ${getValidationTextColor(field.value, !!form.formState.errors.password)}`}
                   >
-                    특수문자를 포함한 8자 이하로 입력해주세요
+                    특수문자를 포함한 8자 이상으로 입력해주세요
                   </div>
                 </FormItem>
               )}
@@ -177,7 +178,7 @@ export default function SignupPage() {
                   <FormControl>
                     <Input
                       type="password"
-                      maxLength={10}
+                      minLength={8}
                       placeholder="비밀번호를 다시 입력하세요"
                       {...field}
                       autoComplete="new-password"

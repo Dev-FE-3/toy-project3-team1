@@ -19,7 +19,7 @@ export interface Playlist {
   created_at: string
   profile_id: string
   likeCount: number
-  favoriteCount: number
+  subscriberCount: number
 }
 
 // 플레이리스트 상세 정보 가져오기
@@ -56,7 +56,7 @@ export const getPlaylistById = async (playlistId: string) => {
       created_at: data.created_at || new Date().toISOString(),
       profile_id: data.profile_id || '',
       likeCount: data.likeCount || 0,
-      favoriteCount: data.favoriteCount || 0,
+      subscriberCount: data.subscriberCount || 0,
     }
 
     return playlist

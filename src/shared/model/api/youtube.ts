@@ -20,7 +20,7 @@ export interface YouTubeVideoDetail {
   statistics: {
     viewCount: string
     likeCount: string
-    favoriteCount: string
+    subscriberCount: string
     commentCount: string
   }
 }
@@ -77,7 +77,7 @@ export const getYouTubeVideoDetails = async (
       statistics: {
         viewCount: statistics.viewCount || '0',
         likeCount: statistics.likeCount || '0',
-        favoriteCount: statistics.favoriteCount || '0',
+        subscriberCount: statistics.subscriberCount || '0',
         commentCount: statistics.commentCount || '0',
       },
     }
@@ -119,7 +119,7 @@ const getDummyVideoDetails = (videoId: string): YouTubeVideoDetail => {
     statistics: {
       viewCount: '1234',
       likeCount: '100',
-      favoriteCount: '0',
+      subscriberCount: '0',
       commentCount: '10',
     },
   }

@@ -8,13 +8,13 @@ import {
 interface AuthorInfoProps {
   authorName: string | undefined
   likeCount: number | undefined
-  favoriteCount: number | undefined
+  subscriberCount: number | undefined
 }
 
 export default function AuthorInfo({
   authorName = '짜파게티오리사',
   likeCount = 332,
-  favoriteCount = 21,
+  subscriberCount = 21,
 }: AuthorInfoProps) {
   return (
     <div className="mt-4 mb-4 flex items-center justify-between">
@@ -37,7 +37,7 @@ export default function AuthorInfo({
         {/* 북마크 수 */}
         <div className="flex flex-col items-center">
           <Bookmark className="h-7 w-7 text-slate-300" />
-          <span className="mt-1 text-sm text-slate-400">{favoriteCount}</span>
+          <span className="mt-1 text-sm text-slate-400">{subscriberCount}</span>
         </div>
       </div>
     </div>
