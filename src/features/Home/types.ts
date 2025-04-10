@@ -41,12 +41,12 @@ export interface PlaylistViewProps {
 }
 export interface PlaylistCardProps {
   playlist: Playlist
-  carouselRef: React.RefObject<HTMLDivElement>
+  carouselRef: React.RefObject<HTMLDivElement | null>
   isBackground?: boolean
 }
 export interface CarouselViewProps {
   images: string[]
   title: string
-  carouselRef: React.RefObject<HTMLDivElement>
+  carouselRef: React.RefObject<HTMLDivElement | null>
   isBackground?: boolean
 }
