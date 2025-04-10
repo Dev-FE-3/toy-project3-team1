@@ -11,7 +11,7 @@ export const Categories = ({ count, onCategorySelect, selectedCategory }: Catego
   return (
     <div className="bg-c900 flex h-[98px] w-[480px] items-center justify-center gap-4">
       <Category>
-        <Search size={34} strokeWidth={1.2} className="text-c200" />
+        <Search size={34} strokeWidth={2} className="text-c200" />
       </Category>
 
       {Object.entries(games)
