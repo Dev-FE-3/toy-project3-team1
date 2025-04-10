@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import PlaylistCard from '../PlaylistCard/PlaylistCard'
 import { PlaylistViewProps } from '../../types'
 import { usePrevious } from '../../hooks/usePrevious'
+import { cn } from '@/shared/model/lib/utils'
 
 export const PlaylistView = ({
   playlists,
@@ -103,27 +104,29 @@ export const PlaylistView = ({
       <AnimatePresence>
         <motion.div
           key={`focused-${focusedIndex}`}
-          className="bg-c600 from-c800 absolute inset-0 top-10 z-20 h-[440px] w-full origin-center cursor-pointer bg-gradient-to-t"
+          className={cn(
+            'absolute inset-0 top-10 z-20 h-[440px] w-full origin-center cursor-pointer',
+            playlists[focusedIndex]
+              ? 'from-c600 to-c800 border-c500 border-y-1 bg-gradient-to-b'
+              : 'bg-c900 border-none',
+          )}
           onClick={handlePlaylistClick}
           initial={{
             opacity: previousFocusedIndex === undefined ? 1 : 0,
-            y:
-              previousFocusedIndex === undefined
-                ? 0
-                : direction === 1
-                  ? '60%' // 아래에서 올라옴
-                  : '-60%', // 위에서 내려옴
-            scale: 0.95,
+            y: previousFocusedIndex === undefined ? 0 : direction === 1 ? '60%' : '-60%',
+            // 빈 플레이리스트일 때는 scale 애니메이션 제거
+            scale: playlists[focusedIndex] ? 0.95 : 1,
           }}
           animate={{
             opacity: 1,
             y: 0,
-            scale: [0.95, 1.02, 1],
+            // 빈 플레이리스트일 때는 scale 애니메이션 제거
+            scale: playlists[focusedIndex] ? [0.95, 1.02, 1] : 1,
           }}
           exit={{
             opacity: 0,
             y: direction === 1 ? '-60%' : '60%',
-            scale: 0.95,
+            scale: playlists[focusedIndex] ? 0.95 : 1,
           }}
           transition={{
             duration: 0.4,

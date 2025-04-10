@@ -3,7 +3,7 @@ import { Playlist } from './types'
 const playlists: Playlist[] = [
   {
     id: 1,
-    title: '롤 챔피언스 코리아',
+    title: '롤 챔피언스 코리아fasldkfjhasdlkfjhadslkjf',
     tag: ['롤', '음악'],
     imageUrl: [
       'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
@@ -24,7 +24,7 @@ const playlists: Playlist[] = [
   {
     id: 2,
     title: '발로란트 프로게이머',
-    tag: ['발로란트', 'FPS'],
+    tag: ['FPS'],
     imageUrl: [
       'https://i.ytimg.com/vi/8bt_t6R8Tw8/maxresdefault.jpg',
       'https://i.ytimg.com/vi/TIwnk7Xyv5Y/maxresdefault.jpg',
@@ -44,7 +44,7 @@ const playlists: Playlist[] = [
   {
     id: 3,
     title: '스타크래프트 레전드',
-    tag: ['스타크래프트', '전략'],
+    tag: ['스타크래프트', '전략','오버워치'],
     imageUrl: [
       'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',
       'https://i.ytimg.com/vi/JHpNrkKMMUQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAO5GoYuj6iNn8FUu9JcfH02IMmtA',
@@ -65,7 +65,7 @@ const playlists: Playlist[] = [
   {
     id: 4,
     title: '배틀그라운드 서바이벌',
-    tag: ['배틀그라운드', '서바이벌'],
+    tag: ['배틀그라운드', '서바이벌','오버워치'],
     imageUrl: [
       'https://i.ytimg.com/vi/JHpNrkKMMUQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAO5GoYuj6iNn8FUu9JcfH02IMmtA',
       'https://i.crepe.land/https://crepe.land/portfolio/t/tv/tve8orjr7lsckzm62dtz2nfpg81rxvai_GODS_NOMINANDO_%EC%8D%B8%EB%84%A4%EC%9D%BC.png?v=3a&t=i&w=1200&h=600&q=75',

@@ -1,32 +1,21 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { SwipeDirection } from '../types'
 
-export const usePlaylistControl = (totalPlaylists: number) => {
-  const [focusedIndex, setFocusedIndexRaw] = useState(0)
+export const usePlaylistControl = (playlistLength: number) => {
+  const [focusedIndex, setFocusedIndex] = useState(0)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [swipeDirection, setSwipeDirection] = useState<'up' | 'down'>('up')
+  const [swipeDirection, setSwipeDirection] = useState<SwipeDirection>('up')
   const [isScrolling, setIsScrolling] = useState(false)
 
-  const setFocusedIndex = (updater: number | ((prev: number) => number)) => {
-    setFocusedIndexRaw((prev) => {
-      const next = typeof updater === 'function' ? updater(prev) : updater
-      if (next < 0 || next >= totalPlaylists) return prev
-      return next
-    })
-  }
-
-  const handlePlaylistChange = (delta: number) => {
-    setFocusedIndex((prev) => {
-      const next = delta > 0 ? prev + 1 : prev - 1
-
-      if (next >= 0 && next < totalPlaylists) {
-        setSwipeDirection(delta > 0 ? 'up' : 'down')
-        setCurrentImageIndex(0)
-        return next
-      }
-
-      return prev
-    })
-  }
+  const setFocusedIndexWithBounds = useCallback(
+    (value: number | ((prev: number) => number)) => {
+      setFocusedIndex((prev) => {
+        const nextIndex = typeof value === 'function' ? value(prev) : value
+        return Math.max(0, Math.min(nextIndex, playlistLength - 1))
+      })
+    },
+    [playlistLength],
+  )
 
   return {
     focusedIndex,
@@ -35,8 +24,7 @@ export const usePlaylistControl = (totalPlaylists: number) => {
     isScrolling,
     setIsScrolling,
     setCurrentImageIndex,
-    handlePlaylistChange,
-    setFocusedIndex,
+    setFocusedIndex: setFocusedIndexWithBounds,
     setSwipeDirection,
   }
 }

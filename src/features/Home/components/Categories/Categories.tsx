@@ -1,49 +1,32 @@
-import { useState } from 'react'
 import { Category } from './Category'
-import { Plus, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { CategoriesProps } from '../../types'
-import { userFavoriteGames } from '../../constants'
+import { games } from '../../constants'
 
-export const Categories = ({ count }: CategoriesProps) => {
-  // 초기값을 0으로 설정하여 첫 번째 이미지 카테고리가 선택되도록 함
-  const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const gameImages = Object.values(userFavoriteGames)
-
-  const handleCategoryClick = (index: number) => {
-    // 게임 이미지 카테고리만 선택 가능
-    if (index >= 0 && index < gameImages.length) {
-      setSelectedIndex(selectedIndex === index ? index : index)
-    }
+export const Categories = ({ count, onCategorySelect, selectedCategory }: CategoriesProps) => {
+  const handleCategoryClick = (gameName: string) => {
+    // 이제 null을 전달해도 타입 에러가 발생하지 않습니다
+    onCategorySelect(gameName === selectedCategory ? null : gameName)
   }
 
   return (
     <div className="bg-c900 flex h-[98px] w-[480px] items-center justify-center gap-4">
-      {/* 검색 */}
-      <Category onClick={() => handleCategoryClick(-1)}>
+      {/* null을 전달해도 타입 에러가 발생하지 않습니다 */}
+      <Category>
         <Search size={34} strokeWidth={1.2} className="text-c200" />
       </Category>
 
-      {/* 게임 카테고리 나열 */}
-      {gameImages.slice(0, count).map((imagePath, index) => (
-        <Category
-          key={index}
-          isSelected={selectedIndex === index}
-          onClick={() => handleCategoryClick(index)}
-        >
-          <img
-            src={imagePath}
-            alt={`Game ${index + 1}`}
-            className="h-[40px] w-[40px] object-contain"
-          />
-        </Category>
-      ))}
-
-      {/* 카테고리 추가 */}
-      {count < 0 && (
-        <Category onClick={() => handleCategoryClick(gameImages.length)}>
-          <Plus size={34} strokeWidth={1.2} className="text-c200" />
-        </Category>
-      )}
+      {Object.entries(games)
+        .slice(0, count)
+        .map(([gameName, imagePath], index) => (
+          <Category
+            key={index}
+            isSelected={selectedCategory === gameName}
+            onClick={() => handleCategoryClick(gameName)}
+          >
+            <img src={imagePath} alt={gameName} className="h-[40px] w-[40px] object-contain" />
+          </Category>
+        ))}
     </div>
   )
 }
