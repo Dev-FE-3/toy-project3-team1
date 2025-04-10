@@ -18,11 +18,6 @@ export default function CommentTrigger({ commentCount = 0, onClick }: CommentTri
           <span>댓글 </span>
           <span>{commentCount}</span>
         </p>
-        <button
-          onClick={onClick}
-          className="text-slate-400 hover:text-white"
-          aria-label="댓글 더보기"
-        ></button>
       </div>
 
       <button
