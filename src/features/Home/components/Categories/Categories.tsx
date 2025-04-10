@@ -5,7 +5,7 @@ import { games } from '../../constants'
 
 export const Categories = ({ count, onCategorySelect, selectedCategory }: CategoriesProps) => {
   const handleCategoryClick = (gameName: string) => {
-    onCategorySelect(gameName === selectedCategory ? null : gameName)
+    onCategorySelect(gameName)
   }
 
   return (
