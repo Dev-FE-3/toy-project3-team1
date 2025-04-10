@@ -1,5 +1,5 @@
 import { ImageIcon, X } from 'lucide-react'
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
@@ -15,6 +15,7 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { Switch } from '@/shared/components/ui/switch'
 import { Textarea } from '@/shared/components/ui/textarea'
+import { getCountStyleClass, limitTextLength } from '@/shared/model/utils/textLengthUtils'
 
 // 설명란 Textarea의 스타일을 오버라이드하기 위한 CSS 클래스
 const textareaStyles = `
@@ -29,17 +30,23 @@ const textareaStyles = `
 export const PlaylistInfoForm = () => {
   const { control, setValue, watch } = useFormContext<PlaylistFormValues>()
 
+  // 상수 정의
+  const MAX_TITLE_LENGTH = 20
+  const MAX_DESCRIPTION_LENGTH = 150
+  const MAX_HASHTAG_LENGTH = 20
+
   // 폼 필드 값 감시
   const title = watch('title') || ''
   const description = watch('description') || ''
   const hashtags = watch('hashtags') || []
 
   // 로컬 상태
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null)
   const [hashtagInput, setHashtagInput] = useState('')
   const [titleCount, setTitleCount] = useState(0)
   const [descriptionCount, setDescriptionCount] = useState(0)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [hashtagCount, setHashtagCount] = useState(0)
 
   // 글자수 카운트 업데이트
   useEffect(() => {
@@ -49,9 +56,6 @@ export const PlaylistInfoForm = () => {
   useEffect(() => {
     setDescriptionCount(description.length)
   }, [description])
-
-  // 글자수 상태 확인
-  const isTitleValid = titleCount > 0 && titleCount <= 20
 
   // =================== 썸네일 관련 함수 ===================
   // 썸네일 클릭 처리
@@ -90,7 +94,6 @@ export const PlaylistInfoForm = () => {
     reader.readAsDataURL(file)
   }
 
-  // =================== 해시태그 관련 함수 ===================
   // 해시태그 키 입력 처리
   const handleHashtagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -99,12 +102,20 @@ export const PlaylistInfoForm = () => {
     }
   }
 
+  // 해시태그 입력 핸들러
+  const handleHashtagInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/^#/, '')
+    const { text, count } = limitTextLength(value, MAX_HASHTAG_LENGTH)
+    setHashtagInput(text)
+    setHashtagCount(count)
+  }
+
   // 해시태그 추가
   const addHashtag = () => {
-    const tag = hashtagInput.trim().replace(/^#/, '')
+    const tag = hashtagInput.trim()
 
     // 유효성 검사
-    if (!tag || hashtags.length >= 3 || tag.length > 20) return
+    if (!tag || hashtags.length >= 3 || tag.length > MAX_HASHTAG_LENGTH) return
     if (hashtags.includes(tag)) return
 
     setValue('hashtags', [...hashtags, tag])
@@ -117,6 +128,20 @@ export const PlaylistInfoForm = () => {
       'hashtags',
       hashtags.filter((tag) => tag !== tagToRemove),
     )
+  }
+
+  // 제목 입력 핸들러
+  const handleTitleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { text, count } = limitTextLength(e.target.value, MAX_TITLE_LENGTH)
+    e.target.value = text
+    setTitleCount(count)
+  }
+
+  // 설명 입력 핸들러
+  const handleDescriptionInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { text, count } = limitTextLength(e.target.value, MAX_DESCRIPTION_LENGTH)
+    e.target.value = text
+    setDescriptionCount(count)
   }
 
   return (
@@ -172,19 +197,15 @@ export const PlaylistInfoForm = () => {
                   제목{' '}
                   <span className="text-dark-orange text-captionM">*제목은 필수 입력입니다.</span>
                 </FormLabel>
-                <span
-                  className={`text-captionM ${
-                    titleCount > 20 ? 'text-red-500' : isTitleValid ? 'text-green-500' : 'text-c500'
-                  }`}
-                >
-                  {titleCount}/20
+                <span className={getCountStyleClass(titleCount)}>
+                  {titleCount}/{MAX_TITLE_LENGTH}
                 </span>
               </div>
               <FormControl>
                 <Input
                   className="rounded-md bg-[#E4E4E7]"
                   placeholder="제목을 입력해주세요. (20자 제한)"
-                  maxLength={20}
+                  onInput={handleTitleInput}
                   {...field}
                 />
               </FormControl>
@@ -207,16 +228,8 @@ export const PlaylistInfoForm = () => {
                 <FormLabel className="text-c100 text-base leading-relaxed font-medium">
                   설명
                 </FormLabel>
-                <span
-                  className={`text-captionM ${
-                    descriptionCount > 150
-                      ? 'text-red-500'
-                      : descriptionCount > 0
-                        ? 'text-green-500'
-                        : 'text-c500'
-                  }`}
-                >
-                  {descriptionCount}/150
+                <span className={getCountStyleClass(descriptionCount)}>
+                  {descriptionCount}/{MAX_DESCRIPTION_LENGTH}
                 </span>
               </div>
               <FormControl>
@@ -224,7 +237,7 @@ export const PlaylistInfoForm = () => {
                   className="fixed-height-textarea rounded-md bg-[#E4E4E7] text-base"
                   placeholder="플레이리스트 설명을 입력해주세요. (150자 제한)"
                   rows={3}
-                  maxLength={150}
+                  onInput={handleDescriptionInput}
                   {...field}
                 />
               </FormControl>
@@ -243,12 +256,17 @@ export const PlaylistInfoForm = () => {
           name="hashtags"
           render={() => (
             <FormItem className="mb-2">
-              <FormLabel className="text-c100 text-base leading-relaxed font-medium">
-                해시태그{' '}
-                <span className="text-c500 text-captionM">
-                  *20자 제한, 최대 3개까지 등록이 가능합니다.
+              <div className="flex items-center justify-between">
+                <FormLabel className="text-c100 text-base leading-relaxed font-medium">
+                  해시태그{' '}
+                  <span className="text-c500 text-captionM">
+                    *20자 제한, 최대 3개까지 등록이 가능합니다.
+                  </span>
+                </FormLabel>
+                <span className={getCountStyleClass(hashtagCount)}>
+                  {hashtagCount}/{MAX_HASHTAG_LENGTH}
                 </span>
-              </FormLabel>
+              </div>
               <FormControl>
                 <div className="space-y-1">
                   <div className="flex gap-[10px]">
@@ -256,9 +274,8 @@ export const PlaylistInfoForm = () => {
                       className="rounded-md bg-[#E4E4E7]"
                       placeholder="# 해시태그를 입력해주세요."
                       value={hashtagInput}
-                      onChange={(e) => setHashtagInput(e.target.value)}
+                      onChange={handleHashtagInput}
                       onKeyDown={handleHashtagKeyDown}
-                      maxLength={20}
                       disabled={hashtags.length >= 3}
                     />
                     <Button
