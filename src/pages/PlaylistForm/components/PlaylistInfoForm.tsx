@@ -1,20 +1,20 @@
+import { ImageIcon, X } from 'lucide-react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { useState, useRef, KeyboardEvent, useEffect } from 'react'
-import { X, ImageIcon } from 'lucide-react'
 
+import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
+import { Badge } from '@/shared/components/ui/badge'
+import { Button } from '@/shared/components/ui/button'
 import {
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
-  FormDescription,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { Textarea } from '@/shared/components/ui/textarea'
-import { Button } from '@/shared/components/ui/button'
 import { Switch } from '@/shared/components/ui/switch'
-import { Badge } from '@/shared/components/ui/badge'
-import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
+import { Textarea } from '@/shared/components/ui/textarea'
 
 // 설명란 Textarea의 스타일을 오버라이드하기 위한 CSS 클래스
 const textareaStyles = `
@@ -169,10 +169,11 @@ export const PlaylistInfoForm = () => {
             <FormItem className="mb-2">
               <div className="flex items-center justify-between">
                 <FormLabel className="text-c100 text-base leading-relaxed font-medium">
-                  제목 <span className="text-dark-orange text-sm">*제목은 필수 입력입니다.</span>
+                  제목{' '}
+                  <span className="text-dark-orange text-captionM">*제목은 필수 입력입니다.</span>
                 </FormLabel>
                 <span
-                  className={`text-sm ${
+                  className={`text-captionM ${
                     titleCount > 20 ? 'text-red-500' : isTitleValid ? 'text-green-500' : 'text-c500'
                   }`}
                 >
@@ -207,7 +208,7 @@ export const PlaylistInfoForm = () => {
                   설명
                 </FormLabel>
                 <span
-                  className={`text-sm ${
+                  className={`text-captionM ${
                     descriptionCount > 150
                       ? 'text-red-500'
                       : descriptionCount > 0
@@ -244,7 +245,7 @@ export const PlaylistInfoForm = () => {
             <FormItem className="mb-2">
               <FormLabel className="text-c100 text-base leading-relaxed font-medium">
                 해시태그{' '}
-                <span className="text-c500 text-sm">
+                <span className="text-c500 text-captionM">
                   *20자 제한, 최대 3개까지 등록이 가능합니다.
                 </span>
               </FormLabel>
@@ -326,7 +327,7 @@ export const PlaylistInfoForm = () => {
                         ) : (
                           <div className="flex flex-col items-center gap-2 p-4">
                             <ImageIcon size={24} className="text-c500" />
-                            <span className="text-c500 text-sm">이미지 업로드</span>
+                            <span className="text-c500 text-captionM">이미지 업로드</span>
                           </div>
                         )}
                         <input
