@@ -5,9 +5,9 @@ export interface Video {
   id: string
   video_id: string
   title: string
-  thumbnail: string
-  views: string
-  date: string
+  thumbnail_url: string
+  viewCount: string
+  created_at: string
 }
 
 interface VideoListProps {
@@ -83,9 +83,9 @@ export default function VideoList({
             <VideoItem
               key={video.id}
               title={video.title}
-              thumbnail={video.thumbnail}
-              views={video.views}
-              date={video.date}
+              thumbnail_url={video.thumbnail_url}
+              viewCount={video.viewCount}
+              created_at={video.created_at}
               onClick={() => onVideoClick?.(video.video_id)}
             />
           ))}

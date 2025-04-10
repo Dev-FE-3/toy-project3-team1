@@ -23,45 +23,30 @@ export interface Playlist {
 }
 
 // 플레이리스트 상세 정보 가져오기
-export const getPlaylistById = async (playlistId: string) => {
+export const getPlaylistById = async (id: string) => {
   try {
-    // supabase 인스턴스 사용
-    const client = supabase
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/playlist-detail`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ id }),
+      },
+    )
 
-    const { data, error } = await client.from('playlists').select('*').eq('id', playlistId).single()
-
-    if (error) {
-      console.warn('데이터 조회 중 오류:', error.message)
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || '플레이리스트를 불러오는데 실패했습니다.')
     }
 
-    if (!data) {
-      console.warn('데이터가 없습니다')
-    }
-
-    // 응답 데이터 로깅
-    console.log('조회된 데이터:', {
-      id: data.id,
-      title: data.title,
-      hasDescription: !!data.description,
-      hasThumbUrl: !!data.thumbnail_url,
-    })
-
-    // 안전한 타입 변환
-    const playlist: Playlist = {
-      id: data.id || playlistId,
-      title: data.title || '제목 없음',
-      description: data.description || '설명 없음',
-      thumbnail_url: data.thumbnail_url || '',
-      is_public: !!data.is_public,
-      created_at: data.created_at || new Date().toISOString(),
-      profile_id: data.profile_id || '',
-      likeCount: data.likeCount || 0,
-      subscriberCount: data.subscriberCount || 0,
-    }
-
-    return playlist
+    const data = await response.json()
+    return data
   } catch (error) {
-    console.error('예상치 못한 오류 발생:', error)
+    console.error('플레이리스트 조회 중 에러:', error)
+    throw error
   }
 }
 

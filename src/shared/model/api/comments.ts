@@ -8,10 +8,12 @@ export interface Comment {
   content: string
   created_at: string
   updated_at: string
+  deleted_at: string | null
   // 중첩 댓글을 위한 필드
   replies?: Comment[]
   // 사용자 정보를 위한 조인 필드
   profiles?: {
+    id: string
     nickname: string
   }
 }
@@ -19,57 +21,52 @@ export interface Comment {
 // 특정 플레이리스트의 댓글 목록 가져오기
 export const getCommentsByPlaylistId = async (playlistId: string): Promise<Comment[]> => {
   try {
-    // 모든 댓글 가져오기 (프로필 정보 포함)
     const { data, error } = await supabase
       .from('comments')
       .select(
         `
-        *,
-        profiles (
+        id,
+        content,
+        created_at,
+        profile_id,
+        playlist_id,
+        parent_id,
+        deleted_at,
+        profiles:profile_id (
           id,
           nickname
+        ),
+        replies:comments (
+          id,
+          content,
+          created_at,
+          profile_id,
+          deleted_at,
+          profiles:profile_id (
+            id,
+            nickname          )
         )
       `,
       )
       .eq('playlist_id', playlistId)
-      .is('parent_id', null) // 최상위 댓글만 가져오기
-      .order('created_at', { ascending: false }) // 최신순 정렬
+      .is('parent_id', null)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('댓글을 가져오는 중 오류 발생:', error)
-      return []
+      throw error
     }
 
-    // 각 최상위 댓글에 대한 대댓글 가져오기
-    const commentsWithReplies = await Promise.all(
-      data.map(async (comment) => {
-        const { data: replies, error: repliesError } = await supabase
-          .from('comments')
-          .select(
-            `
-            *,
-            profiles (
-              id,
-              nickname
-            )
-          `,
-          )
-          .eq('parent_id', comment.id)
-          .order('created_at', { ascending: true })
+    // 삭제되지 않은 답글만 필터링
+    const commentsWithFilteredReplies = data.map((comment) => ({
+      ...comment,
+      replies: comment.replies?.filter((reply) => reply.deleted_at === null) || [],
+    }))
 
-        if (repliesError) {
-          console.error('대댓글을 가져오는 중 오류 발생:', repliesError)
-          return { ...comment, replies: [] }
-        }
-
-        return { ...comment, replies: replies || [] }
-      }),
-    )
-
-    return commentsWithReplies || []
+    return commentsWithFilteredReplies
   } catch (error) {
-    console.error('댓글 목록을 가져오는 중 예상치 못한 오류 발생:', error)
-    return []
+    console.error('댓글 조회 중 에러:', error)
+    throw error
   }
 }
 
@@ -106,8 +103,13 @@ export const addComment = async (
 
 // 댓글 삭제하기 (실제로는 is_deleted 필드를 추가해야 함)
 export const deleteComment = async (commentId: string): Promise<boolean> => {
+  console.log(' deleteComment ~ deleteComment: ', commentId)
+
   try {
-    const { error } = await supabase.from('comments').delete().eq('id', commentId)
+    const { error } = await supabase
+      .from('comments')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', commentId)
 
     if (error) {
       console.error('댓글 삭제 중 오류 발생:', error)

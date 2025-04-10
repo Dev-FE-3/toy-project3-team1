@@ -23,48 +23,28 @@ const PlaylistDetailPage = () => {
   const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
-  const currentPlaylistId = id || 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
+  const currentPlaylistId = id || '8575f134-4936-4b6a-a833-395936663775'
   const commentPlaylistId = '8575f134-4936-4b6a-a833-395936663775'
 
-  // 플레이리스트 정보 가져오기
   const {
     data: playlistData,
-    isLoading: isPlaylistLoading,
-    isError: isPlaylistError,
-    error: playlistError,
+    isLoading,
+    isError,
+    error,
   } = useQuery({
-    queryKey: ['playlistData', currentPlaylistId],
+    queryKey: ['playlist', currentPlaylistId],
     queryFn: async () => {
       const result = await getPlaylistById(currentPlaylistId)
-
       if (!result) {
         throw new Error('플레이리스트를 찾을 수 없습니다.')
       }
-
       return result
     },
     refetchOnWindowFocus: false,
   })
 
-  // 플레이리스트에 속한 비디오 목록 가져오기
-  const {
-    data: videoItems = [],
-    isLoading: isVideosLoading,
-    isError: isVideosError,
-    error: videosError,
-  } = useQuery({
-    queryKey: ['playlistVideos', currentPlaylistId],
-    queryFn: async () => {
-      const result = await getPlaylistVideos(currentPlaylistId)
-
-      if (!result) {
-        throw new Error('비디오를 찾을 수 없습니다.')
-      }
-
-      return result
-    },
-    refetchOnWindowFocus: false,
-  })
+  // videoItems는 playlistData에서 직접 가져옴
+  const videoItems = playlistData?.playlist_items || []
 
   const handleOpenCommentPopup = async () => {
     // 로그인된 경우 댓글 팝업 열기
@@ -80,8 +60,6 @@ const PlaylistDetailPage = () => {
   const handleCommentAdded = () => {
     setRefreshComments((prev) => prev + 1)
   }
-
-  const isLoading = isPlaylistLoading || isVideosLoading
 
   if (isLoading) {
     return (
@@ -102,9 +80,6 @@ const PlaylistDetailPage = () => {
       </div>
     )
   }
-
-  const isError = isPlaylistError || isVideosError
-  const error = playlistError || videosError
 
   if (isError) {
     return (
