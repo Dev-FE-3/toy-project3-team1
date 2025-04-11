@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { PlaylistView } from './PlaylistView/PlaylistView'
 import { usePlaylistControl } from '../hooks/usePlaylistControl'
 import { useScrollControl } from '../hooks/useScrollControl'
-import { PlaylistContainerProps } from '../types'
+import { PlaylistContainerProps } from '../model/types'
 
 export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null)

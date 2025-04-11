@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PlaylistCard from '../PlaylistCard/PlaylistCard'
-import { PlaylistViewProps } from '../../types'
+import { PlaylistViewProps } from '../../model/types'
 import { usePrevious } from '../../hooks/usePrevious'
 import { cn } from '@/shared/model/lib/utils'
 

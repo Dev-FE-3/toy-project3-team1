@@ -1,7 +1,7 @@
 import { Category } from './Category'
 import { Search } from 'lucide-react'
-import { CategoriesProps } from '../../types'
-import { games } from '../../constants'
+import { CategoriesProps } from '../../model/types'
+import { games } from '../../constants/constants'
 
 export const Categories = ({ count, onCategorySelect, selectedCategory }: CategoriesProps) => {
   const handleCategoryClick = (gameName: string) => {

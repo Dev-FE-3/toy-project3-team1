@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Playlist } from '../types'
+import { Playlist } from '../model/types'
 
 interface CategoryFilterProps {
   playlists: Playlist[]

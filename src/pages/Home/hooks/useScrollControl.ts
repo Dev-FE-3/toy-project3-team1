@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { SwipeDirection } from '../types'
+import { SwipeDirection } from '../model/types'
 
 interface ScrollControlProps {
   focusedIndex: number
@@ -48,7 +48,16 @@ export const useScrollControl = ({
         setIsScrolling(false)
       }, 500)
     },
-    [focusedIndex, isScrolling, playlistLength, swipeDirection, setIsScrolling, setFocusedIndex, setCurrentImageIndex, setSwipeDirection],
+    [
+      focusedIndex,
+      isScrolling,
+      playlistLength,
+      swipeDirection,
+      setIsScrolling,
+      setFocusedIndex,
+      setCurrentImageIndex,
+      setSwipeDirection,
+    ],
   )
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
@@ -83,7 +92,17 @@ export const useScrollControl = ({
         setTouchStartY(null)
       }
     },
-    [focusedIndex, isScrolling, playlistLength, swipeDirection, touchStartY, setIsScrolling, setFocusedIndex, setCurrentImageIndex, setSwipeDirection],
+    [
+      focusedIndex,
+      isScrolling,
+      playlistLength,
+      swipeDirection,
+      touchStartY,
+      setIsScrolling,
+      setFocusedIndex,
+      setCurrentImageIndex,
+      setSwipeDirection,
+    ],
   )
 
   const handleTouchEnd = useCallback(() => {

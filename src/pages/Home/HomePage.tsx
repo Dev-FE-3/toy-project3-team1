@@ -1,9 +1,9 @@
-import { Categories } from '@/features/Home/components/Categories/Categories'
-import { useCategoryFilter } from '@/features/Home/hooks/useCategoryFilter'
-import playlists from '@/features/Home/Playlist'
-import { ensureValidCount } from '@/features/Home/types'
-import { games } from '@/features/Home/constants'
-import { PlaylistContainer } from '@/features/Home/components/PlaylistContainer'
+import { Categories } from '@/pages/Home/components/Categories/Categories'
+import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
+import playlists from '@/pages/Home/Playlist'
+import { ensureValidCount } from '@/pages/Home/model/types'
+import { games } from '@/pages/Home/constants/constants'
+import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
 
 const HomePage = () => {
   const defaultCategory = Object.keys(games)[0]

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { SwipeDirection } from '../types'
+import { SwipeDirection } from '../model/types'
 
 export const usePlaylistControl = (playlistLength: number) => {
   const [focusedIndex, setFocusedIndex] = useState(0)

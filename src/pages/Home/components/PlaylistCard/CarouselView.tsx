@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CarouselViewProps } from '../../types'
+import { CarouselViewProps } from '../../model/types'
 
 const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselViewProps) => {
   const [activeIndex, setActiveIndex] = useState(0)

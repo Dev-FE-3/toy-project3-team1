@@ -1,4 +1,4 @@
-import { CategoryProps } from '../../types'
+import { CategoryProps } from '../../model/types'
 
 export const Category = ({ children, isSelected, onClick }: CategoryProps) => {
   return (
