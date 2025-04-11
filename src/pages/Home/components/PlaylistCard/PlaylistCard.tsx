@@ -13,9 +13,9 @@ import EmptyPlaylistCard from './EmptyPlaylistCard'
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) return <EmptyPlaylistCard />
 
-  const isCarousel = Array.isArray(playlist.imageUrl)
-  const [likes, setLikes] = useState(playlist.likes)
-  const [bookmarks, setBookmarks] = useState(playlist.bookmarks)
+  const isCarousel = Array.isArray(playlist.thumbnail_url)
+  const [likes, setLikes] = useState(playlist.likeCount)
+  const [bookmarks, setBookmarks] = useState(playlist.subscriberCount)
   const [isLiked, setIsLiked] = useState(playlist.isLiked)
   const [isBookmarked, setIsBookmarked] = useState(playlist.isBookmarked)
 
@@ -31,12 +31,12 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     setIsBookmarked((prev) => !prev)
   }
 
-  const uploadedDate = getRelativeTime(playlist.uploadedDate)
+  const uploadedDate = getRelativeTime(playlist.created_at)
   return (
     <div className="relative h-[440px] py-4">
       {isCarousel ? (
         <CarouselView
-          images={playlist.imageUrl as string[]}
+          images={playlist.thumbnail_url as string[]}
           title={playlist.title}
           carouselRef={carouselRef}
           isBackground={isBackground}
@@ -50,7 +50,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               {playlist.title}
             </h3>
             <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
-              <UserCard name={playlist.user.name} imageUrl={playlist.user.imageUrl} />
+              <UserCard name={playlist.profile_id} />
               <p className="text-textR text-c500">{uploadedDate}</p>
             </div>
           </div>
@@ -62,7 +62,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               className="flex flex-col items-center gap-1 px-2"
             >
               <LikeIcon isLiked={isLiked} size={34} />
-              <span className="text-c400 text-captionM">{likes.toLocaleString()}</span>
+              <span className="text-c400 text-captionM">{likes}</span>
             </button>
 
             <button
@@ -71,13 +71,13 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               className="flex flex-col items-center gap-1 px-2"
             >
               <BookmarkIcon isBookmarked={isBookmarked} size={34} />
-              <span className="text-c400 text-captionM">{bookmarks.toLocaleString()}</span>
+              <span className="text-c400 text-captionM">{bookmarks}</span>
             </button>
           </div>
         </div>
 
         <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
-          {playlist.tag.map((tagName, index) => (
+          {playlist.hashtag.map((tagName, index) => (
             <HashTag key={index} tag={tagName} />
           ))}
         </div>

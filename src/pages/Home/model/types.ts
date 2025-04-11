@@ -3,12 +3,6 @@ import { Game } from '../constants/games'
 
 export type SwipeDirection = 'up' | 'down'
 
-// User Related Types
-interface User {
-  name: string
-  imageUrl?: string
-}
-
 // Category Related Types
 export interface CategoryProps {
   children?: ReactNode
@@ -27,14 +21,14 @@ export interface CategoriesProps {
 export interface Playlist {
   id: number
   title: string
-  tag: string[]
-  imageUrl: string | string[]
-  user: User
-  likes: number
-  bookmarks: number
+  hashtag: string[]
+  thumbnail_url: string | string[]
+  profile_id: string
+  likeCount: number
+  subscriberCount: number
   isLiked?: boolean
   isBookmarked?: boolean
-  uploadedDate: string
+  created_at: string
 }
 
 // Component Props Types

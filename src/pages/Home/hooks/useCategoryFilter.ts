@@ -11,7 +11,7 @@ export const useCategoryFilter = ({ playlists }: CategoryFilterProps) => {
 
   const filteredPlaylists = useMemo(() => {
     if (selectedCategory) {
-      return playlists.filter((playlist) => playlist.tag.includes(selectedCategory))
+      return playlists.filter((playlist) => playlist.hashtag.includes(selectedCategory))
     }
     return playlists
   }, [selectedCategory, playlists])
