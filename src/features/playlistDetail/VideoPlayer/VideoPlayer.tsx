@@ -4,7 +4,7 @@ interface VideoPlayerProps {
   videoId: string
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
+const VideoPlayer = ({ videoId }: VideoPlayerProps) => {
   return (
     <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg bg-slate-900">
       <iframe
