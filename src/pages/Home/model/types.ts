@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Games } from '../constants/GAMES'
+import { Games } from '../constants/games'
 
 export type SwipeDirection = 'up' | 'down'
 
@@ -17,7 +17,7 @@ export interface CategoryProps {
 }
 
 export interface CategoriesProps {
-  gameList : Games
+  gameList: Games
   count: number
   onCategorySelect: (category: string | null) => void
   selectedCategory: string | null
@@ -63,4 +63,3 @@ export interface CarouselViewProps {
 export interface PlaylistContainerProps {
   playlists: Playlist[]
 }
-

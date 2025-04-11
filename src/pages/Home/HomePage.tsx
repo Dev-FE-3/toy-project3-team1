@@ -2,7 +2,7 @@ import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import playlists from '@/pages/Home/Playlist'
 import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
-import { GAMES } from './constants/GAMES'
+import { GAMES } from './constants/games'
 import { limitCategoryCount } from './utils/limitCategoryCount'
 
 const HomePage = () => {

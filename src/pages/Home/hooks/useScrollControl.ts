@@ -5,7 +5,7 @@ import {
   TOUCH_TIMEOUT,
   WHEEL_SCROLL_THRESHOLD,
   WHEEL_TIMEOUT,
-} from '../constants/ANIMATION_CONSTANTS'
+} from '../constants/animation'
 
 interface ScrollControlProps {
   focusedIndex: number
