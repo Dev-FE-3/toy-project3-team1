@@ -1,97 +1,199 @@
+import { useState, useEffect } from 'react'
+import { initializeSupabase } from '@/shared/model/api/supabase'
+import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
-import Avatar from '@/shared/components/Avatar/Avatar'
+import { CommentPopup } from '@/features/playlistDetail/CommentPopup/CommentPopup'
+import PlaylistInfo from '@/features/playlistDetail/PlaylistInfo/PlaylistInfo'
+import AuthorInfo from '@/features/playlistDetail/AuthorInfo/AuthorInfo'
+import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrigger'
+import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
+import CommentList from '@/features/playlistDetail/CommentList/CommentList'
+import VideoList from '@/features/playlistDetail/VideoList/VideoList'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { useParams } from 'react-router-dom'
+import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
+import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
+import { supabase } from '@/shared/model/api/supabase'
+import { getPlaylistById, getPlaylistVideos } from '@/shared/model/api/playlist'
 
 const PlaylistDetailPage = () => {
-  return (
-    <>
-      <div className="flex flex-col p-4">
-        <AspectRatio ratio={16 / 9}>
-          <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
-        </AspectRatio>
+  const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
+  const [refreshComments, setRefreshComments] = useState(0)
+  const { profile, isAuthenticated } = useGetAuthState()
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
+  const { id } = useParams()
+  const currentPlaylistId = id || 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
+  const commentPlaylistId = '8575f134-4936-4b6a-a833-395936663775'
 
-        {/* 댓글 영역 */}
-        <div className="mt-4 border-t border-slate-800 pt-4 pb-16">
-          <h2 className="mb-4 text-xl">댓글</h2>
+  // 플레이리스트 정보 가져오기
+  const {
+    data: playlistData,
+    isLoading: isPlaylistLoading,
+    isError: isPlaylistError,
+    error: playlistError,
+  } = useQuery({
+    queryKey: ['playlistData', currentPlaylistId],
+    queryFn: async () => {
+      const result = await getPlaylistById(currentPlaylistId)
 
-          {/* 댓글 목록 */}
-          <div className="space-y-6">
-            {/* 댓글 아이템 */}
-            <div className="flex items-start gap-3">
-              <Avatar />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">김철두</span>
-                  <span className="text-sm text-slate-400">•</span>
-                  <span className="text-sm text-slate-400">3일</span>
-                  <span className="text-sm text-slate-400">•</span>
-                  <span className="text-sm text-slate-400">작성자</span>
-                </div>
-                <p className="mt-1 text-slate-300">
-                  정말 영상 맛집이네요 인정 와우 대박 쩔어요 번창하세요 대박대박박박박스
-                </p>
-                <button className="mt-2 text-sm text-slate-400">댓글달기</button>
-              </div>
-            </div>
+      if (!result) {
+        throw new Error('플레이리스트를 찾을 수 없습니다.')
+      }
 
-            {/* 댓글 아이템 */}
-            <div className="flex items-start gap-3">
-              <Avatar />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">김떡볶이</span>
-                  <span className="text-sm text-slate-400">•</span>
-                  <span className="text-sm text-slate-400">3일</span>
-                </div>
-                <p className="mt-1 text-slate-300">
-                  떡볶이 먹고 싶지만 배가 고프지 않아 영상을 봤습니다. 이상하게 배고프지만서도 배가
-                  고프지 않고 와우와우 헙들고 집가고 싶고 산책하고 싶다.
-                </p>
-                <button className="mt-2 text-sm text-slate-400">댓글달기</button>
-              </div>
-            </div>
+      return result
+    },
+    refetchOnWindowFocus: false,
+  })
 
-            <div className="text-center">
-              <button className="text-sm text-slate-400">댓글 2개 더 보기</button>
-            </div>
+  // 플레이리스트에 속한 비디오 목록 가져오기
+  const {
+    data: videoItems = [],
+    isLoading: isVideosLoading,
+    isError: isVideosError,
+    error: videosError,
+  } = useQuery({
+    queryKey: ['playlistVideos', currentPlaylistId],
+    queryFn: async () => {
+      const result = await getPlaylistVideos(currentPlaylistId)
+
+      if (!result) {
+        throw new Error('비디오를 찾을 수 없습니다.')
+      }
+
+      return result
+    },
+    refetchOnWindowFocus: false,
+  })
+
+  const handleOpenCommentPopup = async () => {
+    // 로그인된 경우 댓글 팝업 열기
+    setIsCommentPopupOpen(true)
+  }
+
+  // 비디오 클릭 시 비디오 재생
+  const handleVideoClick = (videoId: string) => {
+    setSelectedVideo(videoId)
+  }
+
+  // 댓글 추가 시 댓글 목록 새로고침
+  const handleCommentAdded = () => {
+    setRefreshComments((prev) => prev + 1)
+  }
+
+  const isLoading = isPlaylistLoading || isVideosLoading
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
+        <div className="flex-shrink-0">
+          <AspectRatio ratio={16 / 9}>
+            <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
+          </AspectRatio>
+          <div className="mt-3">
+            <Skeleton className="bg-c500 h-5 w-3/4 rounded-md" />
+            <Skeleton className="bg-c500 mt-2 h-4 w-1/2 rounded-md" />
           </div>
+        </div>
+        <div className="mt-4 flex-grow">
+          <Skeleton className="bg-c500 h-20 w-full rounded-xl" />
+          <Skeleton className="bg-c500 mt-2 h-20 w-full rounded-xl" />
         </div>
       </div>
+    )
+  }
 
-      {/* 댓글 입력 영역 - 고정 위치 */}
-      <div className="absolute right-0 bottom-16 left-0 border-t border-slate-700 bg-slate-800 p-3">
-        <div className="flex items-center gap-3">
-          <Avatar />
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              placeholder="댓글 달기"
-              className="w-full rounded-full bg-slate-700 px-4 py-3 text-white placeholder-slate-400 outline-none"
-            />
-            <button className="absolute top-1/2 right-3 -translate-y-1/2 transform text-blue-400">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22 2L11 13"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M22 2L15 22L11 13L2 9L22 2Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-              </svg>
+  const isError = isPlaylistError || isVideosError
+  const error = playlistError || videosError
+
+  if (isError) {
+    return (
+      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-4">
+        <div className="bg-c500 rounded-xl p-6 text-center">
+          <p className="text-c500 text-lg font-medium">데이터를 불러오는 중 오류가 발생했습니다.</p>
+          <p className="mt-2 text-slate-300">
+            {error instanceof Error ? error.message : '알 수 없는 오류'}
+          </p>
+          <div className="mt-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-md bg-slate-700 px-4 py-2 text-white hover:bg-slate-600"
+            >
+              다시 시도
             </button>
           </div>
+          <p className="mt-4 text-xs text-slate-400">
+            오류가 계속되면 개발 환경에서 Supabase 설정 및 .env 파일을 확인하세요.
+          </p>
         </div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
+        <div className="flex-shrink-0">
+          {selectedVideo ? (
+            <VideoPlayer videoId={selectedVideo} />
+          ) : (
+            <AspectRatio ratio={16 / 9}>
+              {playlistData?.thumbnail_url ? (
+                <img
+                  src={playlistData.thumbnail_url}
+                  alt={playlistData.title || '플레이리스트'}
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              ) : (
+                <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
+              )}
+            </AspectRatio>
+          )}
+
+          {/* 비디오 정보 - 플레이리스트 제목과 설명 표시 */}
+          <PlaylistInfo
+            title={playlistData?.title || ''}
+            description={playlistData?.description || ''}
+          />
+
+          {/* 작성자 정보 */}
+          <AuthorInfo
+            authorName="오리"
+            likeCount={playlistData?.likeCount || 0}
+            subscriberCount={playlistData?.subscriberCount || 0}
+          />
+
+          {/* 댓글 트리거 */}
+          <CommentTrigger commentCount={100} onClick={handleOpenCommentPopup} />
+        </div>
+
+        {/* 플레이리스트 비디오 목록 */}
+        <VideoList videos={videoItems} onVideoClick={handleVideoClick} />
+
+        {/* 댓글 팝업 */}
+        <CommentPopup open={isCommentPopupOpen} onOpenChange={setIsCommentPopupOpen}>
+          <CommentPopup.Header>
+            <CommentPopup.Title>댓글</CommentPopup.Title>
+          </CommentPopup.Header>
+          <CommentPopup.Content>
+            {profile && isAuthenticated ? (
+              <div className="flex flex-col space-y-4">
+                <CommentList
+                  playlistId={commentPlaylistId}
+                  currentProfileId={profile.id}
+                  key={refreshComments}
+                />
+                <CommentInput
+                  playlistId={commentPlaylistId}
+                  profileId={profile.id}
+                  onCommentAdded={handleCommentAdded}
+                />
+              </div>
+            ) : (
+              <LoginPrompt onLoginClick={handleOpenCommentPopup} />
+            )}
+          </CommentPopup.Content>
+        </CommentPopup>
       </div>
     </>
   )

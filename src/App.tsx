@@ -14,12 +14,15 @@ import { queryClient } from './shared/model/lib/queryClient'
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider
-        router={router}
-        future={{
-          v7_startTransition: true,
-        }}
-      />
+      <AuthProvider>
+        <RouterProvider
+          router={router}
+          future={{
+            v7_startTransition: true,
+          }}
+        />
+      </AuthProvider>
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
