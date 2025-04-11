@@ -1,18 +1,20 @@
 import { useMemo, useState } from 'react'
 import { Playlist } from '../model/types'
+import { GAMES } from '../constants/games'
 
 interface CategoryFilterProps {
   playlists: Playlist[]
-  defaultCategory: string
 }
 
-export const useCategoryFilter = ({ playlists, defaultCategory }: CategoryFilterProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+export const useCategoryFilter = ({ playlists }: CategoryFilterProps) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(GAMES[0].name)
 
   const filteredPlaylists = useMemo(() => {
-    const categoryToUse = selectedCategory || defaultCategory
-    return playlists.filter((playlist) => playlist.tag.includes(categoryToUse))
-  }, [selectedCategory, defaultCategory, playlists])
+    if (selectedCategory) {
+      return playlists.filter((playlist) => playlist.tag.includes(selectedCategory))
+    }
+    return playlists
+  }, [selectedCategory, playlists])
 
   const handleCategorySelect = (category: string | null) => {
     setSelectedCategory(category)

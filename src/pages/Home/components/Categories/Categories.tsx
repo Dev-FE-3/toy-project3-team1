@@ -1,29 +1,32 @@
+import { Layers, Search } from 'lucide-react'
 import { Category } from './Category'
-import { Search } from 'lucide-react'
 import { CategoriesProps } from '../../model/types'
 
-export const Categories = ({ count, gameList, onCategorySelect, selectedCategory }: CategoriesProps) => {
-  const handleCategoryClick = (gameName: string) => {
-    onCategorySelect(gameName)
-  }
-
+export const Categories = ({
+  gameList,
+  count,
+  onCategorySelect,
+  selectedCategory,
+}: CategoriesProps) => {
   return (
     <div className="bg-c900 flex h-[98px] w-[480px] items-center justify-center gap-4">
       <Category>
-        <Search size={34} strokeWidth={2} className="text-c200" />
+        <Search size={34} strokeWidth={1.5} className="text-c200" />
       </Category>
 
-      {Object.entries(gameList)
-        .slice(0, count)
-        .map(([gameName, imagePath], index) => (
-          <Category
-            key={index}
-            isSelected={selectedCategory === gameName}
-            onClick={() => handleCategoryClick(gameName)}
-          >
-            <img src={imagePath} alt={gameName} className="h-[40px] w-[40px] object-contain" />
-          </Category>
-        ))}
+      {gameList.slice(0, count).map((game) => (
+        <Category
+          key={game.id}
+          isSelected={selectedCategory === game.name}
+          onClick={() => onCategorySelect(game.name)}
+        >
+          <img src={game.logoUrl} alt={game.name} className="h-[40px] w-[40px] object-contain" />
+        </Category>
+      ))}
+
+      <Category isSelected={selectedCategory === null} onClick={() => onCategorySelect(null)}>
+        <Layers size={34} strokeWidth={1.2} className="text-c200" />
+      </Category>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Games } from '../constants/games'
+import { Game } from '../constants/games'
 
 export type SwipeDirection = 'up' | 'down'
 
@@ -17,7 +17,7 @@ export interface CategoryProps {
 }
 
 export interface CategoriesProps {
-  gameList: Games
+  gameList: Game[]
   count: number
   onCategorySelect: (category: string | null) => void
   selectedCategory: string | null
