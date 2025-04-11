@@ -1,9 +1,5 @@
 import { ReactNode } from 'react'
-
-// Utility Types & Functions
-export const ensureValidCount = (count: number): number => {
-  return Math.min(count, 4)
-}
+import { Games } from '../constants/GAMES'
 
 export type SwipeDirection = 'up' | 'down'
 
@@ -21,6 +17,7 @@ export interface CategoryProps {
 }
 
 export interface CategoriesProps {
+  gameList : Games
   count: number
   onCategorySelect: (category: string | null) => void
   selectedCategory: string | null
@@ -66,3 +63,4 @@ export interface CarouselViewProps {
 export interface PlaylistContainerProps {
   playlists: Playlist[]
 }
+

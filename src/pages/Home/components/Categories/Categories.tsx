@@ -1,9 +1,8 @@
 import { Category } from './Category'
 import { Search } from 'lucide-react'
 import { CategoriesProps } from '../../model/types'
-import { games } from '../../constants/constants'
 
-export const Categories = ({ count, onCategorySelect, selectedCategory }: CategoriesProps) => {
+export const Categories = ({ count, gameList, onCategorySelect, selectedCategory }: CategoriesProps) => {
   const handleCategoryClick = (gameName: string) => {
     onCategorySelect(gameName)
   }
@@ -14,7 +13,7 @@ export const Categories = ({ count, onCategorySelect, selectedCategory }: Catego
         <Search size={34} strokeWidth={2} className="text-c200" />
       </Category>
 
-      {Object.entries(games)
+      {Object.entries(gameList)
         .slice(0, count)
         .map(([gameName, imagePath], index) => (
           <Category

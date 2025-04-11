@@ -1,14 +1,16 @@
 import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import playlists from '@/pages/Home/Playlist'
-import { ensureValidCount } from '@/pages/Home/model/types'
-import { games } from '@/pages/Home/constants/constants'
 import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
+import { GAMES } from './constants/GAMES'
+import { limitCategoryCount } from './utils/limitCategoryCount'
 
 const HomePage = () => {
-  const defaultCategory = Object.keys(games)[0]
-  const gameCount = ensureValidCount(Object.keys(games).length)
+  const defaultCategory = Object.keys(GAMES)[0]
+  const gameCount = limitCategoryCount(Object.keys(GAMES).length)
 
+  // 카테고리 필터링 훅 사용
+  // playlists를 props로 전달하여 플레이리스트 필터링
   const { selectedCategory, filteredPlaylists, handleCategorySelect } = useCategoryFilter({
     playlists,
     defaultCategory,
@@ -20,6 +22,7 @@ const HomePage = () => {
   return (
     <>
       <Categories
+        gameList={GAMES}
         count={gameCount}
         onCategorySelect={handleCategorySelect}
         selectedCategory={currentCategory}

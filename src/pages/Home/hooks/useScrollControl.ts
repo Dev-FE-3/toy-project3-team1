@@ -1,5 +1,11 @@
 import { useCallback, useState } from 'react'
 import { SwipeDirection } from '../model/types'
+import {
+  TOUCH_SCROLL_THRESHOLD,
+  TOUCH_TIMEOUT,
+  WHEEL_SCROLL_THRESHOLD,
+  WHEEL_TIMEOUT,
+} from '../constants/ANIMATION_CONSTANTS'
 
 interface ScrollControlProps {
   focusedIndex: number
@@ -30,9 +36,8 @@ export const useScrollControl = ({
       setIsScrolling(true)
 
       const delta = e.deltaY
-      const scrollThreshold = 50
 
-      if (Math.abs(delta) > scrollThreshold) {
+      if (Math.abs(delta) > WHEEL_SCROLL_THRESHOLD) {
         if (delta > 0 && focusedIndex < playlistLength - 1) {
           if (swipeDirection !== 'up') setSwipeDirection('up')
           setFocusedIndex((prev) => prev + 1)
@@ -46,7 +51,7 @@ export const useScrollControl = ({
 
       setTimeout(() => {
         setIsScrolling(false)
-      }, 500)
+      }, WHEEL_TIMEOUT)
     },
     [
       focusedIndex,
@@ -70,9 +75,8 @@ export const useScrollControl = ({
 
       const touchEndY = e.touches[0].clientY
       const delta = touchStartY - touchEndY
-      const scrollThreshold = 130
 
-      if (Math.abs(delta) > scrollThreshold) {
+      if (Math.abs(delta) > TOUCH_SCROLL_THRESHOLD) {
         setIsScrolling(true)
 
         if (delta > 0 && focusedIndex < playlistLength - 1) {
@@ -87,7 +91,7 @@ export const useScrollControl = ({
 
         setTimeout(() => {
           setIsScrolling(false)
-        }, 300)
+        }, TOUCH_TIMEOUT)
 
         setTouchStartY(null)
       }
