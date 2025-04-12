@@ -10,10 +10,9 @@ export const useCategoryFilter = ({ playlists }: CategoryFilterProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(GAMES[0].name)
 
   const filteredPlaylists = useMemo(() => {
-    if (selectedCategory) {
-      return playlists.filter((playlist) => playlist.hashtag.includes(selectedCategory))
-    }
-    return playlists
+    if (!selectedCategory) return playlists
+
+    return playlists.filter((playlist) => playlist.hashtag.includes(selectedCategory))
   }, [selectedCategory, playlists])
 
   const handleCategorySelect = (category: string | null) => {

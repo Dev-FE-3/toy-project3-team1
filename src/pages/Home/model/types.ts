@@ -17,12 +17,18 @@ export interface CategoriesProps {
   selectedCategory: string | null
 }
 
+export interface VideoItem {
+  id: string
+  title: string
+  thumbnail_url: string
+}
+
 // Playlist Related Types
 export interface Playlist {
   id: number
   title: string
   hashtag: string[]
-  thumbnail_url: string | string[]
+  thumbnail_url: string // Changed from string | string[] to just string
   profile_id: string
   likeCount: number
   subscriberCount: number
@@ -43,15 +49,15 @@ export interface PlaylistViewProps {
 
 export interface PlaylistCardProps {
   playlist: Playlist
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  isBackground?: boolean
+  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
+  isBackground: boolean
 }
 
 export interface CarouselViewProps {
   images: string[]
   title: string
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  isBackground?: boolean
+  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
+  isBackground: boolean
 }
 
 export interface PlaylistContainerProps {

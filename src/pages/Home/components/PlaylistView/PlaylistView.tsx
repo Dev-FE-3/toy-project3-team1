@@ -30,75 +30,81 @@ export const PlaylistView = ({
     })
   }
 
+  const backgroundPlaylists = playlists
+    .map((playlist, index) => ({ playlist, index }))
+    .filter(({ index }) => index !== focusedIndex && Math.abs(index - focusedIndex) === 1)
+
   return (
     <>
       {/* Background Cards */}
-      <AnimatePresence>
-        {playlists.map((playlist, index) => {
-          const isBackground = index !== focusedIndex && Math.abs(index - focusedIndex) === 1
+      {backgroundPlaylists.length > 0 && (
+        <AnimatePresence>
+          {backgroundPlaylists.map(({ playlist, index }) => {
+            const isBackground = index !== focusedIndex && Math.abs(index - focusedIndex) === 1
 
-          if (!isBackground) return null
+            if (!isBackground) return null
 
-          const offsetY = (index: number) => {
-            if (index > focusedIndex) return '53%' // 아래 카드
-            if (index < focusedIndex) return '-20%' // 위 카드
-            return '0%'
-          }
-
-          const exitY = (index: number) => {
-            if (previousFocusedIndex === undefined) return '0%'
-
-            if (index === previousFocusedIndex) {
-              // 포커스 카드 → 사라지는 방향
-              return focusedIndex > previousFocusedIndex ? '-60%' : '60%'
+            const offsetY = (index: number) => {
+              if (index > focusedIndex) return '53%' // 아래 카드
+              if (index < focusedIndex) return '-20%' // 위 카드
+              return '0%'
             }
 
-            if (index > previousFocusedIndex) {
-              // 아래 카드
-              return focusedIndex > previousFocusedIndex ? '-30%' : '60%'
-            }
+            const exitY = (index: number) => {
+              if (previousFocusedIndex === undefined) return '0%'
 
-            if (index < previousFocusedIndex) {
-              // 위 카드
-              return focusedIndex > previousFocusedIndex ? '-60%' : '30%'
-            }
+              if (index === previousFocusedIndex) {
+                // 포커스 카드 → 사라지는 방향
+                return focusedIndex > previousFocusedIndex ? '-60%' : '60%'
+              }
 
-            return '0%'
-          }
-          return (
-            <motion.div
-              key={`bg-${playlist.id ?? `index-${index}`}`}
-              className="pointer-events-none absolute inset-0 z-0 w-full origin-center"
-              initial={{
-                opacity: 0,
-                y:
-                  previousFocusedIndex === undefined
-                    ? 0
-                    : direction === 1
-                      ? '60%' // 아래에서 올라옴
-                      : '-60%', // 위에서 내려옴
-                scale: 0.9,
-              }}
-              animate={{
-                opacity: 0.5,
-                y: offsetY(index),
-                scale: 0.95,
-              }}
-              exit={{
-                opacity: 0,
-                y: exitY(index),
-                scale: 0.9,
-              }}
-              transition={{
-                duration: 0.4,
-                ease: [0.25, 0.8, 0.25, 1],
-              }}
-            >
-              <PlaylistCard playlist={playlist} carouselRef={carouselRef} isBackground={true} />
-            </motion.div>
-          )
-        })}
-      </AnimatePresence>
+              if (index > previousFocusedIndex) {
+                // 아래 카드
+                return focusedIndex > previousFocusedIndex ? '-30%' : '60%'
+              }
+
+              if (index < previousFocusedIndex) {
+                // 위 카드
+                return focusedIndex > previousFocusedIndex ? '-60%' : '30%'
+              }
+
+              return '0%'
+            }
+            return (
+              <motion.div
+                key={`index-${index}`}
+                className="pointer-events-none absolute inset-0 z-0 w-full origin-center"
+                initial={{
+                  opacity: 0,
+                  y:
+                    previousFocusedIndex === undefined
+                      ? 0
+                      : direction === 1
+                        ? '60%' // 아래에서 올라옴
+                        : '-60%', // 위에서 내려옴
+                  scale: 0.9,
+                }}
+                animate={{
+                  opacity: 0.5,
+                  y: offsetY(index),
+                  scale: 0.95,
+                }}
+                exit={{
+                  opacity: 0,
+                  y: exitY(index),
+                  scale: 0.9,
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.25, 0.8, 0.25, 1],
+                }}
+              >
+                <PlaylistCard playlist={playlist} carouselRef={carouselRef} isBackground={true} />
+              </motion.div>
+            )
+          })}
+        </AnimatePresence>
+      )}
 
       {/* Focused Card */}
       <AnimatePresence>

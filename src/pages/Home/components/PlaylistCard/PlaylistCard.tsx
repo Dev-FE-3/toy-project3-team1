@@ -1,23 +1,29 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
-import { PlaylistCardProps } from '@/pages/Home/model/types'
+import { PlaylistCardProps, VideoItem } from '@/pages/Home/model/types'
 import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import EmptyPlaylistCard from './EmptyPlaylistCard'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/shared/model/api/supabase'
 
 // PlaylistCard 컴포넌트 수정
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
-  if (!playlist) return <EmptyPlaylistCard />
-
-  const isCarousel = Array.isArray(playlist.thumbnail_url)
-  const [likes, setLikes] = useState(playlist.likeCount)
-  const [bookmarks, setBookmarks] = useState(playlist.subscriberCount)
-  const [isLiked, setIsLiked] = useState(playlist.isLiked)
-  const [isBookmarked, setIsBookmarked] = useState(playlist.isBookmarked)
+  if (!playlist) {
+    return (
+      <div className="relative h-[440px] py-4">
+        <EmptyPlaylistCard />
+      </div>
+    )
+  }
+  const [likes, setLikes] = useState(playlist.likeCount || 0)
+  const [bookmarks, setBookmarks] = useState(playlist.subscriberCount || 0)
+  const [isLiked, setIsLiked] = useState(playlist.isLiked || false)
+  const [isBookmarked, setIsBookmarked] = useState(playlist.isBookmarked || false)
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -31,17 +37,39 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     setIsBookmarked((prev) => !prev)
   }
 
+  const { data: videoItems = [] } = useQuery({
+    queryKey: ['playlist_items', playlist.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('playlist_items')
+        .select('*')
+        .eq('playlist_id', playlist.id)
+      if (error) {
+        throw new Error('Error fetching playlists:')
+      }
+      return data as VideoItem[]
+    },
+    refetchOnWindowFocus: false,
+  })
+
+  const carouselImages = useMemo((): string[] => {
+    const thumbnailUrl = Array.isArray(playlist.thumbnail_url)
+      ? playlist.thumbnail_url[0]
+      : playlist.thumbnail_url
+
+    const videoThumbnails = videoItems.map((item) => item.thumbnail_url)
+    return [thumbnailUrl, ...videoThumbnails]
+  }, [playlist.thumbnail_url, videoItems])
+
   const uploadedDate = getRelativeTime(playlist.created_at)
   return (
     <div className="relative h-[440px] py-4">
-      {isCarousel ? (
-        <CarouselView
-          images={playlist.thumbnail_url as string[]}
-          title={playlist.title}
-          carouselRef={carouselRef}
-          isBackground={isBackground}
-        />
-      ) : null}
+      <CarouselView
+        images={carouselImages}
+        title={playlist.title}
+        carouselRef={carouselRef}
+        isBackground={isBackground}
+      />
 
       <div className={cn('absolute left-0 w-full px-[38px] py-2', isBackground && 'px-4')}>
         <div className="flex w-full justify-between">
