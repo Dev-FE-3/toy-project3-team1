@@ -36,8 +36,8 @@ export interface Playlist {
     nickname: string
     imageUrl: string
   }
-  likeCount: number
-  subscriberCount: number
+  like_count: number
+  subscriber_count: number
   isLiked?: boolean
   isBookmarked?: boolean
   created_at: string

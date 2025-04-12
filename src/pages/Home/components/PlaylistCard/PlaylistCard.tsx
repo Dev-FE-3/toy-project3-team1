@@ -20,21 +20,59 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
       </div>
     )
   }
-  const [likes, setLikes] = useState(playlist.likeCount || 0)
-  const [bookmarks, setBookmarks] = useState(playlist.subscriberCount || 0)
+  const [likes, setLikes] = useState(playlist.like_count || 0)
+  const [bookmarks, setBookmarks] = useState(playlist.subscriber_count || 0)
   const [isLiked, setIsLiked] = useState(playlist.isLiked || false)
   const [isBookmarked, setIsBookmarked] = useState(playlist.isBookmarked || false)
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setLikes((prev) => prev + (isLiked ? -1 : 1))
-    setIsLiked((prev) => !prev)
+
+    const prevLiked = isLiked
+    const prevLikes = likes
+
+    // 낙관적 업데이트
+    setIsLiked(!prevLiked)
+    setLikes(prevLiked ? prevLikes - 1 : prevLikes + 1)
+
+    const { error } = await supabase
+      .from('playlists')
+      .update({
+        like_count: prevLiked ? prevLikes - 1 : prevLikes + 1,
+        // isLiked: !prevLiked, // ← 이건 유저 별 상태이면 다른 테이블에 넣어야 함
+      })
+      .eq('id', playlist.id)
+
+    if (error) {
+      // 실패 시 롤백
+      setIsLiked(prevLiked)
+      setLikes(prevLikes)
+      console.error('Like update failed:', error.message)
+    }
   }
 
-  const handleBookmark = (e: React.MouseEvent) => {
+  const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setBookmarks((prev) => prev + (isBookmarked ? -1 : 1))
-    setIsBookmarked((prev) => !prev)
+
+    const prevBookmarked = isBookmarked
+    const prevBookmarks = bookmarks
+
+    setIsBookmarked(!prevBookmarked)
+    setBookmarks(prevBookmarked ? prevBookmarks - 1 : prevBookmarks + 1)
+
+    const { error } = await supabase
+      .from('playlists')
+      .update({
+        subscriber_count: prevBookmarked ? prevBookmarks - 1 : prevBookmarks + 1,
+        // isBookmarked: !prevBookmarked, // ← 이것도 유저 상태면 분리 필요
+      })
+      .eq('id', playlist.id)
+
+    if (error) {
+      setIsBookmarked(prevBookmarked)
+      setBookmarks(prevBookmarks)
+      console.error('Bookmark update failed:', error.message)
+    }
   }
 
   const { data: videoItems = [] } = useQuery({
@@ -78,9 +116,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               {playlist.title}
             </h3>
             <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
-              <UserCard
-                nickname={playlist.profiles.nickname}
-              />
+              <UserCard nickname={playlist.profiles.nickname} />
               <p className="text-textR text-c500">{uploadedDate}</p>
             </div>
           </div>
