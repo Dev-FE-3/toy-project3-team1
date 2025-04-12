@@ -32,6 +32,10 @@ export interface Playlist {
   hashtag: string[]
   thumbnail_url: string // Changed from string | string[] to just string
   profile_id: string
+  profiles: {
+    nickname: string
+    imageUrl: string
+  }
   likeCount: number
   subscriberCount: number
   isLiked?: boolean

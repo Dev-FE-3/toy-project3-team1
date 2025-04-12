@@ -3,22 +3,27 @@ import { AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
 
 interface UserCardProps {
-  imageUrl?: string
-  name: string
+  nickname: string
   className?: string
 }
 
-export function UserCard({ imageUrl, name, className }: UserCardProps) {
+export function UserCard({ nickname, className }: UserCardProps) {
+  if (!nickname) {
+    return (
+      <div className={cn('flex items-center gap-3', className)}>
+        <Avatar size="small">
+          <AvatarFallback>??</AvatarFallback>
+        </Avatar>
+        <span className="text-c300 text-textR">불러오는 중...</span>
+      </div>
+    )
+  }
   return (
     <div className={cn('flex items-center gap-3', className)}>
       <Avatar size="small">
-        {imageUrl ? (
-          <AvatarImage src={imageUrl} alt={name} className="object-cover" />
-        ) : (
-          <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
-        )}
+        <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
       </Avatar>
-      <span className="text-c300 text-textR">{name}</span>
+      <span className="text-c300 text-textR">{nickname}</span>
     </div>
   )
 }

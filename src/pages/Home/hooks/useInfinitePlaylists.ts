@@ -11,17 +11,25 @@ export const useInfinitePlaylists = (category?: Category) => {
       const offset = pageParam as number
       let query = supabase
         .from('playlists')
-        .select('*')
+        .select(
+          `
+          *,
+          profiles:profile_id (nickname)
+          `,
+        )
         .eq('is_public', true)
         .order('created_at', { ascending: false })
         .range(offset * pageSize, offset * pageSize + (pageSize - 1))
 
+      // 배열 필터링 처리
       if (category && category !== '전체') {
-        query = query.contains('hashtag', [category])
+        query = query.filter('hashtag', 'cs', `{${category}}`) // 배열에서 category 값 찾기
       }
 
       const { data, error } = await query
+
       if (error || !data) throw new Error(error?.message || 'Unknown error')
+
       return data
     },
     initialPageParam: 0,

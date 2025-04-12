@@ -78,7 +78,9 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               {playlist.title}
             </h3>
             <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
-              <UserCard name={playlist.profile_id} />
+              <UserCard
+                nickname={playlist.profiles.nickname}
+              />
               <p className="text-textR text-c500">{uploadedDate}</p>
             </div>
           </div>
