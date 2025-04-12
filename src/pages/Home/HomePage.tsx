@@ -3,28 +3,31 @@ import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
 import { GAMES } from './constants/games'
 import { limitCategoryCount } from './utils/limitCategoryCount'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/shared/model/api/supabase'
-import { Playlist } from './model/types'
+import { useInfinitePlaylists } from './hooks/useInfinitePlaylists'
+import { useEffect, useRef } from 'react'
 
 const HomePage = () => {
   const gameCount = limitCategoryCount(GAMES.length)
 
-  const { data: playlistData = [] } = useQuery({
-    queryKey: ['playlists'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('playlists').select('*').eq('is_public', true)
-      if (error) {
-        throw new Error('Error fetching playlists:')
-      }
-      return data as Playlist[]
-    },
-    refetchOnWindowFocus: false,
-  })
+  const { selectedCategory, handleCategorySelect } = useCategoryFilter()
 
-  const { selectedCategory, filteredPlaylists, handleCategorySelect } = useCategoryFilter({
-    playlists: playlistData,
-  })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfinitePlaylists(selectedCategory)
+
+  const playlists = data?.pages.flat() ?? []
+  const loadMoreRef = useRef(null)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 1.0 },
+    )
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage])
 
   return (
     <>
@@ -34,7 +37,8 @@ const HomePage = () => {
         onCategorySelect={handleCategorySelect}
         selectedCategory={selectedCategory}
       />
-      <PlaylistContainer key={selectedCategory} playlists={filteredPlaylists} />
+      <PlaylistContainer key={selectedCategory} playlists={playlists} />
+      <div ref={loadMoreRef} className="h-10" />
     </>
   )
 }

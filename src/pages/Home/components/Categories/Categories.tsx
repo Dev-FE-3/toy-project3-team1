@@ -16,7 +16,7 @@ export const Categories = ({
 
       {gameList.slice(0, count).map((game) => (
         <Category
-          key={game.id}
+          key={game.name}
           isSelected={selectedCategory === game.name}
           onClick={() => onCategorySelect(game.name)}
         >
@@ -24,7 +24,7 @@ export const Categories = ({
         </Category>
       ))}
 
-      <Category isSelected={selectedCategory === null} onClick={() => onCategorySelect(null)}>
+      <Category isSelected={selectedCategory === '전체'} onClick={() => onCategorySelect('전체')}>
         <Layers size={34} strokeWidth={1.2} className="text-c200" />
       </Category>
     </div>

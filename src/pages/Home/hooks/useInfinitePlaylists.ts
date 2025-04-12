@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
-import type { Playlist } from '@/pages/Home/model/types'
+import type { Category, Playlist } from '@/pages/Home/model/types'
 
-export const useInfinitePlaylists = (category?: string) => {
+export const useInfinitePlaylists = (category?: Category) => {
   const pageSize = 10
 
   return useInfiniteQuery<Playlist[], Error>({
@@ -17,7 +17,7 @@ export const useInfinitePlaylists = (category?: string) => {
         .range(offset * pageSize, offset * pageSize + (pageSize - 1))
 
       if (category && category !== '전체') {
-        query = query.eq('category', category)
+        query = query.contains('hashtag', [category])
       }
 
       const { data, error } = await query
