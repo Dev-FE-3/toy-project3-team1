@@ -113,7 +113,32 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     }
   }
 
-  console.log('isLiked:', isLiked) // 상태 값 확인
+  const { data: isMark, refetch: refetchMark } = useQuery<boolean>({
+    queryKey: ['playlist_subscribed', playlist.id, profile?.id],
+    queryFn: async () => {
+      if (!profile) return false
+      const { data, error } = await supabase
+        .from('playlists_subscribers')
+        .select('id')
+        .eq('user_id', profile.id)
+        .eq('playlist_id', playlist.id)
+        .maybeSingle()
+
+      if (error) {
+        console.error('Error fetching bookmark status:', error)
+        return false
+      }
+      return !!data
+    },
+    enabled: !!profile, // profile이 있을 때만 쿼리 실행
+  })
+
+  useEffect(() => {
+    if (isMark !== undefined) {
+      setIsBookmarked(isMark) // 쿼리 결과가 변경되면 상태 업데이트
+    }
+  }, [isMark])
+  console.log('isMark:', isMark)
 
   const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -135,23 +160,20 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
 
     try {
       if (nextMarked) {
-        const { error } = await supabase.from('playlists_subscribers').insert({
+        await supabase.from('playlists_subscribers').insert({
           user_id: profile.id,
           playlist_id: playlist.id,
         })
-
-        if (error) throw error
       } else {
-        const { error } = await supabase
+        await supabase
           .from('playlists_subscribers')
           .delete()
           .eq('user_id', profile.id)
           .eq('playlist_id', playlist.id)
-
-        if (error) throw error
       }
+      refetchMark() // 구독 처리 후, 쿼리 리패치
     } catch (err) {
-      console.error('Bookmark 처리 실패:', err)
+      console.error('Bookmarked 처리 실패:', err)
       setIsBookmarked(prevMarked)
       setBookmarks(prevMarks)
     }
