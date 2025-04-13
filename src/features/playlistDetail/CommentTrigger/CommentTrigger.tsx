@@ -12,9 +12,10 @@ interface CommentTriggerProps {
 
 export default function CommentTrigger({ commentCount = 0, onClick }: CommentTriggerProps) {
   return (
-    <div className="mt-4 rounded-xl border-t border-slate-700 bg-slate-800 p-3">
+    <div className="border-c700 bg-c800 mt-4 rounded-xl border-t p-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">
+        {/* 댓글 수 */}
+        <p className="text-c400 text-sm">
           <span>댓글 </span>
           <span>{commentCount}</span>
         </p>
@@ -22,7 +23,7 @@ export default function CommentTrigger({ commentCount = 0, onClick }: CommentTri
 
       <button
         onClick={onClick}
-        className="mt-3 flex w-full items-center gap-3 rounded-xl bg-slate-700 px-4 py-3 text-left text-slate-400"
+        className="bg-c700 text-c400 mt-3 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left"
         aria-label="댓글 작성하기"
       >
         <AvatarComponent className="h-8 w-8">

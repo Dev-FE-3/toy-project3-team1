@@ -6,7 +6,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ videoId }: VideoPlayerProps) => {
   return (
-    <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg bg-slate-900">
+    <AspectRatio ratio={16 / 9} className="bg-c900 overflow-hidden rounded-lg">
       <iframe
         src={`https://www.youtube.com/embed/${videoId}`}
         className="h-full w-full border-0"

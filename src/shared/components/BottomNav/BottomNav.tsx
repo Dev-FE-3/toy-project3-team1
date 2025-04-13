@@ -17,7 +17,7 @@ export default function BottomNav() {
         <UserRound size={24} className="text-c50" />
       </Link> */}
       <Link
-        to={'/playlist/d276b4f1-d2bf-4325-baab-7ee0dbc314c2'}
+        to={'/playlist/44aa498e-a9df-461a-b18e-fed3d0378994'}
         className="flex h-full w-[88px] items-center justify-center"
       >
         <ListVideo size={24} className="text-c50" />

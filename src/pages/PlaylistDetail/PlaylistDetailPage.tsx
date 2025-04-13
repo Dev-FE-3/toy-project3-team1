@@ -16,14 +16,16 @@ import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
 import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
 import { supabase } from '@/shared/model/api/supabase'
 import { getPlaylistById, getPlaylistVideos } from '@/shared/model/api/playlist'
+import { queryClient } from '@/shared/model/lib/queryClient'
+
+const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
 
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
-  const [refreshComments, setRefreshComments] = useState(0)
   const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
-  const currentPlaylistId = id || '8575f134-4936-4b6a-a833-395936663775'
+  const currentPlaylistId = id || DEFAULT_PLAYLIST_ID
   const commentPlaylistId = '8575f134-4936-4b6a-a833-395936663775'
 
   const {
@@ -34,7 +36,7 @@ const PlaylistDetailPage = () => {
   } = useQuery({
     queryKey: ['playlist', currentPlaylistId],
     queryFn: async () => {
-      const result = await getPlaylistById(currentPlaylistId)
+      const result = await getPlaylistById(currentPlaylistId, profile?.id as string)
       if (!result) {
         throw new Error('플레이리스트를 찾을 수 없습니다.')
       }
@@ -56,14 +58,14 @@ const PlaylistDetailPage = () => {
     setSelectedVideo(videoId)
   }
 
-  // 댓글 추가 시 댓글 목록 새로고침
+  // 댓글 추가
   const handleCommentAdded = () => {
-    setRefreshComments((prev) => prev + 1)
+    queryClient.invalidateQueries({ queryKey: ['comments', currentPlaylistId] })
   }
 
   if (isLoading) {
     return (
-      <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
+      <div className="playlistDetailPage flex h-[calc(100vh-9rem)] flex-col p-6">
         <div className="flex-shrink-0">
           <AspectRatio ratio={16 / 9}>
             <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
@@ -83,21 +85,21 @@ const PlaylistDetailPage = () => {
 
   if (isError) {
     return (
-      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-4">
+      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-16">
         <div className="bg-c500 rounded-xl p-6 text-center">
           <p className="text-c500 text-lg font-medium">데이터를 불러오는 중 오류가 발생했습니다.</p>
-          <p className="mt-2 text-slate-300">
+          <p className="text-c300 mt-2">
             {error instanceof Error ? error.message : '알 수 없는 오류'}
           </p>
           <div className="mt-4">
             <button
               onClick={() => window.location.reload()}
-              className="rounded-md bg-slate-700 px-4 py-2 text-white hover:bg-slate-600"
+              className="bg-c700 hover:bg-c600 rounded-md px-4 py-2 text-white"
             >
               다시 시도
             </button>
           </div>
-          <p className="mt-4 text-xs text-slate-400">
+          <p className="text-c400 mt-4 text-xs">
             오류가 계속되면 개발 환경에서 Supabase 설정 및 .env 파일을 확인하세요.
           </p>
         </div>
@@ -107,11 +109,13 @@ const PlaylistDetailPage = () => {
 
   return (
     <>
-      <div className="flex h-[calc(100vh-9rem)] flex-col p-4">
+      <div className="flex h-[calc(100vh-9rem)] flex-col p-6">
         <div className="flex-shrink-0">
           {selectedVideo ? (
+            // 선택한 비디오 재생
             <VideoPlayer videoId={selectedVideo} />
           ) : (
+            // 선택한 비디오가 없을 경우 플레이리스트 썸네일 표시
             <AspectRatio ratio={16 / 9}>
               {playlistData?.thumbnail_url ? (
                 <img
@@ -129,17 +133,24 @@ const PlaylistDetailPage = () => {
           <PlaylistInfo
             title={playlistData?.title || ''}
             description={playlistData?.description || ''}
+            isOwner={playlistData?.isOwner}
+            isPublic={playlistData?.is_public}
+            videoCount={playlistData?.playlist_items.length || 0}
           />
 
           {/* 작성자 정보 */}
           <AuthorInfo
-            authorName="오리"
-            likeCount={playlistData?.likeCount || 0}
-            subscriberCount={playlistData?.subscriberCount || 0}
+            authorName={playlistData?.profiles.nickname || ''}
+            isOwner={playlistData?.isOwner}
+            likeCount={playlistData?.like_count || 0}
+            subscriberCount={playlistData?.subscriber_count || 0}
           />
 
           {/* 댓글 트리거 */}
-          <CommentTrigger commentCount={100} onClick={handleOpenCommentPopup} />
+          <CommentTrigger
+            commentCount={playlistData?.comment_count || 0}
+            onClick={handleOpenCommentPopup}
+          />
         </div>
 
         {/* 플레이리스트 비디오 목록 */}
@@ -152,17 +163,19 @@ const PlaylistDetailPage = () => {
           </CommentPopup.Header>
           <CommentPopup.Content>
             {profile && isAuthenticated ? (
-              <div className="flex flex-col space-y-4">
-                <CommentList
-                  playlistId={commentPlaylistId}
-                  currentProfileId={profile.id}
-                  key={refreshComments}
-                />
-                <CommentInput
-                  playlistId={commentPlaylistId}
-                  profileId={profile.id}
-                  onCommentAdded={handleCommentAdded}
-                />
+              <div className="contentInside flex h-full flex-col">
+                {/* 댓글 목록 영역 */}
+                <div className="[&::-webkit-scrollbar-thumb]:bg-c700 [&::-webkit-scrollbar-track]:bg-c800 flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full">
+                  <CommentList playlistId={currentPlaylistId} currentProfileId={profile.id} />
+                </div>
+                {/* 댓글 입력 영역 */}
+                <div className="sticky bottom-0 mt-4">
+                  <CommentInput
+                    playlistId={currentPlaylistId}
+                    profileId={profile.id}
+                    onCommentAdded={handleCommentAdded}
+                  />
+                </div>
               </div>
             ) : (
               <LoginPrompt onLoginClick={handleOpenCommentPopup} />

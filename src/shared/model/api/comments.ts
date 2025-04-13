@@ -18,6 +18,28 @@ export interface Comment {
   }
 }
 
+interface DatabaseComment {
+  id: string
+  playlist_id: string
+  profile_id: string
+  parent_id: string | null
+  content: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+  replies: DatabaseComment[] | null
+  profiles: {
+    id: string
+    nickname: string
+  } | null
+}
+
+const transformComment = (dbComment: DatabaseComment): Comment => ({
+  ...dbComment,
+  replies: dbComment.replies?.map(transformComment) || [],
+  profiles: dbComment.profiles || undefined,
+})
+
 // 특정 플레이리스트의 댓글 목록 가져오기
 export const getCommentsByPlaylistId = async (playlistId: string): Promise<Comment[]> => {
   try {
@@ -28,6 +50,7 @@ export const getCommentsByPlaylistId = async (playlistId: string): Promise<Comme
         id,
         content,
         created_at,
+        updated_at,
         profile_id,
         playlist_id,
         parent_id,
@@ -40,11 +63,15 @@ export const getCommentsByPlaylistId = async (playlistId: string): Promise<Comme
           id,
           content,
           created_at,
+          updated_at,
           profile_id,
+          playlist_id,
+          parent_id,
           deleted_at,
           profiles:profile_id (
             id,
-            nickname          )
+            nickname
+          )
         )
       `,
       )
@@ -57,11 +84,12 @@ export const getCommentsByPlaylistId = async (playlistId: string): Promise<Comme
       throw error
     }
 
-    // 삭제되지 않은 답글만 필터링
-    const commentsWithFilteredReplies = data.map((comment) => ({
-      ...comment,
-      replies: comment.replies?.filter((reply) => reply.deleted_at === null) || [],
-    }))
+    const commentsWithFilteredReplies = (data as unknown as DatabaseComment[])
+      .map((comment) => ({
+        ...comment,
+        replies: comment.replies?.filter((reply) => reply.deleted_at === null) || [],
+      }))
+      .map(transformComment)
 
     return commentsWithFilteredReplies
   } catch (error) {
@@ -103,8 +131,6 @@ export const addComment = async (
 
 // 댓글 삭제하기 (실제로는 is_deleted 필드를 추가해야 함)
 export const deleteComment = async (commentId: string): Promise<boolean> => {
-  console.log(' deleteComment ~ deleteComment: ', commentId)
-
   try {
     const { error } = await supabase
       .from('comments')

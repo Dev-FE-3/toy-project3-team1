@@ -194,7 +194,6 @@ export default function SignupPage() {
             />
 
             <Button
-              variant={'outline'}
               type="submit"
               className="bg-c600 text-c200 h-12 w-full"
               disabled={form.formState.isSubmitting}

@@ -8,9 +8,9 @@ import HashTag from '@/shared/components/HashTag/HashTag'
 import MoreMenu, { MenuItem } from '@/shared/components/MoreMenu/MoreMenu'
 import StatusButton from '@/shared/components/StatusButton/StatusButton'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
-import CommentBox from '@/features/CommentBox/components/CommentBox'
 import { useMemo, useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
+import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 
 export default function DesignSystem() {
   // TapMenu 상태 관리
@@ -241,7 +241,7 @@ export default function DesignSystem() {
       </section>
 
       <div>
-        <CommentBox />
+        <CommentInput />
       </div>
     </>
   )

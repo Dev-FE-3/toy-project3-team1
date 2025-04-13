@@ -4,15 +4,18 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/shared/components/ui/avatar'
+import { cn } from '@/shared/model/lib/utils'
 
 interface AuthorInfoProps {
   authorName: string | undefined
+  isOwner: boolean
   likeCount: number | undefined
   subscriberCount: number | undefined
 }
 
 export default function AuthorInfo({
   authorName = '짜파게티오리사',
+  isOwner = false,
   likeCount = 332,
   subscriberCount = 21,
 }: AuthorInfoProps) {
@@ -29,15 +32,17 @@ export default function AuthorInfo({
       </div>
 
       <div className="flex items-center gap-5">
-        {/* 좋아요 수 */}
         <div className="flex flex-col items-center">
-          <Heart className="h-7 w-7 text-slate-300" />
-          <span className="mt-1 text-sm text-slate-400">{likeCount}</span>
+          <Heart className="text-c300 h-7 w-7" />
+          {/* 좋아요 수 */}
+          <span className="text-c400 mt-1 text-sm">{likeCount}</span>
         </div>
         {/* 북마크 수 */}
         <div className="flex flex-col items-center">
-          <Bookmark className="h-7 w-7 text-slate-300" />
-          <span className="mt-1 text-sm text-slate-400">{subscriberCount}</span>
+          {/* 작성자 본인일 경우 색상 칠하기 */}
+          <Bookmark className={cn('text-c300 h-7 w-7', isOwner && 'fill-c300')} />
+          {/* 구독자 수 */}
+          <span className="text-c400 mt-1 text-sm">{subscriberCount}</span>
         </div>
       </div>
     </div>

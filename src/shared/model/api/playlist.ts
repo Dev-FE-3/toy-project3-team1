@@ -23,7 +23,7 @@ export interface Playlist {
 }
 
 // 플레이리스트 상세 정보 가져오기
-export const getPlaylistById = async (id: string) => {
+export const getPlaylistById = async (playlistId: string, profileId: string) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/playlist-detail`,
@@ -33,7 +33,7 @@ export const getPlaylistById = async (id: string) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ playlistId, profileId }),
       },
     )
 

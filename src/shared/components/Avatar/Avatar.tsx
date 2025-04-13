@@ -4,7 +4,7 @@ import {
   AvatarImage,
 } from '@/shared/components/ui/avatar'
 
-type AvatarSize = 'small' | 'medium' | 'large'
+export type AvatarSize = 'small' | 'medium' | 'large'
 
 type AvatarProps = {
   size?: AvatarSize

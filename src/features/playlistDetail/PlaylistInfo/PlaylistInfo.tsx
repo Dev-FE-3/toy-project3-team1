@@ -1,38 +1,54 @@
-import { Eye, Video, Calendar, Lock } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
+import { PenBox } from 'lucide-react'
 
 interface VideoInfoProps {
   title?: string
   description?: string
+  isOwner: boolean
+  isPublic: boolean
+  videoCount?: number
 }
 
-export default function PlaylistInfo({ title, description }: VideoInfoProps) {
+export default function PlaylistInfo({
+  title,
+  description,
+  isOwner,
+  isPublic,
+  videoCount,
+}: VideoInfoProps) {
   return (
     <article className="mt-3">
-      <header className="flex gap-2 text-sm text-slate-400">
+      <header className="text-c400 flex text-sm">
+        {/* 플레이리스트 공개 여부 */}
         <div className="flex items-center">
-          <Lock size={14} className="mr-1" />
-          <span>비공개</span>
+          <span>{isPublic ? '공개' : '비공개'}</span>
+          <span className="mx-2">•</span>
         </div>
+        {/* 플레이리스트 동영상 개수 */}
         <div className="flex items-center">
-          <Video size={14} className="mr-1" />
-          <span>동영상 7개</span>
+          <span>{videoCount}개의 동영상</span>
+          <span className="mx-2">•</span>
         </div>
-        <div className="flex items-center">
-          <Eye size={14} className="mr-1" />
+        {/* <div className="flex items-center">
           <span>조회수 20</span>
-        </div>
+          <span className="mx-2">•</span>
+        </div> */}
+        {/* 플레이리스트 생성일 */}
         <div className="flex items-center">
-          <Calendar size={14} className="mr-1" />
           <span>7일 전</span>
         </div>
       </header>
 
       <section>
-        <h1 className="text-c100 mt-3 text-xl font-medium">
-          {title ||
-            '더미글 입니다. 안녕하세요. 오버워치 2 오리사 플레이 영상 모음입니다아아아아. 화이팅이이이이이임 와우 대박'}
-        </h1>
-        <p className="text-c300 mt-2">{description || '쩔어쩔어 대박 완전 길어요~~~~~'}</p>
+        {/* 플레이리스트 제목 */}
+        <div className="flex justify-between">
+          <h1 className="text-c100 mt-3 text-xl font-medium">{title || ''}</h1>
+          <Button className="cursor-pointer items-end !p-0 align-bottom">
+            <PenBox className="text-c300 !h-6 !w-6" />
+          </Button>
+        </div>
+        {/* 플레이리스트 설명 */}
+        <p className="text-c300 mt-2">{description || ''}</p>
       </section>
     </article>
   )
