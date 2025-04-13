@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
@@ -10,8 +10,8 @@ import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import EmptyPlaylistCard from './EmptyPlaylistCard'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 
-// PlaylistCard 컴포넌트 수정
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) {
     return (
@@ -20,58 +20,140 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
       </div>
     )
   }
-  const [likes, setLikes] = useState(playlist.like_count || 0)
-  const [bookmarks, setBookmarks] = useState(playlist.subscriber_count || 0)
-  const [isLiked, setIsLiked] = useState(playlist.isLiked || false)
-  const [isBookmarked, setIsBookmarked] = useState(playlist.isBookmarked || false)
+
+  const [likes, setLikes] = useState(playlist.like_count)
+  const [bookmarks, setBookmarks] = useState(playlist.subscriber_count)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const { profile } = useGetAuthState()
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const { data, error } = await supabase
+        .from('playlists')
+        .select('like_count, subscriber_count')
+        .eq('id', playlist.id)
+        .single()
+
+      if (error) {
+        console.error('플레이리스트 카운트 가져오기 실패:', error)
+        return
+      }
+
+      setLikes(data.like_count || 0)
+      setBookmarks(data.subscriber_count || 0)
+    }
+
+    fetchCounts()
+  }, [playlist.id])
+
+  const { data: isLike, refetch: refetchLike } = useQuery<boolean>({
+    queryKey: ['playlist_liked', playlist.id, profile?.id],
+    queryFn: async () => {
+      if (!profile) return false
+      const { data, error } = await supabase
+        .from('playlists_likes')
+        .select('id')
+        .eq('user_id', profile.id)
+        .eq('playlist_id', playlist.id)
+        .maybeSingle()
+
+      if (error) {
+        console.error('Error fetching like status:', error)
+        return false
+      }
+      return !!data
+    },
+    enabled: !!profile, // profile이 있을 때만 쿼리 실행
+  })
+
+  useEffect(() => {
+    if (isLike !== undefined) {
+      setIsLiked(isLike) // 쿼리 결과가 변경되면 상태 업데이트
+    }
+  }, [isLike])
+  console.log('isLike:', isLike)
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
 
+    if (!profile) {
+      console.error('사용자 프로필을 찾을 수 없습니다')
+      return
+    }
+
     const prevLiked = isLiked
     const prevLikes = likes
 
+    const nextLiked = !prevLiked
+    const nextLikes = prevLiked ? prevLikes - 1 : prevLikes + 1
+
     // 낙관적 업데이트
-    setIsLiked(!prevLiked)
-    setLikes(prevLiked ? prevLikes - 1 : prevLikes + 1)
+    setIsLiked(nextLiked)
+    setLikes(nextLikes)
 
-    const { error } = await supabase
-      .from('playlists')
-      .update({
-        like_count: prevLiked ? prevLikes - 1 : prevLikes + 1,
-        // isLiked: !prevLiked, // ← 이건 유저 별 상태이면 다른 테이블에 넣어야 함
-      })
-      .eq('id', playlist.id)
-
-    if (error) {
-      // 실패 시 롤백
+    try {
+      if (nextLiked) {
+        await supabase.from('playlists_likes').insert({
+          user_id: profile.id,
+          playlist_id: playlist.id,
+        })
+      } else {
+        await supabase
+          .from('playlists_likes')
+          .delete()
+          .eq('user_id', profile.id)
+          .eq('playlist_id', playlist.id)
+      }
+      refetchLike() // 좋아요 처리 후, 쿼리 리패치
+    } catch (err) {
+      console.error('Like 처리 실패:', err)
       setIsLiked(prevLiked)
       setLikes(prevLikes)
-      console.error('Like update failed:', error.message)
     }
   }
+
+  console.log('isLiked:', isLiked) // 상태 값 확인
 
   const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation()
 
-    const prevBookmarked = isBookmarked
-    const prevBookmarks = bookmarks
+    if (!profile) {
+      console.error('사용자 프로필을 찾을 수 없습니다')
+      return
+    }
 
-    setIsBookmarked(!prevBookmarked)
-    setBookmarks(prevBookmarked ? prevBookmarks - 1 : prevBookmarks + 1)
+    const prevMarked = isBookmarked
+    const prevMarks = bookmarks
 
-    const { error } = await supabase
-      .from('playlists')
-      .update({
-        subscriber_count: prevBookmarked ? prevBookmarks - 1 : prevBookmarks + 1,
-        // isBookmarked: !prevBookmarked, // ← 이것도 유저 상태면 분리 필요
-      })
-      .eq('id', playlist.id)
+    const nextMarked = !prevMarked
+    const nextMarks = prevMarked ? prevMarks - 1 : prevMarks + 1
 
-    if (error) {
-      setIsBookmarked(prevBookmarked)
-      setBookmarks(prevBookmarks)
-      console.error('Bookmark update failed:', error.message)
+    // 낙관적 업데이트
+    setIsBookmarked(nextMarked)
+    setBookmarks(nextMarks)
+
+    try {
+      if (nextMarked) {
+        const { error } = await supabase.from('playlists_subscribers').insert({
+          user_id: profile.id,
+          playlist_id: playlist.id,
+        })
+
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from('playlists_subscribers')
+          .delete()
+          .eq('user_id', profile.id)
+          .eq('playlist_id', playlist.id)
+
+        if (error) throw error
+      }
+    } catch (err) {
+      console.error('Bookmark 처리 실패:', err)
+      setIsBookmarked(prevMarked)
+      setBookmarks(prevMarks)
     }
   }
 
