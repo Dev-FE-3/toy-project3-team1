@@ -92,7 +92,7 @@ const CommentItem = ({
           <div className="mt-2">
             <button
               className="text-c400 text-xs hover:text-white"
-              // onClick={() => setShowReplyForm(!showReplyForm)}
+              onClick={() => setShowReplyForm(!showReplyForm)}
             >
               {showReplyForm ? '취소' : '답글 달기'}
             </button>
