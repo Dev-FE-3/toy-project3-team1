@@ -9,7 +9,7 @@ export const usePlaylistBookmark = (playlistId: string) => {
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [bookmarkCount, setBookmarkCount] = useState(0)
 
-  const { data: isBookmark } = useQuery<boolean>({
+  const { data: fetchedIsBookmarked } = useQuery<boolean>({
     queryKey: ['playlist_bookmarked', playlistId, profile?.id],
     queryFn: async () => {
       if (!profile) return false
@@ -21,12 +21,12 @@ export const usePlaylistBookmark = (playlistId: string) => {
         .maybeSingle()
       return !!data
     },
-    enabled: !!profile,
+    enabled: !!profile && !!playlistId,
   })
 
   useEffect(() => {
-    if (isBookmark !== undefined) setIsBookmarked(isBookmark)
-  }, [isBookmark])
+    if (fetchedIsBookmarked !== undefined) setIsBookmarked(fetchedIsBookmarked)
+  }, [fetchedIsBookmarked])
 
   useEffect(() => {
     const fetchBookmarkCount = async () => {

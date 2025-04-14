@@ -9,7 +9,7 @@ export const usePlaylistLike = (playlistId: string) => {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
 
-  const { data: isLike } = useQuery<boolean>({
+  const { data: fetchedIsLiked } = useQuery<boolean>({
     queryKey: ['playlist_liked', playlistId, profile?.id],
     queryFn: async () => {
       if (!profile) return false
@@ -21,12 +21,12 @@ export const usePlaylistLike = (playlistId: string) => {
         .maybeSingle()
       return !!data
     },
-    enabled: !!profile,
+    enabled: !!profile && !!playlistId,
   })
 
   useEffect(() => {
-    if (isLike !== undefined) setIsLiked(isLike)
-  }, [isLike])
+    if (fetchedIsLiked !== undefined) setIsLiked(fetchedIsLiked)
+  }, [fetchedIsLiked])
 
   useEffect(() => {
     const fetchLikeCount = async () => {
