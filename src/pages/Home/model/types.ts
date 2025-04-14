@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Game } from '../constants/games'
+import { Game } from '../constants/GAMES'
 
 export type SwipeDirection = 'up' | 'down'
 
@@ -27,7 +27,7 @@ export interface VideoItem {
 
 // Playlist Related Types
 export interface Playlist {
-  id: number
+  id: string
   title: string
   hashtag: string[]
   thumbnail_url: string // Changed from string | string[] to just string
