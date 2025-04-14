@@ -9,7 +9,7 @@ import {
   VideoListForm,
 } from '@/pages/PlaylistForm/components'
 import { ToastContainer } from '@/pages/PlaylistForm/components/ToastContainer'
-import { useFormNavigation, useSubmitPlaylist } from '@/pages/PlaylistForm/hooks'
+import { useSubmitPlaylist } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
 import { Button } from '@/shared/components/ui/button'
 import { Form } from '@/shared/components/ui/form'
@@ -34,7 +34,7 @@ const PlaylistFormPage = () => {
 
   // 폼 데이터와 상태 접근
   const { watch, formState } = form
-  const { isDirty, errors, dirtyFields } = formState
+  const { errors, dirtyFields } = formState
 
   // 필요한 폼 값 가져오기
   const title = watch('title') || ''
@@ -46,7 +46,6 @@ const PlaylistFormPage = () => {
   const isComplete = isTitleComplete && isVideoComplete
 
   // 사용자 피드백 및 네비게이션
-  const { handleBackNavigation } = useFormNavigation({ isFormEdited: isDirty })
   const { submitPlaylist, validatePlaylist } = useSubmitPlaylist()
   const { success, error } = useToast()
 
@@ -72,7 +71,7 @@ const PlaylistFormPage = () => {
 
   return (
     <div className="container mx-auto px-9">
-      <FormHeader title="플레이리스트 등록" onBackButtonClick={handleBackNavigation} />
+      <FormHeader title="플레이리스트 등록" />
 
       <Form {...form}>
         <form
