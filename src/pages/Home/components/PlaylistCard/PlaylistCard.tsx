@@ -14,11 +14,6 @@ import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '../../../../shared/hooks/usePlayBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
-  const playlistId = playlist?.id ?? ''
-
-  const { isLiked, likeCount, toggleLike } = usePlaylistLike(playlistId)
-  const { isBookmarked, bookmarkCount, toggleBookmark } = usePlaylistBookmark(playlistId)
-
   if (!playlist) {
     return (
       <div className="relative h-[440px] py-4">
@@ -26,14 +21,18 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
       </div>
     )
   }
+  const { isLiked, likeCount, toggleLike, likeLoading } = usePlaylistLike(playlist.id)
+  const { isBookmarked, bookmarkCount, toggleBookmark, bookmarkLoading } = usePlaylistBookmark(
+    playlist.id,
+  )
 
   const { data: videoItems = [] } = useQuery({
-    queryKey: ['playlist_items', playlistId],
+    queryKey: ['playlist_items', playlist.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('playlist_items')
         .select('*')
-        .eq('playlist_id', playlistId)
+        .eq('playlist_id', playlist.id)
       if (error) {
         throw new Error('Error fetching playlists:')
       }
@@ -80,6 +79,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
             <button
               type="button"
               onClick={toggleLike}
+              disabled={likeLoading}
               className="flex flex-col items-center gap-1 px-2"
             >
               <LikeIcon isLiked={isLiked} size={34} />
@@ -89,6 +89,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
             <button
               type="button"
               onClick={toggleBookmark}
+              disabled={bookmarkLoading}
               className="flex flex-col items-center gap-1 px-2"
             >
               <BookmarkIcon isBookmarked={isBookmarked} size={34} />
