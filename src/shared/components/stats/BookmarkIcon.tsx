@@ -3,18 +3,21 @@ import { cn } from '@/shared/model/lib/utils'
 
 interface BookmarkIconProps extends React.SVGProps<SVGSVGElement> {
   isBookmarked?: boolean
+  size?:number
 }
 
 export default function BookmarkIcon({
   isBookmarked = false,
+  size,
   className,
   ...props
 }: BookmarkIconProps) {
   return (
     <Bookmark
+    size={size}
       className={cn(
-        'h-5 w-5',
-        isBookmarked ? 'fill-c400 text-c400' : 'text-c400',
+        'transition-colors duration-300',
+        isBookmarked ? 'fill-c200 text-c200' : 'fill-c700 text-c400',
         className,
       )}
       {...props}
