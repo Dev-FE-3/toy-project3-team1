@@ -48,7 +48,7 @@ export const playlistService = {
       video_id: video.id,
       title: video.title,
       thumbnail_url: video.thumbnailUrl,
-      position: index, // 영상 순서 저장
+      sort_order: index, // 영상 순서 저장
     }))
 
     const { error } = await supabase.from('playlist_items').insert(playlistItems)
