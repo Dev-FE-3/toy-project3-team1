@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { queryClient } from '../model/lib/queryClient'
 
 export const usePlaylistLike = (playlistId: string) => {
   const { profile } = useGetAuthState()
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
-  const queryClient = useQueryClient()
 
   const { data: isLike } = useQuery<boolean>({
     queryKey: ['playlist_liked', playlistId, profile?.id],

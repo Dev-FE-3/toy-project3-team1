@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { queryClient } from '../model/lib/queryClient'
 
 export const usePlaylistBookmark = (playlistId: string) => {
   const { profile } = useGetAuthState()
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [bookmarkCount, setBookmarkCount] = useState(0)
-  const queryClient = useQueryClient()
 
   const { data: isBookmark } = useQuery<boolean>({
     queryKey: ['playlist_bookmarked', playlistId, profile?.id],
