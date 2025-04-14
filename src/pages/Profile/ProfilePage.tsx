@@ -8,15 +8,23 @@ import { Ghost } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import HashTag from '@/shared/components/HashTag/HashTag'
+import { useState } from 'react'
+import { EditProfileModal } from './components/EditProfileModal'
 
 const ProfilePage = () => {
   const { id: paramId } = useParams()
   const { profile } = useGetAuthState()
+
+  // 프로필 페이지에서는 로그인한 유저를 타겟으로 설정
+  // paramId가 있으면 해당 유저를 타겟을 설정
   const targetProfileId = paramId ?? profile?.id
   const isMyProfile = !paramId || paramId === profile?.id
+  if (!profile) return null // profile이 없으면 아무것도 렌더 안함
 
-  if (!profile) return null // 로그인 안했을 때는 아무것도 안 보임
+  // 프로필 편집 모달
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
+  // 타겟 유저의 프로필
   const { data: targetProfile } = useQuery({
     queryKey: ['profile', targetProfileId],
     queryFn: async () => {
@@ -62,9 +70,22 @@ const ProfilePage = () => {
           listCount={playlistsWithItems.length}
         />
         {isMyProfile && (
-          <Button variant="outline" type="button" className="bg-c600 text-c200 h-12 w-full">
-            프로필 편집
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              type="button"
+              className="bg-c600 text-c200 h-12 w-full"
+              onClick={() => setEditModalOpen(true)}
+            >
+              프로필 편집
+            </Button>
+            <EditProfileModal
+              open={editModalOpen}
+              onClose={() => setEditModalOpen(false)}
+              profileId={targetProfile.id}
+              currentNickname={targetProfile.nickname}
+            />
+          </>
         )}
       </div>
 

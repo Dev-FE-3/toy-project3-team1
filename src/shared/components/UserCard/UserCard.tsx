@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom'
 
 interface UserCardProps {
   profileId?: string
-  nickname: string
-  size?: 'small' | 'medium'
+  nickname?: string
+  size?: 'small' | 'medium' | 'large'
   className?: string
   listCount?: number
 }
@@ -52,7 +52,7 @@ export function UserCard({
     return (
       <div className={cn('text-h3 flex items-center gap-[24px]', className)} onClick={handleClick}>
         <Avatar size="medium">
-          <AvatarImage src="" alt={nickname} />
+          {/* <AvatarImage src="" alt={nickname} /> */}
           <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-2">
@@ -68,6 +68,16 @@ export function UserCard({
           <AvatarFallback></AvatarFallback>
         </Avatar>
         <span className="text-c300">불러오는 중...</span>
+      </div>
+    )
+  }
+  if (size === 'large') {
+    return (
+      <div className={cn('text-h2 flex items-center gap-[24px]', className)} onClick={handleClick}>
+        <Avatar size="large">
+          {/* <AvatarImage src="" alt={nickname} /> */}
+          <AvatarFallback>{nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
       </div>
     )
   }
