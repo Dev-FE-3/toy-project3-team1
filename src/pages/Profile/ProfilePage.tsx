@@ -3,9 +3,11 @@ import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { supabase } from '@/shared/model/api/supabase'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { useQuery } from '@tanstack/react-query'
-import { Playlist } from '../Home/model/types'
+import { PlaylistWithItems } from '../Home/model/types'
 import { Ghost } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import HashTag from '@/shared/components/HashTag/HashTag'
 
 const ProfilePage = () => {
   const { id: paramId } = useParams()
@@ -30,15 +32,18 @@ const ProfilePage = () => {
   })
 
   // 타켓 유저의 플레이리스트
-  const { data: playlists = [] } = useQuery<Playlist[]>({
-    queryKey: ['playlists', targetProfileId],
+  const { data: playlistsWithItems = [] } = useQuery<PlaylistWithItems[]>({
+    queryKey: ['playlists_with_items', targetProfileId],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('playlists')
-        .select('*')
+        .select('*, playlist_items(*)')
         .eq('profile_id', targetProfileId)
         .eq('is_public', true)
         .order('created_at', { ascending: false })
+
+      if (error) throw new Error('Error fetching playlists with items')
+
       return data ?? []
     },
     enabled: !!targetProfileId,
@@ -54,7 +59,7 @@ const ProfilePage = () => {
           nickname={targetProfile.nickname}
           className="mb-[20px]"
           profileId={targetProfile.id}
-          listCount={playlists.length}
+          listCount={playlistsWithItems.length}
         />
         {isMyProfile && (
           <Button variant="outline" type="button" className="bg-c600 text-c200 h-12 w-full">
@@ -63,14 +68,34 @@ const ProfilePage = () => {
         )}
       </div>
 
-      {playlists.length > 0 ? (
-        <div className="public-playlist-container">
-          {playlists.map((playlist) => (
-            <div key={playlist.id} className="public-playlist-item">
-              <div className="playlist-title">{playlist.title}</div>
-              <div className="playlist-description">
-                {playlist.description ?? '설명이 없습니다.'}
-              </div>
+      {playlistsWithItems.length > 0 ? (
+        <div className="no-scrollbar mt-7 h-164 overflow-y-scroll">
+          {playlistsWithItems.map((playlist) => (
+            <div key={playlist.id} className="mb-10">
+              <Link to={`/playlist/${playlist.id}`}>
+                <img
+                  src={playlist.thumbnail_url}
+                  alt={playlist.title}
+                  className="aspect-video h-full w-full rounded-lg object-cover"
+                />
+                <h3 className="text-c50 text-h3 mt-3">{playlist.title}</h3>
+                <div className="text-captionM text-c500 mt-2 flex gap-3">
+                  <span>좋아요 {playlist.like_count}개</span>
+                  <span>영상 {playlist.playlist_items?.length}개</span>
+                  <span>구독 {playlist.subscriber_count}명</span>
+                  <span>{getRelativeTime(playlist.created_at)}</span>
+                </div>
+                <p className="text-textR text-c400 mt-1">
+                  {playlist.description ?? '설명이 없습니다.'}
+                </p>
+                <div className="mt-4 flex gap-[10px]">
+                  {!playlist.hashtag
+                    ? ''
+                    : playlist.hashtag.map((tagName, index) => (
+                        <HashTag key={index} tag={tagName} size="small" />
+                      ))}
+                </div>
+              </Link>
             </div>
           ))}
         </div>

@@ -27,10 +27,10 @@ export interface VideoItem {
 
 // Playlist Related Types
 export interface Playlist {
-  id: number
+  id: string
   title: string
   hashtag: string[]
-  thumbnail_url: string // Changed from string | string[] to just string
+  thumbnail_url: string
   profile_id: string
   profiles: {
     nickname: string
@@ -44,6 +44,9 @@ export interface Playlist {
   description?: string
 }
 
+export interface PlaylistWithItems extends Playlist {
+  playlist_items: VideoItem[]
+}
 // Component Props Types
 export interface PlaylistViewProps {
   playlists: Playlist[]

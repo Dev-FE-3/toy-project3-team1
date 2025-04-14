@@ -136,7 +136,6 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
       setIsBookmarked(isMark) // 쿼리 결과가 변경되면 상태 업데이트
     }
   }, [isMark])
-  console.log('isMark:', isMark)
 
   const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation()
