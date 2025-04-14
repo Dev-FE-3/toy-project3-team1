@@ -41,6 +41,7 @@ export interface Playlist {
   isLiked?: boolean
   isBookmarked?: boolean
   created_at: string
+  description?: string
 }
 
 // Component Props Types
