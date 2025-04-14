@@ -47,7 +47,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     fetchCounts()
   }, [playlist.id])
 
-  const { data: isLike, refetch: refetchLike } = useQuery<boolean>({
+  const { data: isLike } = useQuery<boolean>({
     queryKey: ['playlist_liked', playlist.id, profile?.id],
     queryFn: async () => {
       if (!profile) return false
@@ -72,7 +72,6 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
       setIsLiked(isLike) // 쿼리 결과가 변경되면 상태 업데이트
     }
   }, [isLike])
-  console.log('isLike:', isLike)
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -105,7 +104,6 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           .eq('user_id', profile.id)
           .eq('playlist_id', playlist.id)
       }
-      refetchLike() // 좋아요 처리 후, 쿼리 리패치
     } catch (err) {
       console.error('Like 처리 실패:', err)
       setIsLiked(prevLiked)
@@ -113,7 +111,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     }
   }
 
-  const { data: isMark, refetch: refetchMark } = useQuery<boolean>({
+  const { data: isMark } = useQuery<boolean>({
     queryKey: ['playlist_subscribed', playlist.id, profile?.id],
     queryFn: async () => {
       if (!profile) return false
@@ -171,7 +169,6 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           .eq('user_id', profile.id)
           .eq('playlist_id', playlist.id)
       }
-      refetchMark() // 구독 처리 후, 쿼리 리패치
     } catch (err) {
       console.error('Bookmarked 처리 실패:', err)
       setIsBookmarked(prevMarked)
