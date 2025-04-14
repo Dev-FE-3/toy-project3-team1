@@ -10,8 +10,8 @@ import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import EmptyPlaylistCard from './EmptyPlaylistCard'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
-import { usePlaylistLike } from '../../hooks/usePlaylistLike'
-import { usePlaylistBookmark } from '../../hooks/usePlayBookmark'
+import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
+import { usePlaylistBookmark } from '../../../../shared/hooks/usePlayBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) {
