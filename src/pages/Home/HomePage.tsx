@@ -1,7 +1,7 @@
 import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
-import { GAMES } from './constants/games'
+import { GAMES } from './constants/GAMES'
 import { limitCategoryCount } from './utils/limitCategoryCount'
 import { useInfinitePlaylists } from './hooks/useInfinitePlaylists'
 import { useEffect, useRef } from 'react'
