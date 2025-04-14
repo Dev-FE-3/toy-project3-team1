@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import {
   FormHeader,
@@ -8,7 +9,6 @@ import {
   Tabs,
   VideoListForm,
 } from '@/pages/PlaylistForm/components'
-import { ToastContainer } from '@/pages/PlaylistForm/components/ToastContainer'
 import { useSubmitPlaylist } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
 import { Button } from '@/shared/components/ui/button'
@@ -18,6 +18,8 @@ import { useToast } from '@/shared/store/toastStore'
 type FormTab = 'content' | 'video'
 
 const PlaylistFormPage = () => {
+  const navigate = useNavigate()
+
   // Form 상태 관리 - mode를 onChange로 설정하여 실시간 검증
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(playlistFormSchema),
@@ -58,9 +60,10 @@ const PlaylistFormPage = () => {
         return
       }
 
-      const result = await submitPlaylist(values)
+      const result = await submitPlaylist(values, false) // alert 표시 비활성화
       if (result) {
-        success('플레이리스트가 성공적으로 제출되었습니다.')
+        success('플레이리스트가 성공적으로 생성되었습니다.')
+        navigate('/playlists')
       }
     } catch (err: unknown) {
       const errorMessage =
@@ -134,7 +137,6 @@ const PlaylistFormPage = () => {
           </Tabs>
         </form>
       </Form>
-      <ToastContainer />
     </div>
   )
 }
