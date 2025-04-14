@@ -14,6 +14,11 @@ import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '../../../../shared/hooks/usePlayBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
+  const playlistId = playlist?.id ?? ''
+
+  const { isLiked, likeCount, toggleLike } = usePlaylistLike(playlistId)
+  const { isBookmarked, bookmarkCount, toggleBookmark } = usePlaylistBookmark(playlistId)
+
   if (!playlist) {
     return (
       <div className="relative h-[440px] py-4">
@@ -22,16 +27,13 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
     )
   }
 
-  const { isLiked, likeCount, toggleLike } = usePlaylistLike(playlist.id)
-  const { isBookmarked, bookmarkCount, toggleBookmark } = usePlaylistBookmark(playlist.id)
-
   const { data: videoItems = [] } = useQuery({
-    queryKey: ['playlist_items', playlist.id],
+    queryKey: ['playlist_items', playlistId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('playlist_items')
         .select('*')
-        .eq('playlist_id', playlist.id)
+        .eq('playlist_id', playlistId)
       if (error) {
         throw new Error('Error fetching playlists:')
       }
