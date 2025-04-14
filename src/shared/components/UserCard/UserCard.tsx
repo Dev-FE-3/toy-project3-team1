@@ -20,7 +20,8 @@ export function UserCard({
 }: UserCardProps) {
   const navigate = useNavigate()
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // 클릭 이벤트 전파 방지
     if (profileId) {
       // 프로필 페이지로 이동
       navigate(`/profile/${profileId}`)
