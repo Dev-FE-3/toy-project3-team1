@@ -1,0 +1,3 @@
+const CATEGORY_COUNT_LIMIT = 3
+
+export { CATEGORY_COUNT_LIMIT }

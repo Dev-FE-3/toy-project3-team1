@@ -7,7 +7,7 @@ export default function BottomNav() {
       <Link to={'/'} className="flex h-full w-[88px] items-center justify-center">
         <Home size={24} className="text-c50" />
       </Link>
-      <Link to={'/create'} className="flex h-full w-[88px] items-center justify-center">
+      <Link to={'/playlist/new'} className="flex h-full w-[88px] items-center justify-center">
         <SquarePlus size={24} className="text-c50" />
       </Link>
       {/* <Link to={'/feed'} className="flex h-full w-[88px] items-center justify-center">

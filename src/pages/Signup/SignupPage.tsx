@@ -73,9 +73,7 @@ export default function SignupPage() {
   return (
     <div className="bg-c900 flex min-h-screen flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <h1 className="text-c50 text-h2 mt-[200px] mb-[100px] text-center">
-          <img className="mx-auto h-[52px]" src="/images/logo.svg" />
-        </h1>
+        <img className="mx-auto h-[52px]" src="/images/logo.svg" />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -4,10 +4,9 @@ import {
   AvatarImage,
 } from '@/shared/components/ui/avatar'
 
-type AvatarSize = 'small' | 'medium' | 'large'
-
 type AvatarProps = {
-  size?: AvatarSize
+  size?: 'small' | 'medium' | 'large'
+  children?: React.ReactNode
 }
 
 const AVATAR_SIZES = {
@@ -16,11 +15,15 @@ const AVATAR_SIZES = {
   large: 'h-[130px] w-[130px]',
 } as const
 
-export default function Avatar({ size = 'small' }: AvatarProps) {
+export default function Avatar({ size = 'small', children }: AvatarProps) {
   return (
     <AvatarComponent className={AVATAR_SIZES[size]}>
-      <AvatarImage src="https://github.com/shadcn.png" />
-      <AvatarFallback>CN</AvatarFallback>
+      {children ?? (
+        <>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </>
+      )}
     </AvatarComponent>
   )
 }

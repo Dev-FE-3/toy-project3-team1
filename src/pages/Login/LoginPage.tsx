@@ -1,11 +1,10 @@
-import { useEffect } from 'react'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
 import { signInWithEmail } from '@/shared/model/api/auth'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 
@@ -50,9 +49,10 @@ export default function LoginPage() {
   return (
     <div className="bg-c900 flex min-h-screen flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <h1 className="text-c50 text-h2 mt-[200px] mb-[100px]">
-          <img className="mx-auto h-[52px]" src="/images/logo.svg" />
-        </h1>
+        <img
+          src="/images/logo.svg"
+          className="text-c50 text-h2 m-auto mt-[200px] mb-[100px] w-[200px]"
+        />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
