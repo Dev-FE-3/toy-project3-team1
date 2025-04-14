@@ -58,8 +58,11 @@ const PlaylistFormPage = () => {
         error(errors)
         return
       }
-      await submitPlaylist(values)
-      success('플레이리스트가 성공적으로 제출되었습니다.')
+
+      const result = await submitPlaylist(values)
+      if (result) {
+        success('플레이리스트가 성공적으로 제출되었습니다.')
+      }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다. 다시 시도해주세요.'
