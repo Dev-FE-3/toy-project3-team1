@@ -1,13 +1,14 @@
-import { useRef, useState } from 'react'
 import { cn } from '@/shared/model/lib/utils'
+import { useRef, useState } from 'react'
 
 interface StatusButtonProps {
   status: 'active' | 'inactive'
   onClick?: () => void
   className?: string
+  children?: React.ReactNode
 }
 
-export default function StatusButton({ status, onClick, className }: StatusButtonProps) {
+export default function StatusButton({ status, onClick, className, children }: StatusButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const pressedRef = useRef(false)
   const [isPressed, setIsPressed] = useState(false)
@@ -68,7 +69,7 @@ export default function StatusButton({ status, onClick, className }: StatusButto
         className,
       )}
     >
-      {status === 'active' ? '활성화' : '비활성'}
+      {children || (status === 'active' ? '활성화' : '비활성')}
     </button>
   )
 }

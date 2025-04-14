@@ -1,16 +1,17 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom'
 import { PrivateRoute, PublicRoute } from './ProtectedRouter'
 
-import Layout from '../shared/components/layout/Layout'
-import HomePage from '../pages/Home/HomePage'
-import PlaylistDetailPage from '../pages/PlaylistDetail/PlaylistDetailPage'
-import PlaylistFormPage from '../pages/PlaylistForm/PlaylistFormPage'
-import PlaylistCollectionPage from '../pages/PlaylistCollection/PlaylistCollectionpage'
-import ProfilePage from '../pages/Profile/ProfilePage'
-import LoginPage from '../pages/Login/LoginPage'
-import SignupPage from '../pages/Signup/SignupPage'
+import Settings from '@/pages/Settings/Settings'
 import DesignSystem from '../pages/DesignSystem/DesignSystem'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
+import HomePage from '../pages/Home/HomePage'
+import LoginPage from '../pages/Login/LoginPage'
+import PlaylistCollectionPage from '../pages/PlaylistCollection/PlaylistCollectionpage'
+import PlaylistDetailPage from '../pages/PlaylistDetail/PlaylistDetailPage'
+import PlaylistFormPage from '../pages/PlaylistForm/PlaylistFormPage'
+import ProfilePage from '../pages/Profile/ProfilePage'
+import SignupPage from '../pages/Signup/SignupPage'
+import Layout from '../shared/components/layout/Layout'
 // import WatchVideoPage from './pages/WatchVideo/WatchVideoPage'
 
 const routes: RouteObject[] = [
@@ -45,6 +46,10 @@ const routes: RouteObject[] = [
       {
         path: '/profile',
         element: <ProfilePage />,
+      },
+      {
+        path: '/settings',
+        element: <Settings />,
       },
       {
         path: '/d',
