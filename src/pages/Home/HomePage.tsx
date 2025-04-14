@@ -5,14 +5,26 @@ import { GAMES } from './constants/GAMES'
 import { limitCategoryCount } from './utils/limitCategoryCount'
 import { useInfinitePlaylists } from './hooks/useInfinitePlaylists'
 import { useEffect, useRef } from 'react'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { queryClient } from '@/shared/model/lib/queryClient'
 
 const HomePage = () => {
-  const gameCount = limitCategoryCount(GAMES.length)
+  const { profile } = useGetAuthState()
+  const { selectedCategory, handleCategorySelect } = useCategoryFilter() // 선택된 카테고리 상태 관리
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfinitePlaylists(
+    profile?.id,
+    selectedCategory,
+  ) // 무한 스크롤을 위한 데이터 가져오기 (로그인한 사용자의 플레이리스트 제외)
+  const gameCount = limitCategoryCount(GAMES.length) // 카테고리 개수 제한
 
-  const { selectedCategory, handleCategorySelect } = useCategoryFilter()
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfinitePlaylists(selectedCategory)
+  // 사용자 변경 시 쿼리 초기화
+  useEffect(() => {
+    if (profile?.id) {
+      queryClient.removeQueries({
+        queryKey: ['playlists', profile.id, selectedCategory],
+      })
+    }
+  }, [profile?.id])
 
   const playlists = data?.pages.flat() ?? []
   const loadMoreRef = useRef(null)
@@ -38,7 +50,7 @@ const HomePage = () => {
         selectedCategory={selectedCategory}
       />
       <PlaylistContainer key={selectedCategory} playlists={playlists} />
-      <div ref={loadMoreRef} className="h-10" />
+      <div ref={loadMoreRef} />
     </>
   )
 }
