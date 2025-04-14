@@ -2,13 +2,14 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import type { Category, Playlist } from '@/pages/Home/model/types'
 
-export const useInfinitePlaylists = (category?: Category) => {
+export const useInfinitePlaylists = (userId?: string, category?: Category) => {
   const pageSize = 10
 
   return useInfiniteQuery<Playlist[], Error>({
-    queryKey: ['playlists', category],
-    queryFn: async ({ pageParam = 0 }: { pageParam?: unknown }) => {
+    queryKey: ['playlists', userId, category],
+    queryFn: async ({ pageParam = 0 }) => {
       const offset = pageParam as number
+
       let query = supabase
         .from('playlists')
         .select(
@@ -21,9 +22,14 @@ export const useInfinitePlaylists = (category?: Category) => {
         .order('created_at', { ascending: false })
         .range(offset * pageSize, offset * pageSize + (pageSize - 1))
 
-      // 배열 필터링 처리
+      // 본인 제외
+      if (userId) {
+        query = query.neq('profile_id', userId)
+      }
+
+      // 카테고리 필터링
       if (category && category !== '전체') {
-        query = query.filter('hashtag', 'cs', `{${category}}`) // 배열에서 category 값 찾기
+        query = query.filter('hashtag', 'cs', `{${category}}`)
       }
 
       const { data, error } = await query

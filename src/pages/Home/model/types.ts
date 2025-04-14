@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Game } from '../constants/games'
+import { Game } from '../constants/GAMES'
 
 export type SwipeDirection = 'up' | 'down'
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GAMES } from '../constants/games'
+import { GAMES } from '../constants/GAMES'
 import { Category } from '../model/types'
 
 export const useCategoryFilter = () => {
