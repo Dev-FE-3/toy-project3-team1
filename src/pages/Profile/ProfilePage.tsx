@@ -2,11 +2,10 @@ import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-
-import TargetUserPlaylists from './components/TargetUserPlaylists/TargetUserPlaylists'
 import { useTargetUserPlaylists } from './hooks/useTargetUserPlaylists'
-import ProfilePageHeader from './components/ProfilePageHeader'
 import { useTargetUserProfileInfo } from './hooks/useTargetUserProfileInfo'
+import TargetUserPlaylists from './components/TargetUserPlaylists/TargetUserPlaylists'
+import ProfilePageHeader from './components/ProfilePageHeader'
 import ProfilePageSkeleton from './components/ProfilePageSkeleton'
 
 const ProfilePage = () => {
@@ -16,27 +15,22 @@ const ProfilePage = () => {
   const [showSkeleton, setShowSkeleton] = useState(true)
 
   const targetUserProfileId = paramId ?? profile?.id
-  const isMyProfile = !paramId || paramId === profile?.id
+  const isMyProfile = !paramId || paramId === profile?.id // 프로필 편집 버튼 분기 처리를 위해 본인 프로필인지 아닌지 구분
 
   const {
     data: targetUserProfile,
     isLoading: isTargetUserProfileLoading,
     isFetching: isTargetUserProfileFetching,
-  } = useTargetUserProfileInfo(targetUserProfileId)
+  } = useTargetUserProfileInfo(targetUserProfileId) // 타겟 유저의 프로필 정보 데이터 관리 훅 : nickname 데이터 추출
 
   const {
     data: playlistsWithItems = [],
     isLoading: isTargetUserPlaylistsLoading,
     isFetching: isTargetUserPlaylistsFetching,
-  } = useTargetUserPlaylists(targetUserProfileId)
+  } = useTargetUserPlaylists(targetUserProfileId) // 타겟 유저의 플레이리스트 데이터 관리 훅
 
   const isLoading = isTargetUserProfileLoading || isTargetUserPlaylistsLoading
   const isFetching = isTargetUserProfileFetching || isTargetUserPlaylistsFetching
-
-  // useEffect(() => {
-  //   // 타겟 유저 ID가 바뀌면 skeleton 다시 보이게
-  //   setShowSkeleton(true)
-  // }, [targetUserProfileId])
 
   useEffect(() => {
     if (!isLoading && !isFetching) {
@@ -44,7 +38,7 @@ const ProfilePage = () => {
       const timer = setTimeout(() => setShowSkeleton(false), 500)
       return () => clearTimeout(timer)
     }
-  }, [targetUserProfileId, isLoading, isFetching]) //`targetUserProfileId`,`isLoading`과 `isFetching` 상태 변경을 감지
+  }, [isLoading, isFetching]) // `isLoading`과 `isFetching` 상태 변경을 감지
 
   if (!profile || !targetUserProfile) return null
 
@@ -72,7 +66,7 @@ const ProfilePage = () => {
         animate={{ opacity: showSkeleton ? 0 : 1 }}
         transition={{ duration: 0.5 }}
       >
-        <ProfilePageHeader
+        <ProfilePageHeader // 프로필 페이지 헤더 영역 : 프로필 사진, 이름, 플레이리스트 개수, 프로필 편집 버튼
           playlists={playlistsWithItems}
           isMyProfile={isMyProfile}
           editModalOpen={editModalOpen}

@@ -7,6 +7,8 @@ const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) =
   return (
     <div key={playlist.id} className="mb-10">
       <Link to={`/playlist/${playlist.id}`}>
+        {' '}
+        {/* 플레이리스트 상세 페이지로 이동 */}
         <img
           src={playlist.thumbnail_url}
           alt={playlist.title}
@@ -21,7 +23,7 @@ const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) =
         </div>
         <p className="text-textR text-c400 mt-1">{playlist.description ?? '설명이 없습니다.'}</p>
         <div className="mt-4 flex gap-[10px]">
-          {!playlist.hashtag
+          {!playlist.hashtag // hashtags 컴포넌트 생성 필요 (홈, 플레이리스 상세 페이지에서도 활용)
             ? ''
             : playlist.hashtag.map((tagName, index) => (
                 <HashTag key={index} tag={tagName} size="small" />
