@@ -12,7 +12,7 @@ const Header = () => {
 const Layout = () => {
   return (
     <>
-      <main className="relative h-screen">
+      <main id="main" className="relative h-screen">
         <Header />
         <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip">
           <Outlet />

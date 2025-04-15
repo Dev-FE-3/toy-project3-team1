@@ -47,6 +47,10 @@ const routes: RouteObject[] = [
         element: <ProfilePage />,
       },
       {
+        path: '/profile/:id',
+        element: <ProfilePage />,
+      },
+      {
         path: '/d',
         element: <DesignSystem />,
       },
