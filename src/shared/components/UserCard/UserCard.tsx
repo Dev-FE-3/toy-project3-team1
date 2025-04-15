@@ -20,65 +20,46 @@ export function UserCard({
 }: UserCardProps) {
   const navigate = useNavigate()
 
+  const fallbackText = nickname?.slice(0, 2).toUpperCase() ?? ''
+  const isLoading = !nickname
+
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation() // 클릭 이벤트 전파 방지
-    if (profileId) {
-      // 프로필 페이지로 이동
-      navigate(`/profile/${profileId}`)
-    }
+    e.stopPropagation()
+    if (profileId) navigate(`/profile/${profileId}`)
   }
 
-  if (!nickname && size === 'small') {
-    return (
-      <div className={cn('flex items-center gap-3', className)} onClick={handleClick}>
-        <Avatar size="small">
-          <AvatarFallback></AvatarFallback>
-        </Avatar>
-        <span className="text-c300 text-textR">불러오는 중...</span>
-      </div>
-    )
-  } else if (nickname && size === 'small') {
-    return (
-      <div className={cn('flex items-center gap-3', className)} onClick={handleClick}>
-        <Avatar size="small">
-          <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <span className="text-c300 text-textR">{nickname}</span>
-      </div>
-    )
-  }
-
-  if (nickname && size === 'medium') {
-    return (
-      <div className={cn('text-h3 flex items-center gap-[24px]', className)} onClick={handleClick}>
-        <Avatar size="medium">
-          {/* <AvatarImage src="" alt={nickname} /> */}
-          <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
+  const renderText = () => {
+    if (size === 'medium') {
+      return (
         <div className="flex flex-col gap-2">
           <h3 className="text-c50">{nickname}</h3>
-          <div className="text-c300 text-textR">리스트 {listCount || 0}개</div>
+          <div className="text-c300 text-textR">리스트 {listCount ?? 0}개</div>
         </div>
-      </div>
-    )
-  } else if (!nickname && size === 'medium') {
-    return (
-      <div className={cn('text-h3 flex items-center gap-[24px]', className)} onClick={handleClick}>
-        <Avatar size="medium">
-          <AvatarFallback></AvatarFallback>
-        </Avatar>
-        <span className="text-c300">불러오는 중...</span>
-      </div>
-    )
+      )
+    }
+
+    if (size === 'small') {
+      return <span className="text-c300 text-textR">{isLoading ? '불러오는 중...' : nickname}</span>
+    }
+
+    return null
   }
-  if (size === 'large') {
-    return (
-      <div className={cn('text-h2 flex items-center gap-[24px]', className)} onClick={handleClick}>
-        <Avatar size="large">
-          {/* <AvatarImage src="" alt={nickname} /> */}
-          <AvatarFallback>{nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-      </div>
-    )
-  }
+
+  return (
+    <div
+      className={cn(
+        'flex items-center',
+        size === 'small' && 'gap-3',
+        size === 'medium' && 'text-h3 gap-[24px]',
+        size === 'large' && 'text-h2 gap-[24px]',
+        className,
+      )}
+      onClick={handleClick}
+    >
+      <Avatar size={size}>
+        <AvatarFallback>{fallbackText}</AvatarFallback>
+      </Avatar>
+      {renderText()}
+    </div>
+  )
 }
