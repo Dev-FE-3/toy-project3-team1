@@ -26,19 +26,19 @@ const textareaStyles = `
     font-size: 1rem; /* 텍스트 크기를 제목과 동일하게 설정 */
   }
 `
+// 상수 정의
+const MAX_TITLE_LENGTH = 20
+const MAX_DESCRIPTION_LENGTH = 150
+const MAX_HASHTAG_LENGTH = 20
 
 export const PlaylistInfoForm = () => {
   const { control, setValue, watch } = useFormContext<PlaylistFormValues>()
-
-  // 상수 정의
-  const MAX_TITLE_LENGTH = 20
-  const MAX_DESCRIPTION_LENGTH = 150
-  const MAX_HASHTAG_LENGTH = 20
 
   // 폼 필드 값 감시
   const title = watch('title') || ''
   const description = watch('description') || ''
   const hashtags = watch('hashtags') || []
+  const thumbnailUrl = watch('thumbnailUrl') || ''
 
   // 로컬 상태
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -47,6 +47,13 @@ export const PlaylistInfoForm = () => {
   const [titleCount, setTitleCount] = useState(0)
   const [descriptionCount, setDescriptionCount] = useState(0)
   const [hashtagCount, setHashtagCount] = useState(0)
+
+  // 썸네일 URL이 있을 경우 미리보기 설정
+  useEffect(() => {
+    if (thumbnailUrl && !thumbnailPreview) {
+      setThumbnailPreview(thumbnailUrl)
+    }
+  }, [thumbnailUrl])
 
   // 글자수 카운트 업데이트
   useEffect(() => {
@@ -65,6 +72,7 @@ export const PlaylistInfoForm = () => {
   const removeThumbnail = () => {
     setThumbnailPreview(null)
     setValue('thumbnail', null)
+    setValue('thumbnailUrl', '')
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -90,6 +98,7 @@ export const PlaylistInfoForm = () => {
     reader.onloadend = () => {
       setThumbnailPreview(reader.result as string)
       setValue('thumbnail', file)
+      setValue('thumbnailUrl', '')
     }
     reader.readAsDataURL(file)
   }

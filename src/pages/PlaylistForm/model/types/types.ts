@@ -15,6 +15,7 @@ export const playlistFormSchema = z.object({
     }),
   ),
   thumbnail: z.instanceof(File).nullable(),
+  thumbnailUrl: z.string().optional(),
 })
 
 export type PlaylistFormValues = z.infer<typeof playlistFormSchema>
@@ -24,14 +25,19 @@ export type PlaylistFormValues = z.infer<typeof playlistFormSchema>
 type UserId = string
 type ProfileId = UserId // profile_id는 실제로 user_id와 같은 값을 사용
 
-export interface CreatePlaylistParams {
+interface BasePlaylistParams {
   title: string
   description?: string | null
-  profile_id: ProfileId // 데이터베이스의 컬럼명을 유지하되, 실제로는 UserId
   thumbnail_url?: string | null
   is_public: boolean
   hashtag?: string[] | null
 }
+
+export interface CreatePlaylistParams extends BasePlaylistParams {
+  profile_id: ProfileId // 데이터베이스의 컬럼명을 유지하되, 실제로는 UserId
+}
+
+export type UpdatePlaylistParams = BasePlaylistParams
 
 export interface UploadThumbnailParams {
   file: File
@@ -79,4 +85,25 @@ export interface TabItemProps {
   isComplete?: boolean
   onClick: () => void
   className?: string
+}
+
+export interface PlaylistItem {
+  id?: string
+  video_id: string
+  title: string
+  thumbnail_url: string
+  sort_order: number
+  playlist_id: string
+}
+
+export interface Playlist {
+  id: string
+  title: string
+  description: string | null
+  profile_id: string
+  thumbnail_url: string | null
+  is_public: boolean
+  hashtag: string[] | null
+  created_at: string
+  playlist_items: PlaylistItem[]
 }

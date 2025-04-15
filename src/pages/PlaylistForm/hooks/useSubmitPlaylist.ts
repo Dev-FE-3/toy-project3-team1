@@ -65,9 +65,7 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
       setSubmitError(null)
 
       const profileId = useUserStore.getState().profileId
-      if (!profileId) {
-        throw new Error('사용자 정보를 찾을 수 없습니다.')
-      }
+      if (!profileId) throw new Error('사용자 정보를 찾을 수 없습니다.')
 
       // 1. 플레이리스트 생성
       const newPlaylist = await createPlaylistMutation.mutateAsync({
@@ -88,24 +86,32 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
       // 3. 썸네일 처리
       let thumbnailUrl = ''
       if (data.thumbnail) {
-        // 사용자가 직접 업로드한 썸네일이 있는 경우
-        thumbnailUrl = await uploadThumbnailMutation.mutateAsync({
-          file: data.thumbnail,
-          userId: profileId,
-          playlistId: newPlaylist.id,
-        })
-
-        // 썸네일 URL 업데이트
-        await updateThumbnailUrlMutation.mutateAsync({
-          playlistId: newPlaylist.id,
-          thumbnailUrl,
-        })
+        try {
+          // 썸네일 업로드
+          thumbnailUrl = await uploadThumbnailMutation.mutateAsync({
+            file: data.thumbnail,
+            userId: profileId,
+            playlistId: newPlaylist.id,
+          })
+          // 썸네일 URL 업데이트
+          await updateThumbnailUrlMutation.mutateAsync({
+            playlistId: newPlaylist.id,
+            thumbnailUrl,
+          })
+        } catch (thumbError) {
+          setSubmitError(new Error('썸네일 업로드 또는 URL 업데이트 중 오류가 발생했습니다.'))
+          throw thumbError
+        }
       } else if (data.videos.length > 0) {
-        // 첫 번째 영상의 썸네일 사용
-        await updateThumbnailUrlMutation.mutateAsync({
-          playlistId: newPlaylist.id,
-          thumbnailUrl: data.videos[0].thumbnailUrl,
-        })
+        try {
+          await updateThumbnailUrlMutation.mutateAsync({
+            playlistId: newPlaylist.id,
+            thumbnailUrl: data.videos[0].thumbnailUrl,
+          })
+        } catch (thumbError) {
+          setSubmitError(new Error('기본 썸네일 URL 업데이트 중 오류가 발생했습니다.'))
+          throw thumbError
+        }
       }
 
       // 데이터 형식 변환 (표시용)
@@ -119,7 +125,6 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
       onSuccess?.()
       return true
     } catch (error) {
-      console.error('Error details:', error)
       const err = error instanceof Error ? error : new Error('알 수 없는 오류가 발생했습니다.')
       setSubmitError(err)
       onError?.(err)
