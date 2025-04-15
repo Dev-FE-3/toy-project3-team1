@@ -6,9 +6,9 @@ const TargetUserPlaylists = ({ playlists }: { playlists: PlaylistWithItems[] }) 
   return (
     <>
       {playlists.length > 0 ? (
-        <div className="no-scrollbar mt-7 h-153 overflow-y-scroll">
+        <div>
           {playlists.map((playlist) => (
-            <TargetUserPlaylistItem playlist={playlist} />
+            <TargetUserPlaylistItem playlist={playlist} key={playlist.title} />
           ))}
         </div>
       ) : (
