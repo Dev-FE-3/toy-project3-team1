@@ -47,20 +47,7 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
     }
   }
 
-  const showFormattedDataAlert = (formattedData: FormattedPlaylistData) => {
-    alert(
-      `📋 플레이리스트 정보 📋\n\n` +
-        `제목: ${formattedData.title}\n` +
-        `설명: ${formattedData.description}\n` +
-        `해시태그: ${formattedData.hashtags}\n` +
-        `공개 여부: ${formattedData.isPublic}\n` +
-        `썸네일: ${formattedData.thumbnail}\n` +
-        `등록된 영상: ${formattedData.videoCount}개\n` +
-        `영상 목록:\n- ${formattedData.videoList}`,
-    )
-  }
-
-  const submitPlaylist = async (data: PlaylistFormValues, showAlert = true) => {
+  const submitPlaylist = async (data: PlaylistFormValues) => {
     try {
       setIsSubmitting(true)
       setSubmitError(null)
@@ -118,10 +105,6 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
       // 데이터 형식 변환 (표시용)
       const formatted = formatPlaylistData(data)
       setFormattedData(formatted)
-
-      if (showAlert) {
-        showFormattedDataAlert(formatted)
-      }
 
       onSuccess?.()
       return true

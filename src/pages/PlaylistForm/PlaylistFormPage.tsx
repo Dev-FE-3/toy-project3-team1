@@ -121,7 +121,7 @@ const PlaylistFormPage = () => {
       if (isEditMode) {
         await updatePlaylist(values)
       } else {
-        const result = await submitPlaylist(values, true)
+        const result = await submitPlaylist(values)
         if (result) {
           success('플레이리스트가 성공적으로 생성되었습니다.')
           navigate('/playlists')
@@ -132,6 +132,47 @@ const PlaylistFormPage = () => {
         err instanceof Error ? err.message : '오류가 발생했습니다. 다시 시도해주세요.'
       error(errorMessage)
     }
+  }
+
+  const getButtonText = (
+    isComplete: boolean,
+    isEditMode: boolean,
+    isUpdating: boolean,
+    isSubmitting: boolean,
+  ) => {
+    if (!isComplete) return '다음'
+
+    if (isEditMode) {
+      return isUpdating ? '리플레이 만드는 중' : '플레이리스트 수정하기'
+    }
+
+    return isSubmitting ? '리플레이 만드는 중' : '플레이리스트 생성하기'
+  }
+
+  const handleButtonClick = (
+    isComplete: boolean,
+    activeKey: FormTab,
+    title: string,
+    videos: PlaylistFormValues['videos'],
+    setActiveKey: (key: FormTab) => void,
+  ) => {
+    if (!isComplete) {
+      if (activeKey === 'content' && title.trim()) {
+        setActiveKey('video')
+      } else if (activeKey === 'video' && videos.length > 0) {
+        setActiveKey('content')
+      }
+    }
+  }
+
+  const getButtonDisabled = (
+    activeKey: FormTab,
+    title: string,
+    videos: PlaylistFormValues['videos'],
+    isSubmitting: boolean,
+    isUpdating: boolean,
+  ) => {
+    return (activeKey === 'content' ? !title : videos.length === 0) || isSubmitting || isUpdating
   }
 
   if (isEditMode && isLoadingPlaylist) {
@@ -178,39 +219,22 @@ const PlaylistFormPage = () => {
                   />
                 </div>
 
+                {/* 폼 컨텐츠 */}
                 <div className="max-h-full min-h-0 flex-1 overflow-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 
-                <div className="mt-auto py-4">
-                  {/* 메인 액션 버튼 */}
+                {/* 하단 버튼 */}
+                <div className="py-6">
                   <Button
                     type={isComplete ? 'submit' : 'button'}
                     className="bg-c700 text-c100 h-[56px] w-full rounded-md py-2 text-[16px]"
-                    disabled={
-                      (activeKey === 'content' ? !title : videos.length === 0) ||
-                      isSubmitting ||
-                      isUpdating
+                    disabled={getButtonDisabled(activeKey, title, videos, isSubmitting, isUpdating)}
+                    onClick={() =>
+                      handleButtonClick(isComplete, activeKey, title, videos, setActiveKey)
                     }
-                    onClick={() => {
-                      if (!isComplete) {
-                        if (activeKey === 'content' && title.trim()) {
-                          setActiveKey('video')
-                        } else if (activeKey === 'video' && videos.length > 0) {
-                          setActiveKey('content')
-                        }
-                      }
-                    }}
                   >
-                    {isComplete
-                      ? isEditMode
-                        ? isUpdating
-                          ? '수정 중...'
-                          : '플레이리스트 수정하기'
-                        : isSubmitting
-                          ? '생성 중...'
-                          : '플레이리스트 생성하기'
-                      : '다음'}
+                    {getButtonText(isComplete, isEditMode, isUpdating, isSubmitting)}
                   </Button>
                 </div>
               </div>
