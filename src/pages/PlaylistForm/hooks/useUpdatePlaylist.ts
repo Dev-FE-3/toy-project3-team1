@@ -1,12 +1,13 @@
-import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
-import { useUserStore } from '@/shared/store/userStore'
 import { useState } from 'react'
+
+import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
 import {
   useRemoveThumbnail,
   useUpdatePlaylist,
   useUpdatePlaylistItems,
   useUploadThumbnail,
-} from '../queries/usePlaylistQuery'
+} from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { useUserStore } from '@/shared/store/userStore'
 
 interface UseUpdatePlaylistFormProps {
   playlistId: string

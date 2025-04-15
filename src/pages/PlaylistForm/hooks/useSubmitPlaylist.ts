@@ -1,12 +1,13 @@
-import { PlaylistFormValues } from '@/pages//PlaylistForm/model/types'
-import { useUserStore } from '@/shared/store/userStore'
 import { useState } from 'react'
+
+import { PlaylistFormValues } from '@/pages//PlaylistForm/model/types'
 import {
   useCreatePlaylist,
   useCreatePlaylistItems,
   useUpdateThumbnailUrl,
   useUploadThumbnail,
-} from '../queries/usePlaylistQuery'
+} from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { useUserStore } from '@/shared/store/userStore'
 
 interface UseSubmitPlaylistProps {
   onSuccess?: () => void

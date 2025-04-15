@@ -1,12 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Playlist, PlaylistItem, UpdatePlaylistParams } from '../model/types/types'
+
+import type {
+  Playlist,
+  PlaylistItem,
+  UpdatePlaylistParams,
+} from '@/pages/PlaylistForm/model/types/types'
 import {
   CreatePlaylistItemsParams,
   CreatePlaylistParams,
   UpdateThumbnailUrlParams,
   UploadThumbnailParams,
-} from '../model/types/types'
-import { playlistService } from '../services/playlistService'
+} from '@/pages/PlaylistForm/model/types/types'
+import { playlistService } from '@/pages/PlaylistForm/services/playlistService'
 
 // === 플레이리스트 생성 ===
 export const useCreatePlaylist = () => {
