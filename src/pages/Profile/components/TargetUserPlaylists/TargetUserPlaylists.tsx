@@ -8,10 +8,11 @@ const TargetUserPlaylists = ({ playlists }: { playlists: PlaylistWithItems[] }) 
       {playlists.length > 0 ? ( // 공개로 설정한 플레이리스트가 있을 때
         <div>
           {playlists.map((playlist) => (
-            <TargetUserPlaylistItem playlist={playlist} key={playlist.title} />
+            <TargetUserPlaylistItem playlist={playlist} key={playlist.id} />
           ))}
         </div>
-      ) : ( // 공개로 설정한 플레이리스트가 없을 때
+      ) : (
+        // 공개로 설정한 플레이리스트가 없을 때
         <div className="mt-[100px] flex flex-col items-center text-center">
           <Ghost size={120} className="text-c600 m-auto" />
           <p className="text-h4 text-c300 mt-5">이곳은 조용하네요..</p>

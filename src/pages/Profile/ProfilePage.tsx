@@ -7,6 +7,7 @@ import { useTargetUserProfileInfo } from './hooks/useTargetUserProfileInfo'
 import TargetUserPlaylists from './components/TargetUserPlaylists/TargetUserPlaylists'
 import ProfilePageHeader from './components/ProfilePageHeader'
 import ProfilePageSkeleton from './components/ProfilePageSkeleton'
+import UserNotFound from './components/UserNotFound'
 
 const ProfilePage = () => {
   const { id: paramId } = useParams()
@@ -35,12 +36,19 @@ const ProfilePage = () => {
   useEffect(() => {
     if (!isLoading && !isFetching) {
       // 로딩과 페칭이 모두 끝나면 1초 후에 스켈레톤 숨기기
-      const timer = setTimeout(() => setShowSkeleton(false), 500)
+      const timer = setTimeout(() => setShowSkeleton(false), 1000)
       return () => clearTimeout(timer)
     }
   }, [isLoading, isFetching]) // `isLoading`과 `isFetching` 상태 변경을 감지
 
-  if (!profile || !targetUserProfile) return null
+  if (!targetUserProfile) {
+    return <UserNotFound />
+  }
+
+  if (!profile || !targetUserProfile) {
+    // 프로필 데이터가 렌더되지 않았을 시
+    return <ProfilePageSkeleton />
+  }
 
   return (
     <div className="relative h-full">
@@ -49,7 +57,7 @@ const ProfilePage = () => {
         {showSkeleton && (
           <motion.div
             className="absolute inset-0 z-10 bg-white"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
