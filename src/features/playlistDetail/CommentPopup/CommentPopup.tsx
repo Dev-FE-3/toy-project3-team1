@@ -35,7 +35,7 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
   return (
     <AnimatePresence>
       {open && (
-        <div className="absolute inset-x-0 bottom-0 z-50">
+        <div className="commentContainer absolute inset-x-0 bottom-35 z-50">
           <motion.div
             ref={popupRef}
             initial={{ y: '100%' }}
@@ -43,7 +43,7 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             className={cn(
-              'bg-c800 h-[calc(100vh-100px)] max-h-[59vh] rounded-4xl rounded-t-4xl text-white',
+              'bg-c800 text-c50 h-[calc(100vh-100px)] max-h-[55vh] rounded-4xl rounded-t-4xl',
               className,
             )}
           >

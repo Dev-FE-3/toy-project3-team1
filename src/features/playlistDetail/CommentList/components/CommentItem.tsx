@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2, CircleCheck } from 'lucide-react'
 import { Comment, deleteComment } from '@/shared/model/api/comments'
 import Avatar from '@/shared/components/Avatar/Avatar'
+import { AvatarFallback } from '@/shared/components/ui/avatar'
 import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import { Button } from '@/shared/components/ui/button'
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 
 interface CommentItemProps {
   comment: Comment
   playlistId: string
   currentProfileId: string
+  playListAuthorProfileId: string
   onReplyAdded: () => void
   onCommentDeleted: () => void
 }
@@ -17,6 +20,7 @@ const CommentItem = ({
   comment,
   playlistId,
   currentProfileId,
+  playListAuthorProfileId,
   onReplyAdded,
   onCommentDeleted,
 }: CommentItemProps) => {
@@ -26,6 +30,9 @@ const CommentItem = ({
 
   // 답글 폼이 표시될 때 input에 focus
 
+  // 댓글 작성자별 닉네임
+
+  console.log('111111 comment: ', comment.profile_id)
   const nickname = comment.profiles?.nickname || '사용자'
   const formattedDate = new Date(comment.created_at).toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -53,7 +60,7 @@ const CommentItem = ({
   // 댓글, 대댓글 작성 후 핸들링
   const handleReplyAdded = () => {
     onReplyAdded()
-    // setShowReplyForm(false)
+    setShowReplyForm(false)
   }
 
   useEffect(() => {
@@ -66,14 +73,23 @@ const CommentItem = ({
     <div className="commentItemContainer bg-c800 rounded-lg p-4">
       {/* 댓글 목록 */}
       <div className="commentItem flex items-start gap-3">
-        <Avatar />
+        <Avatar size="small">
+          <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* 댓글 작성자 닉네임 */}
-              <span className="font-medium text-white">{nickname}</span>
+              {/* 댓글 작성자 정보 */}
+              <div className="bg-c300 text-c700 flex items-center gap-1 rounded-2xl px-2 py-1">
+                {/* 댓글 작성자 닉네임 */}
+                <span className="text-c700 text-captionM">{nickname}</span>
+                {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
+                {comment.profile_id === playListAuthorProfileId && (
+                  <CircleCheck size={16} className="text-c700" />
+                )}
+              </div>
               {/* 댓글 작성일 */}
-              <span className="text-c400 text-xs">{formattedDate}</span>
+              <span className="text-c400 text-xs">{getRelativeTime(formattedDate)}</span>
             </div>
             {isOwnComment && (
               <button
@@ -91,7 +107,7 @@ const CommentItem = ({
           {/* 댓글 달기 버튼 */}
           <div className="mt-2">
             <button
-              className="text-c400 text-xs hover:text-white"
+              className="text-c400 hover:text-c50 text-xs"
               onClick={() => setShowReplyForm(!showReplyForm)}
             >
               {showReplyForm ? '취소' : '답글 달기'}
@@ -119,19 +135,27 @@ const CommentItem = ({
               {comment.replies.map((reply) => (
                 <div key={reply.id} className="bg-c700 rounded-lg p-3">
                   <div className="flex items-center gap-2">
-                    <Avatar />
+                    <Avatar size="small">
+                      <AvatarFallback>
+                        {reply?.profiles?.nickname?.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-white">
-                            {reply.profiles?.nickname || '사용자'}
-                          </span>
+                          <div className="bg-c300 text-c700 flex items-center gap-1 rounded-2xl px-2 py-1">
+                            {/* 대댓글 작성자 닉네임 */}
+                            <span className="text-c700 text-captionS">
+                              {reply.profiles?.nickname || '사용자'}
+                            </span>
+                            {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
+                            {comment.profile_id === playListAuthorProfileId && (
+                              <CircleCheck size={16} className="text-c700" />
+                            )}
+                          </div>
+                          {/* 대댓글 작성일 */}
                           <span className="text-c400 text-xs">
-                            {new Date(reply.created_at).toLocaleDateString('ko-KR', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })}
+                            {getRelativeTime(reply.created_at)}
                           </span>
                         </div>
                         {reply.profile_id === currentProfileId && (

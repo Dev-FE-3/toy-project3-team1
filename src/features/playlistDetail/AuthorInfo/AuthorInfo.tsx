@@ -1,10 +1,6 @@
 import { Heart, Bookmark } from 'lucide-react'
-import {
-  Avatar as AvatarComponent,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
+import { UserCard } from '@/shared/components/UserCard/UserCard'
 
 interface AuthorInfoProps {
   authorName: string | undefined
@@ -14,22 +10,14 @@ interface AuthorInfoProps {
 }
 
 export default function AuthorInfo({
-  authorName = '짜파게티오리사',
+  authorName = 'R',
   isOwner = false,
-  likeCount = 332,
-  subscriberCount = 21,
+  likeCount = 0,
+  subscriberCount = 0,
 }: AuthorInfoProps) {
   return (
     <div className="mt-4 mb-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <AvatarComponent className="h-12 w-12">
-          <AvatarImage src="https://github.com/shadcn.png" alt="작성자 이미지" />
-          <AvatarFallback>JK</AvatarFallback>
-        </AvatarComponent>
-        <div>
-          <p className="text-lg font-medium text-white">{authorName}</p>
-        </div>
-      </div>
+      <UserCard nickname={authorName} />
 
       <div className="flex items-center gap-5">
         <div className="flex flex-col items-center">

@@ -4,10 +4,11 @@ import { cn } from '@/shared/model/lib/utils'
 
 interface UserCardProps {
   nickname: string
+  nicknameActive?: boolean
   className?: string
 }
 
-export function UserCard({ nickname, className }: UserCardProps) {
+export function UserCard({ nickname, nicknameActive = true, className }: UserCardProps) {
   if (!nickname) {
     return (
       <div className={cn('flex items-center gap-3', className)}>
@@ -23,7 +24,7 @@ export function UserCard({ nickname, className }: UserCardProps) {
       <Avatar size="small">
         <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
       </Avatar>
-      <span className="text-c300 text-textR">{nickname}</span>
+      {nicknameActive && <span className="text-c300 text-textR">{nickname}</span>}
     </div>
   )
 }

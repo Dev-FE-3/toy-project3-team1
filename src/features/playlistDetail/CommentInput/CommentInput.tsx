@@ -1,10 +1,12 @@
 import { useState, forwardRef } from 'react'
 import Avatar, { type AvatarSize } from '@/shared/components/Avatar/Avatar'
+import { AvatarFallback } from '@/shared/components/ui/avatar'
 import { Button } from '@/shared/components/ui/button'
 import { addComment } from '@/shared/model/api/comments'
 import { SendHorizontal } from 'lucide-react'
 import { Input } from '@/shared/components/ui/input'
 import { cn } from '@/shared/model/lib/utils'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 
 interface CommentInputProps {
   playlistId: string
@@ -19,6 +21,8 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
   ({ playlistId, profileId, onCommentAdded, parentId, className, size = 'default' }, ref) => {
     const [comment, setComment] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const { profile } = useGetAuthState()
+    const playListAuthorNickname = profile?.user_metadata?.nickname
 
     const handleSubmit = async () => {
       if (!comment.trim()) return
@@ -53,7 +57,9 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
         )}
       >
         <div className="flex items-center gap-3">
-          <Avatar size={'small'} />
+          <Avatar size={'small'}>
+            <AvatarFallback>{playListAuthorNickname.slice(0, 2).toUpperCase()}</AvatarFallback>
+          </Avatar>
           <div className="relative flex-grow">
             <Input
               ref={ref}
@@ -63,7 +69,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
               onKeyDown={handleKeyDown}
               placeholder={parentId ? '답글 입력' : '댓글 달기'}
               className={cn(
-                'bg-c700 placeholder:text-c400 focus:bg-c700 w-full rounded-xl px-4 py-3 pr-11 text-white outline-none',
+                'bg-c700 placeholder:text-c400 focus:bg-c700 text-c50 w-full rounded-xl px-4 py-3 pr-11 outline-none',
                 size === 'sm' && 'px-3 py-2 text-sm',
               )}
               aria-label={parentId ? '답글 입력' : '댓글 입력'}

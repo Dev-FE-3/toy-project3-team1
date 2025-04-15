@@ -1,6 +1,6 @@
 import { Button } from '@/shared/components/ui/button'
 import { PenBox } from 'lucide-react'
-
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 interface VideoInfoProps {
   title?: string
   description?: string
@@ -13,6 +13,7 @@ export default function PlaylistInfo({
   title,
   description,
   isOwner,
+  createdAt,
   isPublic,
   videoCount,
 }: VideoInfoProps) {
@@ -35,7 +36,7 @@ export default function PlaylistInfo({
         </div> */}
         {/* 플레이리스트 생성일 */}
         <div className="flex items-center">
-          <span>7일 전</span>
+          <span>{getRelativeTime(createdAt)}</span>
         </div>
       </header>
 

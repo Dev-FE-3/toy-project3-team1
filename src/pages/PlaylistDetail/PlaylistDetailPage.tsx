@@ -47,6 +47,7 @@ const PlaylistDetailPage = () => {
 
   // videoItems는 playlistData에서 직접 가져옴
   const videoItems = playlistData?.playlist_items || []
+  const playListAuthorProfileId = playlistData?.profile_id
 
   const handleOpenCommentPopup = async () => {
     // 로그인된 경우 댓글 팝업 열기
@@ -134,6 +135,7 @@ const PlaylistDetailPage = () => {
             title={playlistData?.title || ''}
             description={playlistData?.description || ''}
             isOwner={playlistData?.isOwner}
+            createdAt={playlistData?.created_at}
             isPublic={playlistData?.is_public}
             videoCount={playlistData?.playlist_items.length || 0}
           />
@@ -148,8 +150,9 @@ const PlaylistDetailPage = () => {
 
           {/* 댓글 트리거 */}
           <CommentTrigger
+            nickname={playlistData?.profiles.nickname}
             commentCount={playlistData?.comment_count || 0}
-            onClick={handleOpenCommentPopup}
+            onToggleCommentPopup={handleOpenCommentPopup}
           />
         </div>
 
@@ -166,7 +169,11 @@ const PlaylistDetailPage = () => {
               <div className="contentInside flex h-full flex-col">
                 {/* 댓글 목록 영역 */}
                 <div className="[&::-webkit-scrollbar-thumb]:bg-c700 [&::-webkit-scrollbar-track]:bg-c800 flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full">
-                  <CommentList playlistId={currentPlaylistId} currentProfileId={profile.id} />
+                  <CommentList
+                    playlistId={currentPlaylistId}
+                    currentProfileId={profile.id}
+                    playListAuthorProfileId={playListAuthorProfileId}
+                  />
                 </div>
                 {/* 댓글 입력 영역 */}
                 <div className="sticky bottom-0 mt-4">

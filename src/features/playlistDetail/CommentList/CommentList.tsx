@@ -8,9 +8,14 @@ import { queryClient } from '@/shared/model/lib/queryClient'
 interface CommentListProps {
   playlistId: string
   currentProfileId: string
+  playListAuthorProfileId: string
 }
 
-const CommentList = ({ playlistId, currentProfileId }: CommentListProps) => {
+const CommentList = ({
+  playlistId,
+  currentProfileId,
+  playListAuthorProfileId,
+}: CommentListProps) => {
   const {
     data: comments = [],
     isLoading,
@@ -69,7 +74,7 @@ const CommentList = ({ playlistId, currentProfileId }: CommentListProps) => {
         className="rounded-lg bg-red-900/30 p-4 text-center"
       >
         <p className="text-red-200">댓글을 불러오는 중 오류가 발생했습니다.</p>
-        <button className="mt-2 rounded bg-red-700 px-3 py-1 text-sm text-white hover:bg-red-600">
+        <button className="text-c50 mt-2 rounded bg-red-700 px-3 py-1 text-sm hover:bg-red-600">
           다시 시도
         </button>
       </motion.div>
@@ -118,6 +123,7 @@ const CommentList = ({ playlistId, currentProfileId }: CommentListProps) => {
               comment={comment}
               playlistId={playlistId}
               currentProfileId={currentProfileId}
+              playListAuthorProfileId={playListAuthorProfileId}
               onReplyAdded={handleCommentAdded}
               onCommentDeleted={handleCommentDeleted}
             />
