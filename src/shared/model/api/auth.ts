@@ -140,6 +140,18 @@ export const refreshSupabaseClient = async () => {
   }
 }
 
+// 닉네임 중복 체크
+export const checkNicknameExists = async (nickname: string) => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('nickname')
+    .eq('nickname', nickname)
+  if (error) {
+    throw error
+  }
+  return data.length > 0
+}
+
 // 이메일 중복 체크
 export const checkEmailExists = async (email: string) => {
   const { data, error } = await supabase.from('profiles').select('email').eq('email', email)

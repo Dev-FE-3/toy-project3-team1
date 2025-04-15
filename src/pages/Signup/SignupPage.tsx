@@ -4,9 +4,9 @@ import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
-import { signUpWithEmail, checkEmailExists } from '@/shared/model/api/auth'
-import { useNavigate, Link, Navigate } from 'react-router-dom'
+import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
+import { signUpWithEmail, checkEmailExists, checkNicknameExists } from '@/shared/model/api/auth'
+import { useNavigate, Link } from 'react-router-dom'
 import { Label } from '@/shared/components/ui/label'
 
 const signupSchema = z
@@ -92,15 +92,38 @@ export default function SignupPage() {
               control={form.control}
               name="nickname"
               render={({ field }) => (
-                <FormItem className="">
+                <FormItem className="space-y-1">
                   <Label className="!text-c50 text-captionL">닉네임</Label>
                   <FormControl>
-                    <Input placeholder="사용할 닉네임을 입력하세요" maxLength={5} {...field} />
+                    <Input
+                      placeholder="사용할 닉네임을 입력하세요"
+                      maxLength={5}
+                      {...field}
+                      onBlur={async (e) => {
+                        field.onBlur()
+                        const nickname = e.target.value
+                        if (nickname && !form.formState.errors.nickname) {
+                          try {
+                            const exists = await checkNicknameExists(nickname)
+                            if (exists) {
+                              form.setError('nickname', {
+                                type: 'manual',
+                                message: '이미 사용 중인 닉네임입니다.',
+                              })
+                            }
+                          } catch (error) {
+                            console.error('닉네임 중복 체크 실패:', error)
+                          }
+                        }
+                      }}
+                    />
                   </FormControl>
                   <div
                     className={`text-captionM ${getValidationTextColor(field.value, !!form.formState.errors.nickname)}`}
                   >
-                    숫자를 포함한 5자 이하를 입력해주세요
+                    {form.formState.errors.nickname
+                      ? form.formState.errors.nickname.message
+                      : '숫자를 포함한 5자 이하를 입력해주세요'}
                   </div>
                 </FormItem>
               )}
