@@ -2,7 +2,11 @@ import { z } from 'zod'
 
 // === Form Validation Schema ===
 export const playlistFormSchema = z.object({
-  title: z.string().min(1, '제목을 입력해주세요.').max(20, '제목은 20자를 초과할 수 없습니다.'),
+  title: z
+    .string()
+    .min(1, '제목을 입력해주세요.')
+    .max(20, '제목은 20자를 초과할 수 없습니다.')
+    .regex(/^[a-zA-Z0-9가-힣\s]+$/, '제목에는 한글, 영문, 숫자, 띄어쓰기만 사용할 수 있습니다.'),
   description: z.string().max(150, '설명은 150자를 초과할 수 없습니다.'),
   hashtags: z.array(z.string()).max(3, '해시태그는 최대 3개까지 추가할 수 있습니다.'),
   isPublic: z.boolean(),
