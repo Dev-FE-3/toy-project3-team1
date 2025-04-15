@@ -3,6 +3,14 @@ import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { EditProfileModal } from './modal/EditProfileModal'
 import { PlaylistWithItems } from '@/pages/Home/model/types'
 
+interface ProfilePageHeaderProps {
+  isMyProfile: boolean
+  editModalOpen: boolean
+  setEditModalOpen: (props: boolean) => void
+  targetUserProfile: { nickname: string; id: string }
+  playlists: PlaylistWithItems[]
+}
+
 // 유저 정보와 프로필 편집 버튼 관리 컴포넌트
 const ProfilePageHeader = ({
   isMyProfile,
@@ -10,13 +18,7 @@ const ProfilePageHeader = ({
   setEditModalOpen,
   targetUserProfile,
   playlists,
-}: {
-  isMyProfile: boolean
-  editModalOpen: boolean
-  setEditModalOpen: (props: boolean) => void
-  targetUserProfile: { nickname: string; id: string }
-  playlists: PlaylistWithItems[]
-}) => {
+}: ProfilePageHeaderProps) => {
   return (
     <>
       <UserCard
