@@ -58,7 +58,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
       >
         <div className="flex items-center gap-3">
           <Avatar size={'small'}>
-            <AvatarFallback>{playListAuthorNickname.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{playListAuthorNickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="relative flex-grow">
             <Input
