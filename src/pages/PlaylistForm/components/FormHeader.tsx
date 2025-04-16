@@ -13,7 +13,7 @@ export const FormHeader = ({
 }: FormHeaderProps) => {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <BackButton onClick={onBackButtonClick} />
+      {onBackButtonClick && <BackButton onClick={onBackButtonClick} />}
       <h1 className="text-h3 text-c100 font-medium">{title}</h1>
     </div>
   )

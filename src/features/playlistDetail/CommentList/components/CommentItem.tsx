@@ -33,11 +33,6 @@ const CommentItem = ({
   // 댓글 작성자별 닉네임
 
   const nickname = comment.profiles?.nickname || '사용자'
-  const formattedDate = new Date(comment.created_at).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
 
   const isOwnComment = comment.profile_id === currentProfileId
 
@@ -88,7 +83,7 @@ const CommentItem = ({
                 )}
               </div>
               {/* 댓글 작성일 */}
-              <span className="text-c400 text-xs">{getRelativeTime(formattedDate)}</span>
+              <span className="text-c400 text-xs">{getRelativeTime(comment.created_at)}</span>
             </div>
             {isOwnComment && (
               <button
