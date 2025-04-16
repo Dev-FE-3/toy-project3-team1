@@ -13,7 +13,7 @@ const Header = () => {
 const Layout = () => {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <Header />
         <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip">
           <Outlet />

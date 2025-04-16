@@ -35,14 +35,8 @@ export default function BottomNav() {
       >
         <SquarePlus size={24} className={cn('text-c50', isActive('/playlist/new') && 'text-c50')} />
       </Link>
-      {/* <Link to={'/feed'} className="flex h-full w-[88px] items-center justify-center">
-        <ListVideo size={24} className="text-c50" />
-      </Link> */}
-      {/* <Link to={'/profile'} className="flex h-full w-[88px] items-center justify-center">
-        <UserRound size={24} className="text-c50" />
-      </Link> */}
       <Link
-        to={'/playlist/d276b4f1-d2bf-4325-baab-7ee0dbc314c2'}
+        to={'/playlists'}
         className={cn(
           'flex h-full w-[88px] items-center justify-center',
           isActive('/playlist') && !isActive('/playlist/new') && 'bg-c800',
