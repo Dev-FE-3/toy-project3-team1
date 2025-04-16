@@ -7,10 +7,16 @@ export const signInWithEmail = async (email: string, password: string) => {
       email,
       password,
     })
+    console.log('111 로그인 성공::: ', data)
 
     if (error) {
       console.error('로그인 중 오류 발생:', error)
       throw error
+    }
+
+    // 로그인 성공 후 프로필 동기화
+    if (data.user) {
+      await syncUserProfile(data.user.id)
     }
 
     return data
@@ -159,4 +165,70 @@ export const checkEmailExists = async (email: string) => {
   }
 
   return data.length > 0
+}
+
+// 닉네임 업데이트
+export const updateNickname = async (userId: string, newNickname: string) => {
+  try {
+    // profiles 테이블 업데이트
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ nickname: newNickname, updated_at: new Date().toISOString() })
+      .eq('id', userId)
+
+    if (profileError) {
+      console.error('프로필 닉네임 업데이트 실패:', profileError)
+      throw profileError
+    }
+
+    // Auth 메타데이터 업데이트
+    const { error: authError } = await supabase.auth.updateUser({
+      data: { nickname: newNickname },
+    })
+
+    if (authError) {
+      console.error('Auth 메타데이터 닉네임 업데이트 실패:', authError)
+      throw authError
+    }
+
+    return true
+  } catch (error) {
+    console.error('닉네임 업데이트 중 오류 발생:', error)
+    throw error
+  }
+}
+
+// 사용자 프로필 동기화
+export const syncUserProfile = async (userId: string) => {
+  try {
+    // profiles 테이블에서 최신 데이터 가져오기
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    if (profileError) {
+      console.error('프로필 정보 가져오기 실패:', profileError)
+      throw profileError
+    }
+
+    // Auth 메타데이터 업데이트
+    const { error: authError } = await supabase.auth.updateUser({
+      data: {
+        nickname: profileData.nickname,
+        updated_at: profileData.updated_at,
+      },
+    })
+
+    if (authError) {
+      console.error('Auth 메타데이터 업데이트 실패:', authError)
+      throw authError
+    }
+
+    return true
+  } catch (error) {
+    console.error('프로필 동기화 중 오류 발생:', error)
+    throw error
+  }
 }

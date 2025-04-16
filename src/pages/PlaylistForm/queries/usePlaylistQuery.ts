@@ -1,3 +1,6 @@
+import { playlistKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueries'
+import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
+import { useUserStore } from '@/shared/store/userStore'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import type {
@@ -160,6 +163,65 @@ export const useUploadOrDeleteThumbnail = () => {
       playlistService.uploadOrDeleteThumbnail(params.file, params.userId, params.playlistId),
     onSuccess: (_, { playlistId }) => {
       queryClient.invalidateQueries({ queryKey: ['playlist', playlistId] })
+    },
+  })
+}
+
+export const useSubmitPlaylistMutation = () => {
+  const queryClient = useQueryClient()
+  const createPlaylistMutation = useCreatePlaylist()
+  const createPlaylistItemsMutation = useCreatePlaylistItems()
+  const uploadThumbnailMutation = useUploadThumbnail()
+  const updateThumbnailUrlMutation = useUpdateThumbnailUrl()
+
+  return useMutation({
+    mutationFn: async (data: PlaylistFormValues) => {
+      const profileId = useUserStore.getState().profileId
+      if (!profileId) throw new Error('사용자 정보를 찾을 수 없습니다.')
+
+      // 1. 플레이리스트 생성
+      const newPlaylist = await createPlaylistMutation.mutateAsync({
+        title: data.title,
+        description: data.description || null,
+        profile_id: profileId,
+        is_public: data.isPublic,
+        hashtag: data.hashtags.length ? data.hashtags : undefined,
+        thumbnail_url: null,
+      })
+
+      // 2. 플레이리스트 아이템 생성
+      await createPlaylistItemsMutation.mutateAsync({
+        playlistId: newPlaylist.id,
+        videos: data.videos,
+      })
+
+      // 3. 썸네일 처리
+      if (data.thumbnail) {
+        // 썸네일 업로드
+        const thumbnailUrl = await uploadThumbnailMutation.mutateAsync({
+          file: data.thumbnail,
+          userId: profileId,
+          playlistId: newPlaylist.id,
+        })
+        // 썸네일 URL 업데이트
+        await updateThumbnailUrlMutation.mutateAsync({
+          playlistId: newPlaylist.id,
+          thumbnailUrl,
+        })
+      } else if (data.videos.length > 0) {
+        await updateThumbnailUrlMutation.mutateAsync({
+          playlistId: newPlaylist.id,
+          thumbnailUrl: data.videos[0].thumbnailUrl,
+        })
+      }
+
+      return newPlaylist
+    },
+    onSuccess: () => {
+      // 플레이리스트 목록 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: playlistKeys.lists(),
+      })
     },
   })
 }

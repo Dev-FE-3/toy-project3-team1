@@ -51,43 +51,43 @@ export const getPlaylistById = async (playlistId: string, profileId: string) => 
 }
 
 // 플레이리스트에 속한 비디오 항목들 가져오기
-export const getPlaylistVideos = async (playlistId: string): Promise<Video[]> => {
-  console.log('getPlaylistVideos 호출, 요청한 플레이리스트 ID:', playlistId)
+// export const getPlaylistVideos = async (playlistId: string): Promise<Video[]> => {
+//   console.log('getPlaylistVideos 호출, 요청한 플레이리스트 ID:', playlistId)
 
-  try {
-    console.log('========= getPlaylistVideos 새 로직 시작 (직접 조회) =========')
+//   try {
+//     console.log('========= getPlaylistVideos 새 로직 시작 (직접 조회) =========')
 
-    // supabase 인스턴스 사용
-    const client = supabase
-    const startTime = performance.now()
+//     // supabase 인스턴스 사용
+//     const client = supabase
+//     const startTime = performance.now()
 
-    const { data, error } = await client
-      .from('playlist_items')
-      .select('*')
-      .eq('playlist_id', playlistId)
+//     const { data, error } = await client
+//       .from('playlist_items')
+//       .select('*')
+//       .eq('playlist_id', playlistId)
 
-    const endTime = performance.now()
-    const duration = (endTime - startTime).toFixed(2)
+//     const endTime = performance.now()
+//     const duration = (endTime - startTime).toFixed(2)
 
-    console.log(`비디오 데이터 조회 완료 (${duration}ms)`)
+//     console.log(`비디오 데이터 조회 완료 (${duration}ms)`)
 
-    if (error) {
-      console.warn('데이터 조회 중 오류:', error.message)
-      return getDummyVideos()
-    }
+//     if (error) {
+//       console.warn('데이터 조회 중 오류:', error.message)
+//       return getDummyVideos()
+//     }
 
-    if (!data || data.length === 0) {
-      console.warn('데이터가 없거나 비어 있습니다')
-      return getDummyVideos()
-    }
+//     if (!data || data.length === 0) {
+//       console.warn('데이터가 없거나 비어 있습니다')
+//       return getDummyVideos()
+//     }
 
-    console.log(`조회된 비디오 수: ${data.length}`)
-    return convertToVideos(data)
-  } catch (error) {
-    console.error('예상치 못한 오류 발생:', error)
-    return getDummyVideos()
-  }
-}
+//     console.log(`조회된 비디오 수: ${data.length}`)
+//     return convertToVideos(data)
+//   } catch (error) {
+//     console.error('예상치 못한 오류 발생:', error)
+//     return getDummyVideos()
+//   }
+// }
 
 // Supabase에서 반환되는 플레이리스트 아이템 타입 정의
 interface PlaylistItem {
