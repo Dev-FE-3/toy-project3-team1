@@ -1,15 +1,24 @@
 import React, { useRef, useCallback } from 'react'
 import VideoItem from '@/features/playlistDetail/VideoItem/VideoItem'
 
+// export interface Video {
+//   id: string
+//   video_id: string
+//   title: string
+//   thumbnail_url: string
+//   viewCount: string
+//   created_at: string
+// }
+
 export interface Video {
   id: string
-  video_id: string
-  title: string
   thumbnail_url: string
+  channelTitle: string
+  title: string
+  likeCount: string
   viewCount: string
-  created_at: string
+  // created_at: string
 }
-
 interface VideoListProps {
   videos: Video[]
   onVideoClick?: (videoId: string) => void
@@ -82,11 +91,13 @@ export default function VideoList({
           {videos.map((video) => (
             <VideoItem
               key={video.id}
+              channelTitle={video.channelTitle}
               title={video.title}
               thumbnail_url={video.thumbnail_url}
+              likeCount={video.likeCount}
               viewCount={video.viewCount}
-              created_at={video.created_at}
-              onClick={() => onVideoClick?.(video.video_id)}
+              // created_at={video.created_at}
+              onClick={() => onVideoClick?.(video.id)}
             />
           ))}
 

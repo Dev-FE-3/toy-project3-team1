@@ -1,18 +1,23 @@
 import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
-import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { countFormatter } from '@/pages/PlaylistDetail/utils/countFormatter'
+
 interface VideoItemProps {
+  channelTitle: string
   title: string
   thumbnail_url: string
   viewCount: string
-  created_at: string
+  likeCount: string
+  // created_at: string
   onClick?: () => void
 }
 
 export default function VideoItem({
+  channelTitle,
   title,
   thumbnail_url,
   viewCount,
-  created_at,
+  likeCount,
+  // created_at,
   onClick,
 }: VideoItemProps) {
   return (
@@ -25,14 +30,18 @@ export default function VideoItem({
       </div>
 
       {/* 비디오 정보 */}
-      <div className="text-c400 flex justify-center gap-1 text-xs">
+      <div className="flex flex-1 flex-col">
         {/* 비디오 제목 */}
-        <h3 className="text-c50 line-clamp-2 text-sm font-medium">{title}</h3>
-        {/* 조회수 */}
-        <span>{viewCount}</span>
-        <span>•</span>
-        {/* 업로드 일자 */}
-        <span>{getRelativeTime(created_at)}</span>
+        <h3 className="text-c50 mb-1 line-clamp-2 text-sm font-medium">{title}</h3>
+        {/* 채널 정보 및 통계 */}
+        <div className="text-c400 flex flex-col gap-0.5 text-xs">
+          <span>{channelTitle}</span>
+          <div className="flex items-center gap-1">
+            <span>좋아요 {countFormatter({ count: likeCount })}</span>
+            <span>•</span>
+            <span>조회수 {countFormatter({ count: viewCount })}</span>
+          </div>
+        </div>
       </div>
     </div>
   )

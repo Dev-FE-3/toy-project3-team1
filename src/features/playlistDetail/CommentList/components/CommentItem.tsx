@@ -32,7 +32,6 @@ const CommentItem = ({
 
   // 댓글 작성자별 닉네임
 
-  console.log('111111 comment: ', comment.profile_id)
   const nickname = comment.profiles?.nickname || '사용자'
   const formattedDate = new Date(comment.created_at).toLocaleDateString('ko-KR', {
     year: 'numeric',

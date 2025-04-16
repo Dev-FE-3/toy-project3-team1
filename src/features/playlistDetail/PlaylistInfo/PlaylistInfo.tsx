@@ -7,6 +7,7 @@ interface VideoInfoProps {
   isOwner: boolean
   isPublic: boolean
   videoCount?: number
+  createdAt?: string
 }
 
 export default function PlaylistInfo({
@@ -36,16 +37,17 @@ export default function PlaylistInfo({
         </div> */}
         {/* 플레이리스트 생성일 */}
         <div className="flex items-center">
-          <span>{getRelativeTime(createdAt)}</span>
+          {createdAt && <span>{getRelativeTime(createdAt)}</span>}
         </div>
       </header>
 
       <section>
-        {/* 플레이리스트 제목 */}
         <div className="flex justify-between">
+          {/* 플레이리스트 제목 */}
           <h1 className="text-c100 mt-3 text-xl font-medium">{title || ''}</h1>
+          {/* 플레이리스트 수정 버튼 */}
           <Button className="cursor-pointer items-end !p-0 align-bottom">
-            <PenBox className="text-c300 !h-6 !w-6" />
+            {isOwner && <PenBox className="text-c300 !h-6 !w-6" />}
           </Button>
         </div>
         {/* 플레이리스트 설명 */}

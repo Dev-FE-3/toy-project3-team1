@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { initializeSupabase } from '@/shared/model/api/supabase'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
@@ -14,19 +13,20 @@ import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
 import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
-import { supabase } from '@/shared/model/api/supabase'
-import { getPlaylistById, getPlaylistVideos } from '@/shared/model/api/playlist'
+import { getPlaylistById } from '@/shared/model/api/playlist'
 import { queryClient } from '@/shared/model/lib/queryClient'
+import { fetchMultipleYouTubeVideos } from '@/shared/services/youtubeVideoApi'
 
-const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
+export const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
+export const SUB_PLAYLIST_ID = 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
+export const PRIVATE_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
 
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
   const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
-  const currentPlaylistId = id || DEFAULT_PLAYLIST_ID
-  const commentPlaylistId = '8575f134-4936-4b6a-a833-395936663775'
+  const currentPlaylistId = id || SUB_PLAYLIST_ID
 
   const {
     data: playlistData,
@@ -45,8 +45,30 @@ const PlaylistDetailPage = () => {
     refetchOnWindowFocus: false,
   })
 
-  // videoItems는 playlistData에서 직접 가져옴
-  const videoItems = playlistData?.playlist_items || []
+  const { data: latestYoutubeVideos } = useQuery({
+    queryKey: ['latestYoutubeVideos', currentPlaylistId],
+    queryFn: async () => {
+      const videoIds =
+        playlistData?.playlist_items
+          .map((item: { video_id: string }) => item.video_id)
+          .filter(Boolean) || []
+
+      const result = await fetchMultipleYouTubeVideos(videoIds)
+      return result
+    },
+    enabled: !!playlistData?.playlist_items?.length && !playlistData?.isPrivate, // 플레이리스트가 비공개가 아닐 때만 실행
+  })
+
+  const videoItems =
+    latestYoutubeVideos?.map((video) => ({
+      id: video.id,
+      thumbnail_url: video.snippet.thumbnails.high.url,
+      channelTitle: video.snippet.channelTitle,
+      title: video.snippet.title,
+      likeCount: video.statistics.likeCount,
+      viewCount: video.statistics.viewCount,
+    })) || []
+
   const playListAuthorProfileId = playlistData?.profile_id
 
   const handleOpenCommentPopup = async () => {
@@ -108,6 +130,18 @@ const PlaylistDetailPage = () => {
     )
   }
 
+  // 비공개 플레이리스트인 경우 간단한 메시지 표시
+  if (!playlistData?.is_public) {
+    return (
+      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-16">
+        <div className="bg-c900 rounded-xl p-6 text-center">
+          <p className="text-c50 text-lg font-medium">비공개 플레이리스트입니다</p>
+          <p className="text-c400 mt-2">이 플레이리스트는 현재 비공개로 설정되어 있습니다.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="flex h-[calc(100vh-9rem)] flex-col p-6">
@@ -137,14 +171,16 @@ const PlaylistDetailPage = () => {
             isOwner={playlistData?.isOwner}
             createdAt={playlistData?.created_at}
             isPublic={playlistData?.is_public}
-            videoCount={playlistData?.playlist_items.length || 0}
+            videoCount={playlistData?.playlist_items?.length || 0}
           />
 
           {/* 작성자 정보 */}
           <AuthorInfo
+            playlistId={currentPlaylistId}
             authorName={playlistData?.profiles.nickname || ''}
             isOwner={playlistData?.isOwner}
-            likeCount={playlistData?.like_count || 0}
+            hashTag={playlistData?.hashtag}
+            createdAt={playlistData?.created_at}
             subscriberCount={playlistData?.subscriber_count || 0}
           />
 

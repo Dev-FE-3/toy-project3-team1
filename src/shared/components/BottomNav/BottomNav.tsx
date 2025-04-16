@@ -1,6 +1,12 @@
 import { Home, SquarePlus, ListVideo, UserRound } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { signOut } from '@/shared/model/api/auth'
+import {
+  DEFAULT_PLAYLIST_ID,
+  PRIVATE_PLAYLIST_ID,
+  SUB_PLAYLIST_ID,
+} from '@/pages/PlaylistDetail/PlaylistDetailPage'
+
 export default function BottomNav() {
   return (
     <nav className="border-c800 bg-c900 flex h-[66px] w-full justify-around border-t px-[15px]">
@@ -17,7 +23,7 @@ export default function BottomNav() {
         <UserRound size={24} className="text-c50" />
       </Link> */}
       <Link
-        to={'/playlist/44aa498e-a9df-461a-b18e-fed3d0378994'}
+        to={`/playlist/${SUB_PLAYLIST_ID}`}
         className="flex h-full w-[88px] items-center justify-center"
       >
         <ListVideo size={24} className="text-c50" />
