@@ -5,6 +5,7 @@ import {
   useRemoveThumbnail,
   useUpdatePlaylist,
   useUpdatePlaylistItems,
+  useUpdateThumbnailUrl,
   useUploadThumbnail,
 } from '@/pages/PlaylistForm/queries/usePlaylistQuery'
 import { useUserStore } from '@/shared/store/userStore'
@@ -29,6 +30,7 @@ export const useUpdatePlaylistForm = ({
   const updatePlaylistItemsMutation = useUpdatePlaylistItems()
   const uploadThumbnailMutation = useUploadThumbnail()
   const removeThumbnailMutation = useRemoveThumbnail()
+  const updateThumbnailUrlMutation = useUpdateThumbnailUrl()
 
   const handleError = (error: unknown) => {
     const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'
@@ -74,16 +76,32 @@ export const useUpdatePlaylistForm = ({
       // 3. 썸네일 업로드 또는 삭제
       if (typeof data.thumbnail !== 'undefined') {
         if (data.thumbnail) {
-          await uploadThumbnailMutation.mutateAsync({
+          // 새로운 썸네일 업로드
+          const thumbnailUrl = await uploadThumbnailMutation.mutateAsync({
             file: data.thumbnail,
             userId: profileId,
             playlistId,
           })
+
+          // 썸네일 URL 업데이트
+          await updateThumbnailUrlMutation.mutateAsync({
+            playlistId,
+            thumbnailUrl,
+          })
         } else {
+          // 썸네일 삭제
           await removeThumbnailMutation.mutateAsync({
             userId: profileId,
             playlistId,
           })
+
+          // 첫 번째 영상의 썸네일로 업데이트
+          if (data.videos.length > 0) {
+            await updateThumbnailUrlMutation.mutateAsync({
+              playlistId,
+              thumbnailUrl: data.videos[0].thumbnailUrl,
+            })
+          }
         }
       }
 

@@ -141,24 +141,22 @@ export const PlaylistInfoForm = () => {
 
   // 제목 입력 핸들러
   const handleTitleInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    if (value.length <= MAX_TITLE_LENGTH) {
-      setTitleCount(value.length)
-      return
-    }
-    e.target.value = value.slice(0, MAX_TITLE_LENGTH)
-    setTitleCount(MAX_TITLE_LENGTH)
+    const { text, count } = limitTextLength(e.target.value, MAX_TITLE_LENGTH)
+    e.target.value = text
+    setTitleCount(count)
   }
 
   // 설명 입력 핸들러
   const handleDescriptionInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
-    if (value.length <= MAX_DESCRIPTION_LENGTH) {
-      setDescriptionCount(value.length)
-      return
+    const count = value.length
+
+    if (count > MAX_DESCRIPTION_LENGTH) {
+      e.target.value = value.slice(0, MAX_DESCRIPTION_LENGTH)
+      setDescriptionCount(MAX_DESCRIPTION_LENGTH)
+    } else {
+      setDescriptionCount(count)
     }
-    e.target.value = value.slice(0, MAX_DESCRIPTION_LENGTH)
-    setDescriptionCount(MAX_DESCRIPTION_LENGTH)
   }
 
   return (
