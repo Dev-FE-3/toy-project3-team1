@@ -1,8 +1,9 @@
 // src/shared/model/contexts/AuthContext.tsx
-import { createContext, useContext, useEffect, useState } from 'react'
 import { getSession } from '@/shared/model/api/auth'
-import { User } from '@supabase/supabase-js'
 import { supabase } from '@/shared/model/api/supabase'
+import { useUserStore } from '@/shared/store/userStore'
+import { User } from '@supabase/supabase-js'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isLoading: true,
     profile: null,
   })
+  const setProfileId = useUserStore((state) => state.setProfileId)
 
   useEffect(() => {
     // 초기 인증 상태 확인
@@ -35,6 +37,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           isLoading: false,
           profile: session?.user || null,
         })
+        // userStore 업데이트
+        if (session?.user?.id) {
+          setProfileId(session.user.id)
+        }
       } catch (error) {
         console.error('인증 확인 중 오류:', error)
         setState({
@@ -42,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           isLoading: false,
           profile: null,
         })
+        setProfileId('') // 에러 시 프로필 ID 초기화
       }
     }
 
@@ -54,6 +61,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading: false,
         profile: session?.user || null,
       })
+      // userStore 업데이트
+      if (session?.user?.id) {
+        setProfileId(session.user.id)
+      } else {
+        setProfileId('') // 로그아웃 시 프로필 ID 초기화
+      }
     })
 
     // 초기 인증 상태 확인 실행
@@ -63,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [setProfileId])
 
   // 로딩 중일 때는 아무것도 렌더링하지 않거나 로딩 표시
   if (state.isLoading) {
