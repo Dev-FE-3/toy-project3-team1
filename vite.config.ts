@@ -11,4 +11,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    host: true, // ← 여기 추가! 'true'는 0.0.0.0과 같음
+  },
 })

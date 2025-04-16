@@ -70,7 +70,7 @@ export default function VideoList({
   // 비디오가 없는 경우
   if (videos.length === 0) {
     return (
-      <div className={`bg-c900 mt-4 flex-grow overflow-hidden rounded-xl ${className || ''}`}>
+      <div className={`bg-c900 mt-4 flex-grow rounded-xl ${className || ''}`}>
         <div className="flex h-full items-center justify-center p-6">
           <div className="text-center">
             <p className="text-c300 text-lg">비디오가 없습니다</p>
@@ -84,7 +84,7 @@ export default function VideoList({
   }
 
   return (
-    <div className={`bg-c900 mt-4 flex-grow overflow-hidden rounded-xl ${className || ''}`}>
+    <div className={`bg-c900 mt-4 flex-grow rounded-xl ${className || ''}`}>
       <div className="h-full overflow-y-auto">
         <div className="flex flex-col space-y-2">
           {/* 영상 목록 */}

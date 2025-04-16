@@ -111,10 +111,10 @@ export const PlaylistView = ({
         <motion.div
           key={`focused-${focusedIndex}`}
           className={cn(
-            'absolute inset-0 top-10 z-20 h-[440px] w-full origin-center cursor-pointer',
-            playlists[focusedIndex]
-              ? 'from-c600 to-c800 border-c500 border-y-1 bg-gradient-to-b'
-              : 'bg-c900 border-none',
+            'absolute inset-0 top-4 z-20 w-full origin-center cursor-pointer py-2',
+            playlists[focusedIndex],
+            // ? 'from-c600 to-c800 border-c500 border-y-1 bg-gradient-to-b'
+            // : 'bg-c900 border-none',
           )}
           onClick={handlePlaylistClick}
           initial={{

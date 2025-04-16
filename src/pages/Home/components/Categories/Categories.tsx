@@ -9,7 +9,7 @@ export const Categories = ({
   selectedCategory,
 }: CategoriesProps) => {
   return (
-    <div className="bg-c900 flex h-[98px] w-[480px] items-center justify-center gap-4">
+    <div className="bg-c900 flex h-22 w-full items-center justify-center gap-4">
       <Category>
         <Search size={34} strokeWidth={1.5} className="text-c200" />
       </Category>
@@ -20,7 +20,7 @@ export const Categories = ({
           isSelected={selectedCategory === game.name}
           onClick={() => onCategorySelect(game.name)}
         >
-          <img src={game.logoUrl} alt={game.name} className="h-[40px] w-[40px] object-contain" />
+          <img src={game.logoUrl} alt={game.name} className="h-10 w-10 object-contain" />
         </Category>
       ))}
 

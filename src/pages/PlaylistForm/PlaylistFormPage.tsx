@@ -180,7 +180,7 @@ const PlaylistFormPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-9">
+    <div className="container mx-auto px-4">
       <FormHeader
         title={isEditMode ? '플레이리스트 수정' : '플레이리스트 등록'}
         onBackButtonClick={isEditMode ? () => navigate('/playlists') : undefined}
@@ -200,7 +200,7 @@ const PlaylistFormPage = () => {
           >
             {({ activeKey, setActiveKey, tabStatus }) => (
               <div className="flex h-full flex-col">
-                <div className="text-c100 border-c600 flex justify-between border-b pt-6">
+                <div className="text-c100 border-c600 flex justify-between border-b pt-3">
                   <TabItem
                     tabKey="content"
                     label="제목/내용"

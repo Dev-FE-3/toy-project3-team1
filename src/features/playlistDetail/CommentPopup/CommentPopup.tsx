@@ -35,17 +35,14 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
   return (
     <AnimatePresence>
       {open && (
-        <div className="commentContainer absolute inset-x-0 bottom-35 z-50">
+        <div className="commentContainer absolute inset-x-0 bottom-0 z-50">
           <motion.div
             ref={popupRef}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-            className={cn(
-              'bg-c800 text-c50 h-[calc(100vh-100px)] max-h-[55vh] rounded-4xl rounded-t-4xl',
-              className,
-            )}
+            transition={{ type: 'spring', damping: 70, stiffness: 700 }}
+            className={cn('bg-c800 text-c50 h-[62dvh] max-h-[55vh] rounded-t-4xl', className)}
           >
             {children}
           </motion.div>
@@ -72,18 +69,18 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
 const Header = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn('header border-c700 flex flex-col gap-1.5 rounded-t-4xl p-4', className)}
+      className={cn('header border-c700 flex flex-col gap-1.5 rounded-t-4xl px-3 pt-2 pb-3', className)}
       {...props}
     />
   )
 }
 
 const Title = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
-  return <h2 className={cn('title pl-4 text-lg font-semibold', className)} {...props} />
+  return <h3 className={cn('title pl-4 text-lg font-semibold', className)} {...props} />
 }
 
 const Content = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cn('content flex h-full flex-col p-4', className)} {...props}></div>
+  return <div className={cn('content flex h-full flex-col px-4 pb-10', className)} {...props}></div>
 }
 
 export const CommentPopup = Object.assign(CommentPopupRoot, {

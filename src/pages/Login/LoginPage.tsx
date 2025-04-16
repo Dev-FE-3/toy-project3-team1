@@ -47,12 +47,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-c900 flex min-h-screen flex-col">
+    <div className="bg-c900 flex min-h-[100dvh] flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <img
-          src="/images/logo.svg"
-          className="text-c50 text-h2 m-auto mt-[200px] mb-[100px] w-[200px]"
-        />
+        <img src="/images/logo.svg" className="text-c50 text-h2 mx-auto mt-[16vh] mb-[10vh] w-60" />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -78,7 +75,7 @@ export default function LoginPage() {
                       className={`${form.formState.errors.email ? 'border-red border-2' : ''}`}
                     />
                   </FormControl>
-                  <div className="text-red mt-1 flex items-center gap-1">
+                  <div className="text-red text-captionM flex items-center gap-1">
                     {form.formState.errors.email && (
                       <>
                         <AlertCircle className="h-4 w-4" />
@@ -104,7 +101,7 @@ export default function LoginPage() {
                       className={`${form.formState.errors.password ? 'border-red border-2' : ''}`}
                     />
                   </FormControl>
-                  <div className="text-red mt-1 flex items-center gap-1">
+                  <div className="text-red text-captionM flex items-center gap-1">
                     {form.formState.errors.password && (
                       <>
                         <AlertCircle className="h-4 w-4" />

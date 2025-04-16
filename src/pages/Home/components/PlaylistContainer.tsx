@@ -32,7 +32,7 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto h-[calc(100%-98px)] max-w-[480px] overflow-hidden"
+      className="relative mx-auto h-full w-full overflow-hidden"
       style={{
         perspective: '1200px',
         transformStyle: 'preserve-3d',
@@ -52,8 +52,8 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
           setCurrentImageIndex={setCurrentImageIndex}
         />
       </AnimatePresence>
-      <div className="from-c900 pointer-events-none absolute top-0 z-10 h-60 w-full bg-gradient-to-b via-transparent to-transparent" />
-      <div className="from-c900 pointer-events-none absolute bottom-0 z-10 h-60 w-full bg-gradient-to-t via-transparent to-transparent" />
+      <div className="from-c900 pointer-events-none absolute top-0 z-10 h-[24vh] w-full bg-gradient-to-b via-transparent to-transparent" />
+      <div className="from-c900 pointer-events-none absolute bottom-0 z-10 h-[24vh] w-full bg-gradient-to-t via-transparent to-transparent" />
     </div>
   )
 }

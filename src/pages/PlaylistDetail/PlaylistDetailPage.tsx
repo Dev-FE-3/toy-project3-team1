@@ -90,9 +90,7 @@ const PlaylistDetailPage = () => {
     return (
       <div className="playlistDetailPage flex h-[calc(100vh-9rem)] flex-col p-6">
         <div className="flex-shrink-0">
-          <AspectRatio ratio={16 / 9}>
-            <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
-          </AspectRatio>
+          <Skeleton className="bg-c500 aspect-video w-full rounded-xl" />
           <div className="mt-3">
             <Skeleton className="bg-c500 h-5 w-3/4 rounded-md" />
             <Skeleton className="bg-c500 mt-2 h-4 w-1/2 rounded-md" />
@@ -143,8 +141,8 @@ const PlaylistDetailPage = () => {
   }
 
   return (
-    <>
-      <div className="flex h-[calc(100vh-9rem)] flex-col p-6">
+    <div className="no-scrollbar h-full overflow-y-scroll">
+      <div className="flex h-full flex-col px-4">
         <div className="flex-shrink-0">
           {selectedVideo ? (
             // 선택한 비디오 재생
@@ -171,6 +169,7 @@ const PlaylistDetailPage = () => {
             isOwner={playlistData?.isOwner}
             createdAt={playlistData?.created_at}
             isPublic={playlistData?.is_public}
+            hashTag={playlistData?.hashtag}
             videoCount={playlistData?.playlist_items?.length || 0}
           />
 
@@ -179,14 +178,12 @@ const PlaylistDetailPage = () => {
             playlistId={currentPlaylistId}
             authorName={playlistData?.profiles.nickname || ''}
             isOwner={playlistData?.isOwner}
-            hashTag={playlistData?.hashtag}
-            createdAt={playlistData?.created_at}
             subscriberCount={playlistData?.subscriber_count || 0}
           />
 
           {/* 댓글 트리거 */}
           <CommentTrigger
-            nickname={playlistData?.profiles.nickname}
+            nickname={profile?.user_metadata?.nickname}
             commentCount={playlistData?.comment_count || 0}
             onToggleCommentPopup={handleOpenCommentPopup}
           />
@@ -226,7 +223,7 @@ const PlaylistDetailPage = () => {
           </CommentPopup.Content>
         </CommentPopup>
       </div>
-    </>
+    </div>
   )
 }
 

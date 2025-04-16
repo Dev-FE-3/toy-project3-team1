@@ -17,7 +17,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
     const scrollLeft = container.scrollLeft
-    const itemWidth = 400 + 16 // item width + padding (px-2)
+    const itemWidth = 340 // item width + padding (px-2)
     const newIndex = Math.round(scrollLeft / itemWidth)
     if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
       setActiveIndex(newIndex)
@@ -27,7 +27,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
   return (
     <>
       {isBackground ? (
-        <div className="relative m-auto w-[450px]">
+        <div className="relative m-auto w-full py-1">
           <div className="aspect-video w-full overflow-hidden rounded-lg">
             <img
               src={images[0]}
@@ -46,7 +46,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
             style={{
               marginLeft: '-20px',
               marginRight: '-20px',
-              paddingLeft: '50px',
+              paddingLeft: '40px',
               paddingRight: '100px',
               width: 'calc(100% + 40px)',
               scrollBehavior: 'smooth',
@@ -54,7 +54,10 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
             }}
           >
             {images.map((url, imgIndex) => (
-              <div key={imgIndex} className="relative w-[400px] flex-none snap-center p-2">
+              <div
+                key={imgIndex}
+                className="relative w-[128%] max-w-[440px] flex-none snap-center p-1"
+              >
                 <div className="aspect-video w-full overflow-hidden rounded-lg shadow-[0_0_12px_rgba(0,0,0,0.3)]">
                   <motion.div
                     className="h-full w-full"
@@ -69,7 +72,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
                     <img
                       src={url}
                       alt={`${title} ${imgIndex + 1}`}
-                      className="h-full w-full object-cover object-center"
+                      className="aspect-video w-full object-cover object-center"
                       draggable={false}
                     />
                   </motion.div>

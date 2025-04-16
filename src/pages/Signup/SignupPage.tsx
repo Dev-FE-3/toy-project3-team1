@@ -71,15 +71,15 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="bg-c900 flex min-h-screen flex-col">
-      <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <img className="mx-auto h-[52px]" src="/images/logo.svg" />
+    <div className="bg-c900 min-h-[100dvh]">
+      <div className="mx-auto h-full w-full max-w-[390px] px-4">
+        <img className="text-h2 mx-auto mt-[3vh] mb-[2vh] w-32" src="/images/logo.svg" />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {form.formState.errors.root && (
-              <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-500">
-                <div className="flex items-center gap-2">
+              <div className="text-captionM rounded-md bg-red-500/10 p-3 text-red-500">
+                <div className="flex items-center">
                   <AlertCircle className="h-4 w-4" />
                   <p>{form.formState.errors.root.message}</p>
                 </div>
@@ -90,8 +90,8 @@ export default function SignupPage() {
               control={form.control}
               name="nickname"
               render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <Label className="!text-c50 text-captionL">닉네임</Label>
+                <FormItem>
+                  <Label className="text-captionM text-c50 mb-1">닉네임</Label>
                   <FormControl>
                     <Input
                       placeholder="사용할 닉네임을 입력하세요"
@@ -131,8 +131,8 @@ export default function SignupPage() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <Label className="!text-c50 text-captionL">이메일</Label>
+                <FormItem>
+                  <Label className="text-captionM text-c50 mb-1">이메일</Label>
                   <FormControl>
                     <Input
                       placeholder="이메일을 입력하세요"
@@ -170,8 +170,8 @@ export default function SignupPage() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <Label className="!text-c50 text-captionL">비밀번호</Label>
+                <FormItem>
+                  <Label className="text-captionM text-c50 mb-1">비밀번호</Label>
                   <FormControl>
                     <Input
                       type="password"
@@ -194,8 +194,8 @@ export default function SignupPage() {
               control={form.control}
               name="passwordConfirm"
               render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <Label className="!text-c50 text-captionL">비밀번호 확인</Label>
+                <FormItem>
+                  <Label className="text-captionM text-c50 mb-1">비밀번호 확인</Label>
                   <FormControl>
                     <Input
                       type="password"

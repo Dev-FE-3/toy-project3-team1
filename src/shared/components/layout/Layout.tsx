@@ -4,7 +4,7 @@ import BottomNav from '../BottomNav/BottomNav'
 
 const Header = () => {
   return (
-    <header className="border-c800 flex h-[66px] w-full items-center border-b pl-5">
+    <header className="border-c800 flex h-[50px] w-full items-center border-b pl-5">
       <img src="/images/logo.svg" />
     </header>
   )
@@ -12,12 +12,10 @@ const Header = () => {
 
 const Layout = () => {
   return (
-    <div className="relative flex h-screen flex-col">
-      <main id="main" className="flex-1">
-        <Header />
-        <div className="no-scrollbar h-[calc(100vh-66px-66px)] overflow-x-clip">
-          <Outlet />
-        </div>
+    <div className="relative flex min-h-[100dvh] flex-col overflow-y-hidden">
+      <Header />
+      <main id="main" className="no-scrollbar h-[calc(100dvh-50px-60px)] overflow-x-clip">
+        <Outlet />
         <ToastContainer position="top-right" spacing={2} />
       </main>
       <BottomNav />

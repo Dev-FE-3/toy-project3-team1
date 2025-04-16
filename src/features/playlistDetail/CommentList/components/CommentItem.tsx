@@ -6,6 +6,7 @@ import { AvatarFallback } from '@/shared/components/ui/avatar'
 import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import { Button } from '@/shared/components/ui/button'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { cn } from '@/shared/model/lib/utils'
 
 interface CommentItemProps {
   comment: Comment
@@ -64,26 +65,33 @@ const CommentItem = ({
   }, [showReplyForm])
 
   return (
-    <div className="commentItemContainer bg-c800 rounded-lg p-4">
+    <div className="commentItemContainer bg-c800 rounded-lg">
       {/* 댓글 목록 */}
       <div className="commentItem flex items-start gap-3">
         <Avatar size="small">
           <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <div className="flex-1">
+        <div className="mb-2 flex-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {/* 댓글 작성자 정보 */}
-              <div className="bg-c300 text-c700 flex items-center gap-1 rounded-2xl px-2 py-1">
+              <div
+                className={cn(
+                  'flex items-center gap-1',
+                  comment.profile_id === playListAuthorProfileId
+                    ? 'bg-c300 text-c700 rounded-2xl px-2'
+                    : 'text-c50',
+                )}
+              >
                 {/* 댓글 작성자 닉네임 */}
-                <span className="text-c700 text-captionM">{nickname}</span>
+                <span className="text-captionM">{nickname}</span>
                 {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
                 {comment.profile_id === playListAuthorProfileId && (
                   <CircleCheck size={16} className="text-c700" />
                 )}
               </div>
               {/* 댓글 작성일 */}
-              <span className="text-c400 text-xs">{getRelativeTime(comment.created_at)}</span>
+              <span className="text-c400 text-captionS">{getRelativeTime(comment.created_at)}</span>
             </div>
             {isOwnComment && (
               <button
@@ -97,7 +105,7 @@ const CommentItem = ({
             )}
           </div>
           {/* 댓글 내용 */}
-          <p className="text-c200 mt-1">{comment.content}</p>
+          <p className="text-c200 text-textR mt-1">{comment.content}</p>
           {/* 댓글 달기 버튼 */}
           <div className="mt-2">
             <button
@@ -125,9 +133,9 @@ const CommentItem = ({
 
           {/* 대댓글 목록 */}
           {comment.replies && comment.replies.length > 0 && (
-            <div className="mt-3 space-y-3 pl-4">
+            <div className="text-textR mt-3 space-y-3 pl-4">
               {comment.replies.map((reply) => (
-                <div key={reply.id} className="bg-c700 rounded-lg p-3">
+                <div key={reply.id} className="bg-c700 rounded-lg px-3 py-2">
                   <div className="flex items-center gap-2">
                     <Avatar size="small">
                       <AvatarFallback>
@@ -135,20 +143,25 @@ const CommentItem = ({
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="bg-c300 text-c700 flex items-center gap-1 rounded-2xl px-2 py-1">
+                      <div className="flex h-5 items-center justify-between">
+                        <div className="flex gap-2">
+                          <div
+                            className={cn(
+                              'flex items-center gap-1',
+                              reply.profile_id === playListAuthorProfileId
+                                ? 'bg-c300 text-c700 mb-2 rounded-2xl px-2'
+                                : 'text-c50',
+                            )}
+                          >
                             {/* 대댓글 작성자 닉네임 */}
-                            <span className="text-c700 text-captionS">
-                              {reply.profiles?.nickname || '사용자'}
-                            </span>
+                            <span className="text-sm">{reply.profiles?.nickname || '사용자'}</span>
                             {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
-                            {comment.profile_id === playListAuthorProfileId && (
+                            {reply.profile_id === playListAuthorProfileId && (
                               <CircleCheck size={16} className="text-c700" />
                             )}
                           </div>
                           {/* 대댓글 작성일 */}
-                          <span className="text-c400 text-xs">
+                          <span className="text-c400 mt-1 text-sm">
                             {getRelativeTime(reply.created_at)}
                           </span>
                         </div>
