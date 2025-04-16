@@ -4,6 +4,8 @@ import {
   AvatarImage,
 } from '@/shared/components/ui/avatar'
 
+export type AvatarSize = 'small' | 'medium' | 'large'
+
 type AvatarProps = {
   size?: 'small' | 'medium' | 'large'
   children?: React.ReactNode

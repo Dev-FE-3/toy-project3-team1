@@ -13,14 +13,7 @@ interface CommentPopupProps {
 }
 
 // 메인 CommentPopup 컴포넌트
-const CommentPopupRoot = ({
-  open,
-  onOpenChange,
-  children,
-  className,
-  snapPoints = [0.9],
-  activeSnapPoint = 0,
-}: CommentPopupProps) => {
+const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -42,7 +35,7 @@ const CommentPopupRoot = ({
   return (
     <AnimatePresence>
       {open && (
-        <div className="absolute inset-x-0 bottom-14 z-50">
+        <div className="commentContainer absolute inset-x-0 bottom-35 z-50">
           <motion.div
             ref={popupRef}
             initial={{ y: '100%' }}
@@ -50,12 +43,9 @@ const CommentPopupRoot = ({
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             className={cn(
-              'max-h-[59vh] overflow-auto rounded-t-xl bg-slate-800 text-white',
+              'bg-c800 text-c50 h-[calc(100vh-100px)] max-h-[55vh] rounded-4xl rounded-t-4xl',
               className,
             )}
-            style={{
-              height: `${snapPoints[activeSnapPoint] * 100}vh`,
-            }}
           >
             {children}
           </motion.div>
@@ -79,16 +69,21 @@ const CommentPopupRoot = ({
 //   )
 // }
 
-const Title = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
-  return <h2 className={cn('text-lg font-semibold', className)} {...props} />
+const Header = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      className={cn('header border-c700 flex flex-col gap-1.5 rounded-t-4xl p-4', className)}
+      {...props}
+    />
+  )
 }
 
-const Header = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cn('flex flex-col gap-1.5 p-4', className)} {...props} />
+const Title = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+  return <h2 className={cn('title pl-4 text-lg font-semibold', className)} {...props} />
 }
 
 const Content = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cn('p-4', className)} {...props} />
+  return <div className={cn('content flex h-full flex-col p-4', className)} {...props}></div>
 }
 
 export const CommentPopup = Object.assign(CommentPopupRoot, {

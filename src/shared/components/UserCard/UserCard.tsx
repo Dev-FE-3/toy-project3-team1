@@ -7,6 +7,7 @@ interface UserCardProps {
   profileId?: string
   nickname?: string
   size?: 'small' | 'medium' | 'large'
+  nicknameActive?: boolean
   className?: string
   listCount?: number
 }
@@ -16,6 +17,7 @@ export function UserCard({
   nickname,
   className,
   size = 'small',
+  nicknameActive = true,
   listCount,
 }: UserCardProps) {
   const navigate = useNavigate()
@@ -59,7 +61,7 @@ export function UserCard({
       <Avatar size={size}>
         <AvatarFallback>{fallbackText}</AvatarFallback>
       </Avatar>
-      {renderText()}
+      {nicknameActive && renderText()}
     </div>
   )
 }

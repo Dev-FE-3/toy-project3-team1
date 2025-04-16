@@ -1,25 +1,27 @@
 export interface YouTubeVideoRaw {
-  id: string;
+  id: string
   snippet: {
-    title: string;
+    title: string
     thumbnails: {
       high: {
-        url: string;
-      };
-    };
-    channelTitle: string;
-    publishedAt: string;
-  };
+        url: string
+      }
+    }
+    channelTitle: string
+    publishedAt: string
+  }
   statistics: {
-    viewCount: string;
-  };
+    viewCount: string
+    likeCount: string
+    favoriteCount: string
+  }
 }
 
 export interface YouTubeVideoInfo {
-    id: string
-    title: string
-    thumbnailUrl: string
-    channelTitle: string
-    publishedAt: string
-    viewCount: string
-  }
+  id: string
+  title: string
+  thumbnailUrl: string
+  channelTitle: string
+  publishedAt: string
+  viewCount: string
+}
