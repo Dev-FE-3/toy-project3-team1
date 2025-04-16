@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   FormHeader,
+  FormLoadingFallback,
   PlaylistInfoForm,
   TabItem,
   Tabs,
@@ -12,15 +13,16 @@ import {
 } from '@/pages/PlaylistForm/components'
 import { useSubmitPlaylist, useUpdatePlaylistForm } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
+import { useGetPlaylist } from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { Button } from '@/shared/components/ui/button'
 import { Form } from '@/shared/components/ui/form'
 import { useToast } from '@/shared/store/toastStore'
 import { useUserStore } from '@/shared/store/userStore'
-import { useGetPlaylist } from './queries/usePlaylistQuery'
 
 type FormTab = 'content' | 'video'
 
-const PlaylistFormPage = () => {
+const PlaylistFormContent = () => {
   const navigate = useNavigate()
   const { id: playlistId } = useParams<{ id: string }>()
   const isEditMode = !!playlistId
@@ -243,6 +245,16 @@ const PlaylistFormPage = () => {
         </form>
       </Form>
     </div>
+  )
+}
+
+export const PlaylistFormPage = () => {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<FormLoadingFallback />}>
+        <PlaylistFormContent />
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 
