@@ -20,11 +20,11 @@ const ProfilePageHeader = ({
   playlists,
 }: ProfilePageHeaderProps) => {
   return (
-    <>
+    <div className="mb-[20px]">
       <UserCard
         size="medium"
         nickname={targetUserProfile.nickname}
-        className="mb-[20px]"
+        className="mb-[10px]"
         profileId={targetUserProfile.id}
         listCount={playlists.length}
       />
@@ -33,7 +33,7 @@ const ProfilePageHeader = ({
           <Button
             variant="outline"
             type="button"
-            className="bg-c600 text-c200 h-12 w-full"
+            className="bg-c600 text-c200 mt-[10px] h-12 w-full"
             onClick={() => setEditModalOpen(true)}
           >
             프로필 편집
@@ -46,7 +46,7 @@ const ProfilePageHeader = ({
           />
         </>
       )}
-    </>
+    </div>
   )
 }
 

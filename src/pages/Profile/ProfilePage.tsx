@@ -41,7 +41,7 @@ const ProfilePage = () => {
     }
   }, [isLoading, isFetching]) // `isLoading`과 `isFetching` 상태 변경을 감지
 
-  if (!targetUserProfile) {
+  if (!targetUserProfile && !isFetching) {
     return <UserNotFound />
   }
 
