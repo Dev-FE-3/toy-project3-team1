@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+
 import { useYouTubeVideo } from '@/shared/hooks/useYouTubeVideo'
-import { extractVideoId, createYouTubeUrl, isValidVideoId } from '@/shared/model/utils/youtube'
+import { createYouTubeUrl, extractVideoId, isValidVideoId } from '@/shared/model/utils/youtube'
 
 export type Video = {
   id: string

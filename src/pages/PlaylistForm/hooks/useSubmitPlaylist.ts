@@ -1,5 +1,13 @@
-import { PlaylistFormValues } from '@/pages//PlaylistForm/model/types'
 import { useState } from 'react'
+
+import { PlaylistFormValues } from '@/pages//PlaylistForm/model/types'
+import {
+  useCreatePlaylist,
+  useCreatePlaylistItems,
+  useUpdateThumbnailUrl,
+  useUploadThumbnail,
+} from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { useUserStore } from '@/shared/store/userStore'
 
 interface UseSubmitPlaylistProps {
   onSuccess?: () => void
@@ -21,6 +29,12 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
   const [submitError, setSubmitError] = useState<Error | null>(null)
   const [formattedData, setFormattedData] = useState<FormattedPlaylistData | null>(null)
 
+  // Playlist 생성 및 업로드 관련 mutations
+  const createPlaylistMutation = useCreatePlaylist()
+  const createPlaylistItemsMutation = useCreatePlaylistItems()
+  const uploadThumbnailMutation = useUploadThumbnail()
+  const updateThumbnailUrlMutation = useUpdateThumbnailUrl()
+
   const formatPlaylistData = (data: PlaylistFormValues): FormattedPlaylistData => {
     return {
       title: data.title,
@@ -33,55 +47,64 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
     }
   }
 
-  const showFormattedDataAlert = (formattedData: FormattedPlaylistData) => {
-    alert(
-      `📋 플레이리스트 정보 📋\n\n` +
-        `제목: ${formattedData.title}\n` +
-        `설명: ${formattedData.description}\n` +
-        `해시태그: ${formattedData.hashtags}\n` +
-        `공개 여부: ${formattedData.isPublic}\n` +
-        `썸네일: ${formattedData.thumbnail}\n` +
-        `등록된 영상: ${formattedData.videoCount}개\n` +
-        `영상 목록:\n- ${formattedData.videoList}`,
-    )
-  }
-
-  const submitPlaylist = async (data: PlaylistFormValues, showAlert = true) => {
+  const submitPlaylist = async (data: PlaylistFormValues) => {
     try {
       setIsSubmitting(true)
       setSubmitError(null)
 
-      // FormData 생성
-      const formData = new FormData()
-      formData.append('title', data.title)
-      formData.append('description', data.description || '')
-      formData.append('isPublic', String(data.isPublic))
-      formData.append('hashtags', JSON.stringify(data.hashtags))
-      formData.append('videos', JSON.stringify(data.videos))
+      const profileId = useUserStore.getState().profileId
+      if (!profileId) throw new Error('사용자 정보를 찾을 수 없습니다.')
 
-      // 썸네일 처리
+      // 1. 플레이리스트 생성
+      const newPlaylist = await createPlaylistMutation.mutateAsync({
+        title: data.title,
+        description: data.description || null,
+        profile_id: profileId,
+        is_public: data.isPublic,
+        hashtag: data.hashtags.length ? data.hashtags : undefined,
+        thumbnail_url: null,
+      })
+
+      // 2. 플레이리스트 아이템 생성
+      await createPlaylistItemsMutation.mutateAsync({
+        playlistId: newPlaylist.id,
+        videos: data.videos,
+      })
+
+      // 3. 썸네일 처리
+      let thumbnailUrl = ''
       if (data.thumbnail) {
-        // 사용자가 직접 업로드한 이미지 파일인 경우
-        formData.append('thumbnail', data.thumbnail)
-        formData.append('thumbnailType', 'file')
+        try {
+          // 썸네일 업로드
+          thumbnailUrl = await uploadThumbnailMutation.mutateAsync({
+            file: data.thumbnail,
+            userId: profileId,
+            playlistId: newPlaylist.id,
+          })
+          // 썸네일 URL 업데이트
+          await updateThumbnailUrlMutation.mutateAsync({
+            playlistId: newPlaylist.id,
+            thumbnailUrl,
+          })
+        } catch (thumbError) {
+          setSubmitError(new Error('썸네일 업로드 또는 URL 업데이트 중 오류가 발생했습니다.'))
+          throw thumbError
+        }
       } else if (data.videos.length > 0) {
-        // 첫 번째 영상의 썸네일 URL을 사용하는 경우
-        formData.append('thumbnail', data.videos[0].thumbnailUrl)
-        formData.append('thumbnailType', 'url')
+        try {
+          await updateThumbnailUrlMutation.mutateAsync({
+            playlistId: newPlaylist.id,
+            thumbnailUrl: data.videos[0].thumbnailUrl,
+          })
+        } catch (thumbError) {
+          setSubmitError(new Error('기본 썸네일 URL 업데이트 중 오류가 발생했습니다.'))
+          throw thumbError
+        }
       }
 
       // 데이터 형식 변환 (표시용)
       const formatted = formatPlaylistData(data)
       setFormattedData(formatted)
-
-      if (showAlert) {
-        showFormattedDataAlert(formatted)
-      }
-
-      // TODO: API 호출 구현
-      // const response = await apiClient.post('/playlists', formData);
-
-      console.log('플레이리스트 제출:', formData)
 
       onSuccess?.()
       return true

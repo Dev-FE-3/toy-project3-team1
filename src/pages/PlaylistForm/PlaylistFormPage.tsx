@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   FormHeader,
@@ -8,16 +10,40 @@ import {
   Tabs,
   VideoListForm,
 } from '@/pages/PlaylistForm/components'
-import { ToastContainer } from '@/pages/PlaylistForm/components/ToastContainer'
-import { useFormNavigation, useSubmitPlaylist } from '@/pages/PlaylistForm/hooks'
+import { useSubmitPlaylist, useUpdatePlaylistForm } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
 import { Button } from '@/shared/components/ui/button'
 import { Form } from '@/shared/components/ui/form'
 import { useToast } from '@/shared/store/toastStore'
+import { useUserStore } from '@/shared/store/userStore'
+import { useGetPlaylist } from './queries/usePlaylistQuery'
 
 type FormTab = 'content' | 'video'
 
 const PlaylistFormPage = () => {
+  const navigate = useNavigate()
+  const { id: playlistId } = useParams<{ id: string }>()
+  const isEditMode = !!playlistId
+  const profileId = useUserStore((state) => state.profileId)
+  const { success, error } = useToast()
+
+  // 수정 모드일 때 기존 데이터 조회
+  const { data: playlist, isLoading: isLoadingPlaylist } = useGetPlaylist(playlistId || '')
+
+  // Form hooks
+  const { submitPlaylist, validatePlaylist, isSubmitting } = useSubmitPlaylist({
+    onError: (err: Error) => error(err.message),
+  })
+
+  const { updatePlaylist, isUpdating } = useUpdatePlaylistForm({
+    playlistId: playlistId || '',
+    onSuccess: () => {
+      success('플레이리스트가 성공적으로 수정되었습니다.')
+      navigate('/playlists')
+    },
+    onError: (err: Error) => error(err.message),
+  })
+
   // Form 상태 관리 - mode를 onChange로 설정하여 실시간 검증
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(playlistFormSchema),
@@ -28,38 +54,79 @@ const PlaylistFormPage = () => {
       isPublic: true,
       videos: [],
       thumbnail: null,
+      thumbnailUrl: '',
     },
-    mode: 'onChange', // 입력 변경 시 즉시 검증
+    mode: 'onChange',
   })
+
+  // 플레이리스트 데이터가 로드되면 폼 업데이트
+  useEffect(() => {
+    if (playlist && isEditMode) {
+      const formValues = {
+        title: playlist.title,
+        description: playlist.description || '',
+        hashtags: playlist.hashtag || [],
+        isPublic: playlist.is_public,
+        videos: playlist.playlist_items.map((item) => ({
+          id: item.video_id,
+          title: item.title,
+          thumbnailUrl: item.thumbnail_url,
+          url: `https://www.youtube.com/watch?v=${item.video_id}`,
+        })),
+        thumbnail: null,
+        thumbnailUrl: playlist.thumbnail_url || '',
+      }
+
+      form.reset(formValues, {
+        keepDirtyValues: false,
+        keepErrors: false,
+        keepDirty: false,
+        keepIsSubmitted: false,
+        keepTouched: false,
+        keepIsValid: false,
+        keepSubmitCount: false,
+      })
+    }
+  }, [playlist, isEditMode, form])
 
   // 폼 데이터와 상태 접근
   const { watch, formState } = form
-  const { isDirty, errors, dirtyFields } = formState
+  const { errors, dirtyFields } = formState
 
   // 필요한 폼 값 가져오기
   const title = watch('title') || ''
   const videos = watch('videos') || []
 
   // 탭 완료 상태 계산 (유효성 검사 결과 기반)
-  const isTitleComplete = !!dirtyFields.title && !errors.title && title.trim().length > 0
+  const isTitleComplete = isEditMode
+    ? !!title.trim()
+    : !!dirtyFields.title && !errors.title && title.trim().length > 0
   const isVideoComplete = videos.length > 0 && !errors.videos
   const isComplete = isTitleComplete && isVideoComplete
-
-  // 사용자 피드백 및 네비게이션
-  const { handleBackNavigation } = useFormNavigation({ isFormEdited: isDirty })
-  const { submitPlaylist, validatePlaylist } = useSubmitPlaylist()
-  const { success, error } = useToast()
 
   // 폼 제출 핸들러
   const onSubmit = async (values: PlaylistFormValues) => {
     try {
-      const { isValid, errors } = validatePlaylist(values)
-      if (!isValid) {
-        error(errors)
+      if (!profileId) {
+        error('사용자 정보를 찾을 수 없습니다.')
         return
       }
-      await submitPlaylist(values)
-      success('플레이리스트가 성공적으로 제출되었습니다.')
+
+      const { isValid, errors: validationErrors } = validatePlaylist(values)
+      if (!isValid) {
+        error(validationErrors)
+        return
+      }
+
+      if (isEditMode) {
+        await updatePlaylist(values)
+      } else {
+        const result = await submitPlaylist(values)
+        if (result) {
+          success('플레이리스트가 성공적으로 생성되었습니다.')
+          navigate('/playlists')
+        }
+      }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다. 다시 시도해주세요.'
@@ -67,9 +134,57 @@ const PlaylistFormPage = () => {
     }
   }
 
+  const getButtonText = (
+    isComplete: boolean,
+    isEditMode: boolean,
+    isUpdating: boolean,
+    isSubmitting: boolean,
+  ) => {
+    if (!isComplete) return '다음'
+
+    if (isEditMode) {
+      return isUpdating ? '리플레이 만드는 중' : '플레이리스트 수정하기'
+    }
+
+    return isSubmitting ? '리플레이 만드는 중' : '플레이리스트 생성하기'
+  }
+
+  const handleButtonClick = (
+    isComplete: boolean,
+    activeKey: FormTab,
+    title: string,
+    videos: PlaylistFormValues['videos'],
+    setActiveKey: (key: FormTab) => void,
+  ) => {
+    if (!isComplete) {
+      if (activeKey === 'content' && title.trim()) {
+        setActiveKey('video')
+      } else if (activeKey === 'video' && videos.length > 0) {
+        setActiveKey('content')
+      }
+    }
+  }
+
+  const getButtonDisabled = (
+    activeKey: FormTab,
+    title: string,
+    videos: PlaylistFormValues['videos'],
+    isSubmitting: boolean,
+    isUpdating: boolean,
+  ) => {
+    return (activeKey === 'content' ? !title : videos.length === 0) || isSubmitting || isUpdating
+  }
+
+  if (isEditMode && isLoadingPlaylist) {
+    return <div>로딩 중...</div>
+  }
+
   return (
     <div className="container mx-auto px-9">
-      <FormHeader title="플레이리스트 등록" onBackButtonClick={handleBackNavigation} />
+      <FormHeader
+        title={isEditMode ? '플레이리스트 수정' : '플레이리스트 등록'}
+        onBackButtonClick={isEditMode ? () => navigate('/playlists') : undefined}
+      />
 
       <Form {...form}>
         <form
@@ -104,27 +219,22 @@ const PlaylistFormPage = () => {
                   />
                 </div>
 
+                {/* 폼 컨텐츠 */}
                 <div className="max-h-full min-h-0 flex-1 overflow-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 
-                <div className="mt-auto py-4">
-                  {/* 메인 액션 버튼 */}
+                {/* 하단 버튼 */}
+                <div className="py-6">
                   <Button
                     type={isComplete ? 'submit' : 'button'}
                     className="bg-c700 text-c100 h-[56px] w-full rounded-md py-2 text-[16px]"
-                    disabled={activeKey === 'content' ? !title : videos.length === 0}
-                    onClick={() => {
-                      if (!isComplete) {
-                        if (activeKey === 'content' && title.trim()) {
-                          setActiveKey('video')
-                        } else if (activeKey === 'video' && videos.length > 0) {
-                          setActiveKey('content')
-                        }
-                      }
-                    }}
+                    disabled={getButtonDisabled(activeKey, title, videos, isSubmitting, isUpdating)}
+                    onClick={() =>
+                      handleButtonClick(isComplete, activeKey, title, videos, setActiveKey)
+                    }
                   >
-                    {isComplete ? '플레이리스트 생성하기' : '다음'}
+                    {getButtonText(isComplete, isEditMode, isUpdating, isSubmitting)}
                   </Button>
                 </div>
               </div>
@@ -132,7 +242,6 @@ const PlaylistFormPage = () => {
           </Tabs>
         </form>
       </Form>
-      <ToastContainer />
     </div>
   )
 }
