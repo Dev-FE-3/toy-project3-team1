@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { type Metric, onCLS, onINP, onLCP } from 'web-vitals'
+import { reportWebVitals } from './reportWebVitals'
 
 // 개발 환경에서만 사용
 const isDevelopment = import.meta.env.DEV
@@ -182,6 +183,19 @@ const WebVitalsMonitorContent = () => {
     // INP도 모든 상호작용 보고
     onINP(handleMetric, { reportAllChanges: true })
   }, [handleMetric])
+
+  useEffect(() => {
+    const handleWebVitals = (metric: Metric) => {
+      // metric.name은 'CLS', 'LCP', 'INP' 중 하나입니다
+      // metric.value는 실제 측정값입니다
+      console.log(`[Web Vitals] ${metric.name}: ${metric.value}`)
+
+      // 여기에 원하는 분석 도구로 데이터를 보내는 로직을 추가할 수 있습니다
+      // 예: Google Analytics, Custom Analytics 등
+    }
+
+    reportWebVitals(handleWebVitals)
+  }, [])
 
   const getRatingColor = (rating: string) => {
     switch (rating) {
