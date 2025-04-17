@@ -55,14 +55,14 @@ export const Card = ({
             </div>
           )}
         </figure>
-        <section className="relative flex items-start justify-between p-3">
-          <div className="flex-1 pr-2">
-            <h3 className="text-c100 text-captionM mb-1 w-30 overflow-hidden text-ellipsis whitespace-nowrap">
+        <section className="relative flex items-start justify-between p-2">
+          <div className="flex-1 overflow-hidden ">
+            <h3 className="text-c100 text-captionM mb-1 overflow-hidden text-ellipsis whitespace-nowrap">
               {title}
             </h3>
             <p className="text-c100 text-captionS">동영상 {videoCount}개</p>
           </div>
-          <div onClick={handleMoreMenuClick} className="-mt-1 -mr-1 p-2">
+          <div onClick={handleMoreMenuClick}>
             <PlaylistMoreMenu
               playlistId={id}
               title={title}
