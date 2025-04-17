@@ -32,7 +32,6 @@ const CommentList = ({
 
   // 댓글 추가 후 목록 새로고침
   const handleCommentAdded = () => {
-    console.log('댓글 추가 후 목록 새로고침')
     refreshComments()
   }
 

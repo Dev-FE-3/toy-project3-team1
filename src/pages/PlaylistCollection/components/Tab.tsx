@@ -18,7 +18,7 @@ export const Tab = ({ items, activeKey, onTabChange }: TabProps) => {
           role="tab"
           aria-selected={activeKey === item.key}
           aria-controls={`${item.key}-panel`}
-          className={`w-1/2 border-b-2 pb-4 text-[24px] transition-colors ${
+          className={`text-textM w-1/2 border-b-2 pb-4 transition-colors ${
             activeKey === item.key
               ? 'text-C100 border-white font-semibold'
               : 'border-transparent font-normal text-gray-400'

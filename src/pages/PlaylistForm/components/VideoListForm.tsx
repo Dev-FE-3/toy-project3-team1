@@ -50,27 +50,29 @@ export const VideoListForm = () => {
     }
 
     return (
-      <div className="space-y-2">
-        {videos.map((video, index) => (
-          <VideoItem
-            key={video.id}
-            id={video.id}
-            title={video.title}
-            index={index}
-            onRemove={() => handleRemoveVideo(index)}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          />
-        ))}
+      <div className="overflow-y-scroll flex-1">
+        <div className="space-y-2 overflow-y-scroll">
+          {videos.map((video, index) => (
+            <VideoItem
+              key={video.id}
+              id={video.id}
+              title={video.title}
+              index={index}
+              onRemove={() => handleRemoveVideo(index)}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+            />
+          ))}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 py-4">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <FormField
         control={control}
         name="videos"
@@ -105,8 +107,8 @@ export const VideoListForm = () => {
         )}
       />
 
-      <div className="">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="flex h-full flex-col flex-1 overflow-hidden">
+        <div className="mb-3 pt-3 flex items-center justify-between">
           <p className="text-c100 text-base font-medium">영상 목록</p>
           <span className="text-c300 text-sm">
             {videos.length > 0 ? `${videos.length}개의 영상` : ''}

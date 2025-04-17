@@ -93,14 +93,14 @@ export const EditProfileModal = ({
           <Button
             variant="outline"
             type="button"
-            className="bg-c700 text-c200 h-12 w-[48%]"
+            className="bg-c700 text-c200 h-12 flex-1"
             onClick={handleClose}
           >
             취소
           </Button>
           <Button
             variant="outline"
-            className="bg-c300 text-c900 h-12 w-[48%]"
+            className="bg-c300 text-c900 h-12 flex-1"
             onClick={handleSave}
             disabled={!isAvailable || isSaving || isSameAsCurrent || !isValidFormat}
           >

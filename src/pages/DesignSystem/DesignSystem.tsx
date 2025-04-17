@@ -1,4 +1,3 @@
-import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import Avatar from '@/shared/components/Avatar/Avatar'
 import BackButton from '@/shared/components/BackButton/BackButton'
 import HashTag from '@/shared/components/HashTag/HashTag'
@@ -11,6 +10,7 @@ import TabMenu from '@/shared/components/TabMenu/TabMenu'
 import { Button } from '@/shared/components/ui/button'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
 import { useMemo, useState } from 'react'
+import CommentInput from '../PlaylistDetail/components/CommentInput/CommentInput'
 
 export default function DesignSystem() {
   // TapMenu 상태 관리

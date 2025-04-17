@@ -7,7 +7,6 @@ export const signInWithEmail = async (email: string, password: string) => {
       email,
       password,
     })
-    console.log('111 로그인 성공::: ', data)
 
     if (error) {
       console.error('로그인 중 오류 발생:', error)
@@ -80,13 +79,11 @@ export const resetPassword = async (email: string) => {
 // 로그아웃 함수
 export const signOut = async () => {
   try {
-    console.log('signOut 호출')
     const { error } = await supabase.auth.signOut()
     if (error) {
       console.error('로그아웃 중 오류 발생:', error)
       throw error
     }
-    console.log('signOut success')
     return true
   } catch (error) {
     console.error('로그아웃 프로세스 오류:', error)
@@ -133,14 +130,12 @@ export const getSession = async () => {
 export const refreshSupabaseClient = async () => {
   // 현재 세션 가져오기
   const { data } = await supabase.auth.getSession()
-  // console.log('refreshSupabaseClient 호출', data)
   if (data.session) {
     // 세션이 있으면 토큰 갱신
     const { error } = await supabase.auth.refreshSession()
     if (error) {
       console.error('세션 갱신 오류:', error)
     } else {
-      console.log('Supabase 클라이언트 세션 갱신됨')
     }
   }
 }

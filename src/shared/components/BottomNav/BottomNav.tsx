@@ -16,7 +16,7 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="border-c800 bg-c900 flex h-[66px] w-full justify-around border-t px-[15px]">
+    <nav className="border-c800 bg-c900 z-20 flex h-[60px] w-full justify-around border-t px-[15px]">
       <Link
         to={'/'}
         className={cn(

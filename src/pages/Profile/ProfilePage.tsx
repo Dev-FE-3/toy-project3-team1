@@ -69,7 +69,7 @@ const ProfilePage = () => {
 
       {/* 콘텐츠 진입 애니메이션 */}
       <motion.div
-        className="flex h-full flex-col px-[20px] pt-[20px]"
+        className="flex h-full flex-col px-5 pt-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: showSkeleton ? 0 : 1 }}
         transition={{ duration: 0.5 }}

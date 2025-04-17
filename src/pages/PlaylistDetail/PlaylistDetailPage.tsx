@@ -1,21 +1,21 @@
-import AuthorInfo from '@/features/playlistDetail/AuthorInfo/AuthorInfo'
-import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
-import CommentList from '@/features/playlistDetail/CommentList/CommentList'
-import { CommentPopup } from '@/features/playlistDetail/CommentPopup/CommentPopup'
-import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrigger'
-import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
-import PlaylistInfo from '@/features/playlistDetail/PlaylistInfo/PlaylistInfo'
-import VideoList from '@/features/playlistDetail/VideoList/VideoList'
-import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
-import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { getPlaylistById } from '@/shared/model/api/playlist'
+import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
+import { CommentPopup } from '@/pages/PlaylistDetail/components/CommentPopup/CommentPopup'
+import PlaylistInfo from '@/pages/PlaylistDetail/components/PlaylistInfo/PlaylistInfo'
+import AuthorInfo from '@/pages/PlaylistDetail/components/AuthorInfo/AuthorInfo'
+import CommentTrigger from '@/pages/PlaylistDetail/components/CommentTrigger/CommentTrigger'
+import CommentInput from '@/pages/PlaylistDetail/components/CommentInput/CommentInput'
+import CommentList from '@/pages/PlaylistDetail/components/CommentList/CommentList'
+import VideoList from '@/pages/PlaylistDetail/components/VideoList/VideoList'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { useParams } from 'react-router-dom'
+import VideoPlayer from '@/pages/PlaylistDetail/components/VideoPlayer/VideoPlayer'
+import LoginPrompt from '@/pages/PlaylistDetail/components/LoginPrompt/LoginPrompt'
+import { getPlaylistById } from '@/shared/model/api/playlist'
 import { queryClient } from '@/shared/model/lib/queryClient'
 import { fetchMultipleYouTubeVideos } from '@/shared/services/youtubeVideoApi'
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
 
 export const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
 export const SUB_PLAYLIST_ID = 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
@@ -90,9 +90,7 @@ const PlaylistDetailPage = () => {
     return (
       <div className="playlistDetailPage flex h-[calc(100vh-9rem)] flex-col p-6">
         <div className="flex-shrink-0">
-          <AspectRatio ratio={16 / 9}>
-            <Skeleton className="bg-c500 h-[200px] w-full rounded-xl" />
-          </AspectRatio>
+          <Skeleton className="bg-c500 aspect-video w-full rounded-xl" />
           <div className="mt-3">
             <Skeleton className="bg-c500 h-5 w-3/4 rounded-md" />
             <Skeleton className="bg-c500 mt-2 h-4 w-1/2 rounded-md" />
@@ -133,7 +131,7 @@ const PlaylistDetailPage = () => {
   // 비공개 플레이리스트인 경우 간단한 메시지 표시
   if (!playlistData?.is_public) {
     return (
-      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-16">
+      <div className="flex h-full items-center justify-center">
         <div className="bg-c900 rounded-xl p-6 text-center">
           <p className="text-c50 text-lg font-medium">비공개 플레이리스트입니다</p>
           <p className="text-c400 mt-2">이 플레이리스트는 현재 비공개로 설정되어 있습니다.</p>
@@ -143,8 +141,8 @@ const PlaylistDetailPage = () => {
   }
 
   return (
-    <>
-      <div className="flex h-[calc(100vh-9rem)] flex-col p-6">
+    <div className="no-scrollbar h-full overflow-y-scroll">
+      <div className="flex h-full flex-col px-4">
         <div className="flex-shrink-0">
           {selectedVideo ? (
             // 선택한 비디오 재생
@@ -171,6 +169,7 @@ const PlaylistDetailPage = () => {
             isOwner={playlistData?.isOwner}
             createdAt={playlistData?.created_at}
             isPublic={playlistData?.is_public}
+            hashTag={playlistData?.hashtag}
             videoCount={playlistData?.playlist_items?.length || 0}
           />
 
@@ -179,13 +178,12 @@ const PlaylistDetailPage = () => {
             playlistId={currentPlaylistId}
             authorName={playlistData?.profiles.nickname || ''}
             isOwner={playlistData?.isOwner}
-            hashTag={playlistData?.hashtag}
             subscriberCount={playlistData?.subscriber_count || 0}
           />
 
           {/* 댓글 트리거 */}
           <CommentTrigger
-            nickname={playlistData?.profiles.nickname}
+            nickname={profile?.user_metadata?.nickname}
             commentCount={playlistData?.comment_count || 0}
             onToggleCommentPopup={handleOpenCommentPopup}
           />
@@ -225,7 +223,7 @@ const PlaylistDetailPage = () => {
           </CommentPopup.Content>
         </CommentPopup>
       </div>
-    </>
+    </div>
   )
 }
 
