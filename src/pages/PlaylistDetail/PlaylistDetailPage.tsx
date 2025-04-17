@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { Skeleton } from '@/shared/components/ui/skeleton'
-import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
-import { CommentPopup } from '@/features/playlistDetail/CommentPopup/CommentPopup'
-import PlaylistInfo from '@/features/playlistDetail/PlaylistInfo/PlaylistInfo'
 import AuthorInfo from '@/features/playlistDetail/AuthorInfo/AuthorInfo'
-import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrigger'
 import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import CommentList from '@/features/playlistDetail/CommentList/CommentList'
-import VideoList from '@/features/playlistDetail/VideoList/VideoList'
-import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
-import { useParams } from 'react-router-dom'
-import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
+import { CommentPopup } from '@/features/playlistDetail/CommentPopup/CommentPopup'
+import CommentTrigger from '@/features/playlistDetail/CommentTrigger/CommentTrigger'
 import LoginPrompt from '@/features/playlistDetail/LoginPrompt/LoginPrompt'
+import PlaylistInfo from '@/features/playlistDetail/PlaylistInfo/PlaylistInfo'
+import VideoList from '@/features/playlistDetail/VideoList/VideoList'
+import VideoPlayer from '@/features/playlistDetail/VideoPlayer/VideoPlayer'
+import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { getPlaylistById } from '@/shared/model/api/playlist'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { queryClient } from '@/shared/model/lib/queryClient'
 import { fetchMultipleYouTubeVideos } from '@/shared/services/youtubeVideoApi'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 export const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
 export const SUB_PLAYLIST_ID = 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
@@ -180,7 +180,6 @@ const PlaylistDetailPage = () => {
             authorName={playlistData?.profiles.nickname || ''}
             isOwner={playlistData?.isOwner}
             hashTag={playlistData?.hashtag}
-            createdAt={playlistData?.created_at}
             subscriberCount={playlistData?.subscriber_count || 0}
           />
 

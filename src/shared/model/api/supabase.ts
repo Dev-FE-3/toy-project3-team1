@@ -5,8 +5,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // 클라이언트 초기화 상태 추적
 let isInitialized = false
-let clientId = Math.random().toString(36).substring(2, 10)
-let createCount = 0
+const clientId = Math.random().toString(36).substring(2, 10)
 
 // Supabase 인스턴스
 let supabaseInstance: SupabaseClient | null = null

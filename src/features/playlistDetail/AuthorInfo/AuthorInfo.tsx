@@ -1,9 +1,8 @@
-import { Heart, Bookmark } from 'lucide-react'
-import { cn } from '@/shared/model/lib/utils'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
-import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlayBookmark'
-import { useEffect } from 'react'
+import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
+import { cn } from '@/shared/model/lib/utils'
+import { Bookmark, Heart } from 'lucide-react'
 
 interface AuthorInfoProps {
   authorName: string | undefined

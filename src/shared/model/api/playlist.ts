@@ -1,5 +1,3 @@
-import { supabase } from './supabase'
-
 export interface Video {
   id: string
   title: string
@@ -90,90 +88,90 @@ export const getPlaylistById = async (playlistId: string, profileId: string) => 
 // }
 
 // Supabase에서 반환되는 플레이리스트 아이템 타입 정의
-interface PlaylistItem {
-  id?: string
-  video_id?: string
-  title?: string
-  thumbnail_url?: string
-  created_at?: string
-  duration?: string
-  statistics?: {
-    viewCount?: string
-    [key: string]: string | undefined
-  }
-  playlist_id?: string
-  position?: number
-  added_at?: string
-  updated_at?: string
-  description?: string
-  // [key: string]: any // 알 수 없는 추가 필드 허용
-}
+// interface PlaylistItem {
+//   id?: string
+//   video_id?: string
+//   title?: string
+//   thumbnail_url?: string
+//   created_at?: string
+//   duration?: string
+//   statistics?: {
+//     viewCount?: string
+//     [key: string]: string | undefined
+//   }
+//   playlist_id?: string
+//   position?: number
+//   added_at?: string
+//   updated_at?: string
+//   description?: string
+//   // [key: string]: any // 알 수 없는 추가 필드 허용
+// }
 
 // 데이터를 비디오 포맷으로 변환하는 함수
-const convertToVideos = (data: PlaylistItem[]): Video[] => {
-  console.log('데이터 변환 중...')
-  return data.map((item) => {
-    try {
-      return {
-        id: item.id || item.video_id || '임시ID',
-        title: item.title || '제목 없음',
-        thumbnail:
-          item.thumbnail_url || 'https://placehold.co/300x169/2a3a4a/FFF?text=No+Thumbnail',
-        views: (item.statistics && item.statistics.viewCount) || '조회수 정보가 없습니다',
-        date: item.created_at
-          ? new Date(item.created_at).toLocaleDateString('ko-KR')
-          : '날짜 정보 없음',
-        duration: item.duration || '00:00',
-        video_id: item.video_id || '임시ID',
-      }
-    } catch (itemError) {
-      console.error('아이템 변환 중 오류:', itemError, item)
-      return {
-        id: '오류',
-        title: '데이터 변환 중 오류 발생',
-        thumbnail: 'https://placehold.co/300x169/ff0000/FFF?text=Error',
-        views: '오류',
-        date: '오류',
-        duration: '00:00',
-        video_id: '오류',
-      }
-    }
-  })
-}
+// const convertToVideos = (data: PlaylistItem[]): Video[] => {
+//   console.log('데이터 변환 중...')
+//   return data.map((item) => {
+//     try {
+//       return {
+//         id: item.id || item.video_id || '임시ID',
+//         title: item.title || '제목 없음',
+//         thumbnail:
+//           item.thumbnail_url || 'https://placehold.co/300x169/2a3a4a/FFF?text=No+Thumbnail',
+//         views: (item.statistics && item.statistics.viewCount) || '조회수 정보가 없습니다',
+//         date: item.created_at
+//           ? new Date(item.created_at).toLocaleDateString('ko-KR')
+//           : '날짜 정보 없음',
+//         duration: item.duration || '00:00',
+//         video_id: item.video_id || '임시ID',
+//       }
+//     } catch (itemError) {
+//       console.error('아이템 변환 중 오류:', itemError, item)
+//       return {
+//         id: '오류',
+//         title: '데이터 변환 중 오류 발생',
+//         thumbnail: 'https://placehold.co/300x169/ff0000/FFF?text=Error',
+//         views: '오류',
+//         date: '오류',
+//         duration: '00:00',
+//         video_id: '오류',
+//       }
+//     }
+//   })
+// }
 
-// 더미 비디오 데이터 반환 (오류 발생 시 사용)
-const getDummyVideos = (): Video[] => {
-  console.log('더미 비디오 데이터 반환')
-  return [
-    {
-      id: '1',
-      title: 'ORISA BARRIER STRATEGY',
-      thumbnail: 'https://placehold.co/300x169/2a3a4a/FFF?text=Orisa',
-      views: '240회',
-      date: '2024.12.1',
-      duration: '1:42',
-      video_id: '1',
-    },
-    {
-      id: '2',
-      title: '오버워치2 오리사 장인의 신규 메타 전략!',
-      thumbnail: 'https://placehold.co/300x169/3a4a5a/FFF?text=Orisa2',
-      views: '1.2만회',
-      date: '2024.11.15',
-      duration: '8:42',
-      video_id: '2',
-    },
-    {
-      id: '3',
-      title: '탱커 오리사 3분만에 배우기!',
-      thumbnail: 'https://placehold.co/300x169/4a5a6a/FFF?text=Orisa3',
-      views: '3.5만회',
-      date: '2024.10.28',
-      duration: '3:11',
-      video_id: '3',
-    },
-  ]
-}
+// // 더미 비디오 데이터 반환 (오류 발생 시 사용)
+// const getDummyVideos = (): Video[] => {
+//   console.log('더미 비디오 데이터 반환')
+//   return [
+//     {
+//       id: '1',
+//       title: 'ORISA BARRIER STRATEGY',
+//       thumbnail: 'https://placehold.co/300x169/2a3a4a/FFF?text=Orisa',
+//       views: '240회',
+//       date: '2024.12.1',
+//       duration: '1:42',
+//       video_id: '1',
+//     },
+//     {
+//       id: '2',
+//       title: '오버워치2 오리사 장인의 신규 메타 전략!',
+//       thumbnail: 'https://placehold.co/300x169/3a4a5a/FFF?text=Orisa2',
+//       views: '1.2만회',
+//       date: '2024.11.15',
+//       duration: '8:42',
+//       video_id: '2',
+//     },
+//     {
+//       id: '3',
+//       title: '탱커 오리사 3분만에 배우기!',
+//       thumbnail: 'https://placehold.co/300x169/4a5a6a/FFF?text=Orisa3',
+//       views: '3.5만회',
+//       date: '2024.10.28',
+//       duration: '3:11',
+//       video_id: '3',
+//     },
+//   ]
+// }
 
 // // 무한 스크롤을 위한 페이지네이션된 비디오 가져오기
 // export const getPlaylistVideosPaginated = async (

@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Trash2, CircleCheck } from 'lucide-react'
-import { Comment, deleteComment } from '@/shared/model/api/comments'
+import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import Avatar from '@/shared/components/Avatar/Avatar'
 import { AvatarFallback } from '@/shared/components/ui/avatar'
-import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
 import { Button } from '@/shared/components/ui/button'
+import { Comment, deleteComment } from '@/shared/model/api/comments'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { CircleCheck, Trash2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 interface CommentItemProps {
   comment: Comment

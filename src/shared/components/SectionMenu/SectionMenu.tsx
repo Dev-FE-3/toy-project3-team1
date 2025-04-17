@@ -1,4 +1,3 @@
-import React from 'react'
 import MoreMenu, { MenuItem } from '@/shared/components/MoreMenu/MoreMenu'
 import { cn } from '@/shared/model/lib/utils'
 

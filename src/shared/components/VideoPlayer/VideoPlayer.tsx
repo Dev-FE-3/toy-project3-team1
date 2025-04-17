@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { cn } from '@/shared/model/lib/utils'
+import { useState } from 'react'
 
 interface VideoPlayerProps {
   videoId: string

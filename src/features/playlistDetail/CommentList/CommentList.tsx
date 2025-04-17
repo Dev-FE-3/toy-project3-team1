@@ -1,10 +1,9 @@
-import React from 'react'
-import { getCommentsByPlaylistId, type Comment } from '@/shared/model/api/comments'
-import CommentItem from './components/CommentItem'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { motion, AnimatePresence } from 'motion/react'
-import { useQuery } from '@tanstack/react-query'
+import { getCommentsByPlaylistId, type Comment } from '@/shared/model/api/comments'
 import { queryClient } from '@/shared/model/lib/queryClient'
+import { useQuery } from '@tanstack/react-query'
+import { AnimatePresence, motion } from 'motion/react'
+import CommentItem from './components/CommentItem'
 interface CommentListProps {
   playlistId: string
   currentProfileId: string
