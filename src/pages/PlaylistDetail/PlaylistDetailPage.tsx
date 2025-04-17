@@ -131,7 +131,7 @@ const PlaylistDetailPage = () => {
   // 비공개 플레이리스트인 경우 간단한 메시지 표시
   if (!playlistData?.is_public) {
     return (
-      <div className="flex h-[calc(100vh-9rem)] items-center justify-center p-16">
+      <div className="flex h-full items-center justify-center">
         <div className="bg-c900 rounded-xl p-6 text-center">
           <p className="text-c50 text-lg font-medium">비공개 플레이리스트입니다</p>
           <p className="text-c400 mt-2">이 플레이리스트는 현재 비공개로 설정되어 있습니다.</p>
