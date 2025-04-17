@@ -1,5 +1,5 @@
 import { UserCard } from '@/shared/components/UserCard/UserCard'
-import { usePlaylistBookmark } from '@/shared/hooks/usePlayBookmark'
+import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { cn } from '@/shared/model/lib/utils'
 import { Bookmark, Heart } from 'lucide-react'

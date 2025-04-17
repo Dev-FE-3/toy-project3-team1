@@ -11,7 +11,7 @@ import EmptyPlaylistCard from './EmptyPlaylistCard'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
-import { usePlaylistBookmark } from '../../../../shared/hooks/usePlayBookmark'
+import { usePlaylistBookmark } from '../../../../shared/hooks/usePlaylistBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) {
