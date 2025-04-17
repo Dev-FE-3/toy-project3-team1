@@ -1,10 +1,11 @@
 import { UserCard } from '@/shared/components/UserCard/UserCard'
-import { usePlaylistBookmark } from '@/shared/hooks/usePlayBookmark'
+import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { cn } from '@/shared/model/lib/utils'
 import { Bookmark, Heart } from 'lucide-react'
 
 interface AuthorInfoProps {
+  ownerId: string
   authorName: string | undefined
   isOwner: boolean
   // likeCount: number | undefined
@@ -13,6 +14,7 @@ interface AuthorInfoProps {
 }
 
 export default function AuthorInfo({
+  ownerId,
   authorName = 'R',
   isOwner = false,
   // likeCount = 0,
@@ -34,7 +36,7 @@ export default function AuthorInfo({
     <div className="mt-3 mb-4">
       <div className="flex items-center justify-between">
         {/* 왼쪽: 작성자 정보 */}
-        <UserCard nickname={authorName} />
+        <UserCard nickname={authorName} profileId={ownerId} size="small" />
         {/* 오른쪽: 좋아요/북마크 버튼 */}
         <div className="flex items-center gap-5">
           <div className="flex flex-col items-center">

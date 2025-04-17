@@ -11,7 +11,7 @@ import EmptyPlaylistCard from './EmptyPlaylistCard'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
-import { usePlaylistBookmark } from '../../../../shared/hooks/usePlayBookmark'
+import { usePlaylistBookmark } from '../../../../shared/hooks/usePlaylistBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) {
@@ -105,10 +105,8 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           </div>
         </div>
 
-        <div className={cn('mt-[2vh] flex gap-[1.2vh]', isBackground && 'opacity-0')}>
-          {playlist.hashtag.map((tagName, index) => (
-            <HashTag key={index} tag={tagName} size="small" />
-          ))}
+        <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
+          {playlist.hashtag?.map((tagName, index) => <HashTag key={index} tag={tagName} />)}
         </div>
       </div>
     </div>

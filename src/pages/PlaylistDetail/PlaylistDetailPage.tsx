@@ -175,6 +175,7 @@ const PlaylistDetailPage = () => {
 
           {/* 작성자 정보 */}
           <AuthorInfo
+            ownerId={playlistData.profile_id}
             playlistId={currentPlaylistId}
             authorName={playlistData?.profiles.nickname || ''}
             isOwner={playlistData?.isOwner}

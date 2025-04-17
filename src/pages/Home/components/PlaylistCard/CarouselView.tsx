@@ -17,7 +17,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
     const scrollLeft = container.scrollLeft
-    const itemWidth = 340 // item width + padding (px-2)
+    const itemWidth = 370 // item width + padding (px-2)
     const newIndex = Math.round(scrollLeft / itemWidth)
     if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
       setActiveIndex(newIndex)
@@ -56,7 +56,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
             {images.map((url, imgIndex) => (
               <div
                 key={imgIndex}
-                className="relative w-[128%] max-w-[440px] flex-none snap-center p-1"
+                className="relative w-[120%] max-w-[440px] flex-none snap-center p-1"
               >
                 <div className="aspect-video w-full overflow-hidden rounded-lg shadow-[0_0_12px_rgba(0,0,0,0.3)]">
                   <motion.div

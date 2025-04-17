@@ -29,7 +29,7 @@ export interface VideoItem {
 export interface Playlist {
   id: string
   title: string
-  hashtag: string[]
+  hashtag?: string[]
   thumbnail_url: string
   profile_id: string
   profiles: {
