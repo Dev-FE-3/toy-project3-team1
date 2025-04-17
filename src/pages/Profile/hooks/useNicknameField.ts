@@ -1,5 +1,5 @@
-// useNicknameField.ts
 import { useState } from 'react'
+
 import { supabase } from '@/shared/model/api/supabase'
 
 export const useNicknameField = (profileId: string, currentNickname: string) => {
