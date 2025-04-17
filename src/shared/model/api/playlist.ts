@@ -1,5 +1,3 @@
-import { supabase } from './supabase'
-
 export interface Video {
   id: string
   title: string
@@ -111,7 +109,6 @@ interface PlaylistItem {
 
 // 데이터를 비디오 포맷으로 변환하는 함수
 const convertToVideos = (data: PlaylistItem[]): Video[] => {
-  console.log('데이터 변환 중...')
   return data.map((item) => {
     try {
       return {
@@ -143,7 +140,6 @@ const convertToVideos = (data: PlaylistItem[]): Video[] => {
 
 // 더미 비디오 데이터 반환 (오류 발생 시 사용)
 const getDummyVideos = (): Video[] => {
-  console.log('더미 비디오 데이터 반환')
   return [
     {
       id: '1',
