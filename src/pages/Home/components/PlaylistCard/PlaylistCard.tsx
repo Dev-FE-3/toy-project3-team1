@@ -103,7 +103,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         </div>
 
         <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
-          {playlist.hashtag.map((tagName, index) => (
+          {playlist.hashtag?.map((tagName, index) => (
             <HashTag key={index} tag={tagName} />
           ))}
         </div>
