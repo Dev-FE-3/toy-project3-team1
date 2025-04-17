@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <base href="/" />
-    <link rel="icon" type="image/svg+xml" href="./favicon-svgrepo-com.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link
       rel="preload"
       href="/fonts/NotoSansKR-Medium.woff2"
@@ -20,9 +20,19 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>리플레이</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+      gtag('config', 'YOUR_MEASUREMENT_ID')
+    </script>
   </head>
-  <body>
-    <div id="root" class="bg-c900 m-auto flex min-h-screen w-[480px] flex-col"></div>
+  <body class="">
+    <div id="root" class="bg-c900 m-auto flex w-screen max-w-[480px] flex-col"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -22,7 +22,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
     const [comment, setComment] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { profile } = useGetAuthState()
-    const playListAuthorNickname = profile?.user_metadata?.nickname
+    const userNickname = profile?.user_metadata?.nickname
 
     const handleSubmit = async () => {
       if (!comment.trim()) return
@@ -31,9 +31,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
       try {
         await addComment(comment, playlistId, profileId, parentId)
         setComment('')
-        console.log('1 CommentInput 댓글 추가 후 핸들링')
         onCommentAdded()
-        console.log('1-1. CommentInput - onCommentAdded 호출 완료')
       } catch (error) {
         console.error('댓글 추가 중 오류:', error)
       } finally {
@@ -50,15 +48,11 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
 
     return (
       <div
-        className={cn(
-          'border-c700 bg-c800 rounded-xl border-t p-3',
-          size === 'sm' && 'p-2',
-          className,
-        )}
+        className={cn('border-c700 bg-c800 border-t p-3 pb-10', size === 'sm' && 'p-2', className)}
       >
         <div className="flex items-center gap-3">
           <Avatar size={'small'}>
-            <AvatarFallback>{playListAuthorNickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{userNickname.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="relative flex-grow">
             <Input

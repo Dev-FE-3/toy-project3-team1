@@ -15,11 +15,7 @@ import { usePlaylistBookmark } from '../../../../shared/hooks/usePlaylistBookmar
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
   if (!playlist) {
-    return (
-      <div className="relative h-[440px] py-4">
-        <EmptyPlaylistCard />
-      </div>
-    )
+    return <EmptyPlaylistCard />
   }
   const { isLiked, likeCount, toggleLike, likeLoading } = usePlaylistLike(playlist.id)
   const { isBookmarked, bookmarkCount, toggleBookmark, bookmarkLoading } = usePlaylistBookmark(
@@ -55,7 +51,14 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
 
   const uploadedDate = getRelativeTime(playlist.created_at)
   return (
-    <div className="relative h-[440px] py-4">
+    <div
+      className={cn(
+        'relative py-3',
+        isBackground
+          ? 'bg-c900 border-none'
+          : 'from-c600 to-c800 border-c500 border-y-1 bg-gradient-to-b',
+      )}
+    >
       <CarouselView
         images={carouselImages}
         title={playlist.title}
@@ -63,12 +66,12 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         isBackground={isBackground}
       />
 
-      <div className={cn('absolute left-0 w-full px-[38px] py-2', isBackground && 'px-4')}>
+      <div className={cn('relative left-0 w-full py-2 pr-4 pb-4 pl-5', isBackground && 'px-4')}>
         <div className="flex w-full justify-between">
-          <div className="flex w-72 flex-col gap-4">
-            <h3 className="text-c50 text-h3 w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
+          <div className="flex flex-1 flex-col gap-3">
+            <h2 className="text-c50 text-h4 w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
               {playlist.title}
-            </h3>
+            </h2>
             <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
               <UserCard
                 nickname={playlist.profiles.nickname}
@@ -79,12 +82,12 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
             </div>
           </div>
 
-          <div className={cn('mt-1 mr-1 flex', isBackground && 'opacity-0')}>
+          <div className={cn('mt-1 flex', isBackground && 'opacity-0')}>
             <button
               type="button"
               onClick={toggleLike}
               disabled={likeLoading}
-              className="flex flex-col items-center gap-1 px-2"
+              className="flex flex-col items-center gap-1 px-1"
             >
               <LikeIcon isLiked={isLiked} size={34} />
               <span className="text-c400 text-captionM">{likeCount}</span>
@@ -94,7 +97,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
               type="button"
               onClick={toggleBookmark}
               disabled={bookmarkLoading}
-              className="flex flex-col items-center gap-1 px-2"
+              className="flex flex-col items-center gap-1 pl-1"
             >
               <BookmarkIcon isBookmarked={isBookmarked} size={34} />
               <span className="text-c400 text-captionM">{bookmarkCount}</span>
@@ -103,9 +106,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         </div>
 
         <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
-          {playlist.hashtag?.map((tagName, index) => (
-            <HashTag key={index} tag={tagName} />
-          ))}
+          {playlist.hashtag?.map((tagName, index) => <HashTag key={index} tag={tagName} />)}
         </div>
       </div>
     </div>

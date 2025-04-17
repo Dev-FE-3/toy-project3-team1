@@ -31,7 +31,7 @@ export default function HashTag({ size = 'medium', tag, className, onClick }: Ha
       <Badge
         variant="secondary"
         className={cn(
-          'border-c400 bg-c700 text-c400 !text-captionM rounded-full px-[8px] pt-[3px] pb-[4px]',
+          'border-c400 bg-c700 text-c400 !text-captionM rounded-full px-3 pt-1 pb-1',
           'cursor-pointer transition-colors',
           className,
         )}

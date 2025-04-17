@@ -15,6 +15,7 @@ export default function BookmarkIcon({
   return (
     <Bookmark
     size={size}
+    strokeWidth={1.5}
       className={cn(
         'transition-colors duration-300',
         isBookmarked ? 'fill-c200 text-c200' : 'fill-c700 text-c400',

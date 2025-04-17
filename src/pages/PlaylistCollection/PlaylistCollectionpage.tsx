@@ -47,7 +47,7 @@ const PlaylistContent = () => {
     <>
       <Tab items={TAB_ITEMS} activeKey={activeKey} onTabChange={handleTabChange} />
       <div
-        className="mt-8 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden"
+        className="mt-5 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden"
         style={hideScrollbarStyles}
       >
         <div className="mb-4">

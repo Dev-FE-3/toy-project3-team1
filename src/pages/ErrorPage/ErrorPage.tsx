@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const ErrorPage = () => {
   const navigate = useNavigate()
   return (
-    <div className="bg-c900 flex h-full flex-col items-center justify-center gap-20 py-60">
+    <div className="bg-c900 flex min-h-[100dvh] flex-col items-center justify-center gap-20">
       <div className="flex flex-col items-center justify-center">
         {/* 404 문구 */}
         <div className="text-c400 flex items-center text-[120px]">

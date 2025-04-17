@@ -11,9 +11,9 @@ const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) =
         <img
           src={playlist.thumbnail_url}
           alt={playlist.title}
-          className="aspect-video h-full w-full rounded-lg object-cover"
+          className="aspect-video w-full rounded-lg object-cover"
         />
-        <h3 className="text-c50 text-h3 mt-3">{playlist.title}</h3>
+        <h2 className="text-c50 text-h4 mt-3">{playlist.title}</h2>
         <div className="text-captionM text-c500 mt-2 flex gap-3">
           <span>좋아요 {playlist.like_count}개</span>
           <span>영상 {playlist.playlist_items?.length}개</span>
@@ -21,7 +21,7 @@ const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) =
           <span>{getRelativeTime(playlist.created_at)}</span>
         </div>
         <p className="text-textR text-c400 mt-1">{playlist.description ?? '설명이 없습니다.'}</p>
-        <div className="mt-4 flex gap-[10px]">
+        <div className="mt-3 flex gap-[10px]">
           {Array.isArray(playlist.hashtag) &&
             playlist.hashtag.map((tagName, index) => (
               <HashTag key={index} tag={tagName} size="small" />

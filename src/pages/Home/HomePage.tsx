@@ -54,7 +54,7 @@ const HomePage = () => {
   }, [profile?.id, selectedCategory])
 
   return (
-    <div className="relative h-full overflow-hidden">
+    <div className="flex h-full flex-col">
       <Categories
         gameList={GAMES}
         count={gameCount}
@@ -71,7 +71,7 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute inset-0 top-22 z-10"
+            className="absolute inset-0 top-27 z-10"
           >
             <HomePageSkeleton />
           </motion.div>
@@ -82,7 +82,7 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative h-full"
+            className="relative flex-1"
           >
             {playlists.length > 0 ? (
               <>

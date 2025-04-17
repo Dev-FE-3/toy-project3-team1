@@ -87,7 +87,7 @@ export default function PlaylistMoreMenu({
           <Button
             variant="ghost"
             size="icon"
-            className={cn('h-8 w-8 cursor-pointer rounded-full p-0', className)}
+            className={cn('h-4 w-4 cursor-pointer rounded-full p-0', className)}
           >
             <MoreVertical className="h-5 w-5" />
             <span className="sr-only">더 보기 메뉴</span>

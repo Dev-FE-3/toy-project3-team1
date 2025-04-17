@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 interface UserCardProps {
   profileId?: string
   nickname?: string
-  size?: 'small' | 'medium' | 'large'
+  size?: 'xsmall' | 'small' | 'medium' | 'large'
   nicknameActive?: boolean
   className?: string
   listCount?: number
@@ -43,14 +43,14 @@ export function UserCard({
     if (size === 'small') {
       return <span className="text-c300 text-textR">{isLoading ? '불러오는 중...' : nickname}</span>
     }
-
     return null
   }
 
   return (
     <div
       className={cn(
-        'flex items-center',
+        'text-captionM flex items-center',
+        size === 'xsmall' && 'text-captionS',
         size === 'small' && 'gap-3',
         size === 'medium' && 'text-h3 gap-[24px]',
         size === 'large' && 'text-h2 gap-[24px]',
@@ -59,7 +59,7 @@ export function UserCard({
       onClick={handleClick}
     >
       <Avatar size={size}>
-        <AvatarFallback>{fallbackText}</AvatarFallback>
+        <AvatarFallback className="text-c400">{fallbackText}</AvatarFallback>
       </Avatar>
       {nicknameActive && renderText()}
     </div>

@@ -273,7 +273,7 @@ export const PlaylistInfoForm = () => {
             <FormItem className="mb-2">
               <div className="flex items-center justify-between">
                 <FormLabel className="text-c100 text-base leading-relaxed font-medium">
-                  해시태그{' '}
+                  태그
                   <span className="text-c500 text-captionM">
                     *20자 제한, 최대 3개까지 등록이 가능합니다.
                   </span>
@@ -283,7 +283,7 @@ export const PlaylistInfoForm = () => {
                 </span>
               </div>
               <FormControl>
-                <div className="space-y-1">
+                <div className="space-y-3">
                   <div className="flex gap-[10px]">
                     <Input
                       className="rounded-md bg-[#E4E4E7]"
@@ -297,19 +297,19 @@ export const PlaylistInfoForm = () => {
                       type="button"
                       onClick={addHashtag}
                       disabled={!hashtagInput.trim() || hashtags.length >= 3}
-                      className="bg-c100 text-c900 flex h-12 min-w-12 items-center justify-center rounded-xl p-2"
+                      className="bg-c100 text-c900 flex h-12 min-w-12 items-center justify-center rounded-md p-2"
                     >
                       추가
                     </Button>
                   </div>
                   <div className="max-w-full overflow-x-auto">
-                    <div className="flex min-h-[36px] flex-wrap gap-2 pb-2">
+                    <div className="flex flex-wrap gap-2 pb-2">
                       {hashtags.map((tag, index) => (
                         <Badge
                           key={index}
-                          className="bg-c600 text-c100 border-c300 flex items-center border px-2 py-1 text-xs"
+                          className="bg-c700 text-c300 border-c500 flex items-center border text-xs"
                         >
-                          <span>#{tag}</span>
+                          <span># {tag}</span>
                           <button
                             type="button"
                             onClick={() => removeHashtag(tag)}

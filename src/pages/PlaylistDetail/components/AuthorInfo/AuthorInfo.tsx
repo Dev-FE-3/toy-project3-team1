@@ -5,18 +5,18 @@ import { cn } from '@/shared/model/lib/utils'
 import { Bookmark, Heart } from 'lucide-react'
 
 interface AuthorInfoProps {
+  ownerId: string
   authorName: string | undefined
   isOwner: boolean
-  hashTag?: string[]
   // likeCount: number | undefined
   subscriberCount: number | undefined
   playlistId: string
 }
 
 export default function AuthorInfo({
+  ownerId,
   authorName = 'R',
   isOwner = false,
-  hashTag = [],
   // likeCount = 0,
   // subscriberCount = 0,
   playlistId,
@@ -29,28 +29,14 @@ export default function AuthorInfo({
   }
 
   const handleBookmark = () => {
-    console.log('bookmark')
     toggleBookmark()
   }
 
   return (
-    <div className="mt-4 mb-4">
+    <div className="mt-3 mb-4">
       <div className="flex items-center justify-between">
         {/* 왼쪽: 작성자 정보 */}
-        <div className="flex flex-col gap-2">
-          <UserCard nickname={authorName} />
-          {/* 플리 해시태그 */}
-          {hashTag && hashTag.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {hashTag.map((tagName, idx) => (
-                <span key={idx} className="text-c400 text-sm">
-                  {`# ${tagName}`}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
+        <UserCard nickname={authorName} profileId={ownerId} size="small" />
         {/* 오른쪽: 좋아요/북마크 버튼 */}
         <div className="flex items-center gap-5">
           <div className="flex flex-col items-center">
@@ -71,7 +57,7 @@ export default function AuthorInfo({
               onClick={isOwner ? undefined : handleBookmark}
             />
             {/* 구독자 수 */}
-            <span className={cn('text-c400 text-c300 mt-1 text-sm')}>{bookmarkCount}</span>
+            <span className={cn('text-c400 mt-1 text-sm')}>{bookmarkCount}</span>
           </div>
         </div>
       </div>

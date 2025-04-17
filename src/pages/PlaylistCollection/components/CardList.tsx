@@ -46,7 +46,7 @@ export const CardList = ({
   if (isLoading && playlists.length === 0) {
     return (
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <CardSkeleton key={index} />
           ))}
@@ -57,7 +57,7 @@ export const CardList = ({
 
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-4">
         {playlists.map((playlist) => (
           <div key={playlist.id}>
             <Card
@@ -87,10 +87,12 @@ export const CardList = ({
 
       {/* 상태 메시지 */}
       {!hasMore && playlists.length > 0 && (
-        <div className="py-4 text-center text-gray-500">더 이상 불러올 플레이리스트가 없습니다</div>
+        <div className="text-c600 mt-3 py-4 text-center">
+          더 이상 불러올 플레이리스트가 없습니다
+        </div>
       )}
       {!hasMore && playlists.length === 0 && (
-        <div className="py-4 text-center text-gray-500">플레이리스트가 없습니다</div>
+        <div className="text-c600 py-4 text-center">플레이리스트가 없습니다</div>
       )}
     </div>
   )
