@@ -182,16 +182,15 @@ const PlaylistFormContent = () => {
   }
 
   return (
-    <div className="container mx-auto px-4">
-      <FormHeader
-        title={isEditMode ? '플레이리스트 수정' : '플레이리스트 등록'}
-        onBackButtonClick={isEditMode ? () => navigate('/playlists') : undefined}
-      />
-
+    <div className="container mx-auto flex h-full flex-col overflow-hidden px-4">
       <Form {...form}>
+        <FormHeader
+          title={isEditMode ? '플레이리스트 수정' : '플레이리스트 등록'}
+          onBackButtonClick={isEditMode ? () => navigate('/playlists') : undefined}
+        />
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex h-[calc(100vh-200px)] flex-col"
+          className="flex flex-1 flex-col overflow-hidden"
         >
           <Tabs<FormTab>
             defaultKey="content"
@@ -201,8 +200,8 @@ const PlaylistFormContent = () => {
             }}
           >
             {({ activeKey, setActiveKey, tabStatus }) => (
-              <div className="flex h-full flex-col">
-                <div className="text-c100 border-c600 flex justify-between border-b pt-3">
+              <div className="flex h-full flex-col justify-between">
+                <div className="text-c100 border-c600 flex h-10 border-b pt-2">
                   <TabItem
                     tabKey="content"
                     label="제목/내용"
@@ -222,15 +221,15 @@ const PlaylistFormContent = () => {
                 </div>
 
                 {/* 폼 컨텐츠 */}
-                <div className="max-h-full min-h-0 flex-1 overflow-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="no-scrollbar flex-1 overflow-y-scroll pt-3 flex flex-col">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 
                 {/* 하단 버튼 */}
-                <div className="py-6">
+                <div className="py-4">
                   <Button
                     type={isComplete ? 'submit' : 'button'}
-                    className="bg-c700 text-c100 h-[56px] w-full rounded-md py-2 text-[16px]"
+                    className="bg-c700 text-c100 text-textM h-12 w-full rounded-md py-2"
                     disabled={getButtonDisabled(activeKey, title, videos, isSubmitting, isUpdating)}
                     onClick={() =>
                       handleButtonClick(isComplete, activeKey, title, videos, setActiveKey)
