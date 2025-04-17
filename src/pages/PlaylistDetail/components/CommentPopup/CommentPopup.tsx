@@ -69,7 +69,10 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
 const Header = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn('header border-c700 flex flex-col gap-1.5 rounded-t-4xl px-3 pt-2 pb-3', className)}
+      className={cn(
+        'header border-c700 flex flex-col gap-1.5 rounded-t-4xl px-3 pt-2 pb-3',
+        className,
+      )}
       {...props}
     />
   )

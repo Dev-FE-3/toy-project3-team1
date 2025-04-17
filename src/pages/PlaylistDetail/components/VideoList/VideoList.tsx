@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-import VideoItem from '@/features/playlistDetail/VideoItem/VideoItem'
+import VideoItem from '@/pages/PlaylistDetail/components/VideoItem/VideoItem'
 
 // export interface Video {
 //   id: string

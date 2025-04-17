@@ -31,9 +31,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
       try {
         await addComment(comment, playlistId, profileId, parentId)
         setComment('')
-        console.log('1 CommentInput 댓글 추가 후 핸들링')
         onCommentAdded()
-        console.log('1-1. CommentInput - onCommentAdded 호출 완료')
       } catch (error) {
         console.error('댓글 추가 중 오류:', error)
       } finally {

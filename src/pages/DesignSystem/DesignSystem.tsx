@@ -10,7 +10,7 @@ import StatusButton from '@/shared/components/StatusButton/StatusButton'
 import VideoPlayer from '@/shared/components/VideoPlayer/VideoPlayer'
 import { useMemo, useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
-import CommentInput from '@/features/playlistDetail/CommentInput/CommentInput'
+import CommentInput from '@/pages/PlaylistDetail/components/CommentInput/CommentInput'
 
 export default function DesignSystem() {
   // TapMenu 상태 관리

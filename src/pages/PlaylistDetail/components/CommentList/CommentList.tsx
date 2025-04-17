@@ -1,4 +1,3 @@
-import React from 'react'
 import { getCommentsByPlaylistId, type Comment } from '@/shared/model/api/comments'
 import CommentItem from './components/CommentItem'
 import { Skeleton } from '@/shared/components/ui/skeleton'
@@ -33,7 +32,6 @@ const CommentList = ({
 
   // 댓글 추가 후 목록 새로고침
   const handleCommentAdded = () => {
-    console.log('댓글 추가 후 목록 새로고침')
     refreshComments()
   }
 

@@ -3,7 +3,6 @@ import { cn } from '@/shared/model/lib/utils'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlayBookmark'
-import { useEffect } from 'react'
 
 interface AuthorInfoProps {
   authorName: string | undefined
@@ -28,7 +27,6 @@ export default function AuthorInfo({
   }
 
   const handleBookmark = () => {
-    console.log('bookmark')
     toggleBookmark()
   }
 
@@ -57,7 +55,7 @@ export default function AuthorInfo({
               onClick={isOwner ? undefined : handleBookmark}
             />
             {/* 구독자 수 */}
-            <span className={cn('text-c400 text-c300 mt-1 text-sm')}>{bookmarkCount}</span>
+            <span className={cn('text-c400 mt-1 text-sm')}>{bookmarkCount}</span>
           </div>
         </div>
       </div>
