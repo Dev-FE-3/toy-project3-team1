@@ -167,29 +167,46 @@ export const checkEmailExists = async (email: string) => {
   return data.length > 0
 }
 
-// 닉네임 업데이트
 export const updateNickname = async (userId: string, newNickname: string) => {
   try {
-    // profiles 테이블 업데이트
-    const { error: profileError } = await supabase
+    // profiles 테이블에서 기존 프로필 정보 가져오기
+    const { data: currentProfile, error: profileError } = await supabase
       .from('profiles')
-      .update({ nickname: newNickname, updated_at: new Date().toISOString() })
+      .select('*')
       .eq('id', userId)
+      .single()
 
     if (profileError) {
-      console.error('프로필 닉네임 업데이트 실패:', profileError)
+      console.error('프로필 정보 가져오기 실패:', profileError)
       throw profileError
     }
 
-    // Auth 메타데이터 업데이트
+    // profiles 테이블 업데이트 (nickname만 수정)
+    const { error: profileUpdateError } = await supabase
+      .from('profiles')
+      .update({ nickname: newNickname })
+      .eq('id', userId)
+
+    if (profileUpdateError) {
+      console.error('프로필 닉네임 업데이트 실패:', profileUpdateError)
+      throw profileUpdateError
+    }
+
+    // Auth 메타데이터 업데이트 (기존 데이터와 새 nickname 병합)
     const { error: authError } = await supabase.auth.updateUser({
-      data: { nickname: newNickname },
+      data: {
+        ...currentProfile, // 기존 프로필 데이터 가져오기
+        nickname: newNickname, // 새로운 nickname으로 덮어씌우기
+      },
     })
 
     if (authError) {
       console.error('Auth 메타데이터 닉네임 업데이트 실패:', authError)
       throw authError
     }
+
+    // 프로필 동기화 함수 호출
+    await syncUserProfile(userId)
 
     return true
   } catch (error) {
@@ -201,8 +218,16 @@ export const updateNickname = async (userId: string, newNickname: string) => {
 // 사용자 프로필 동기화
 export const syncUserProfile = async (userId: string) => {
   try {
+    // 현재 로그인된 사용자 세션 가져오기
+    const { data: user, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      console.error('사용자 세션이 없거나 오류 발생:', userError)
+      throw new Error('로그인 세션이 없습니다.')
+    }
+
     // profiles 테이블에서 최신 데이터 가져오기
-    const { data: profileData, error: profileError } = await supabase
+    const { data: currentProfile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -213,11 +238,10 @@ export const syncUserProfile = async (userId: string) => {
       throw profileError
     }
 
-    // Auth 메타데이터 업데이트
+    // Auth 메타데이터 동기화 (기존 데이터와 새로운 데이터를 병합)
     const { error: authError } = await supabase.auth.updateUser({
       data: {
-        nickname: profileData.nickname,
-        updated_at: profileData.updated_at,
+        ...currentProfile, // 기존 프로필 데이터 가져오기
       },
     })
 
