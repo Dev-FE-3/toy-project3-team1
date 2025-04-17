@@ -10,7 +10,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="container mx-auto px-9">
+    <div className="container mx-auto px-5">
       <FormHeader title="설정" />
 
       <div className="flex flex-col gap-4 py-6">
