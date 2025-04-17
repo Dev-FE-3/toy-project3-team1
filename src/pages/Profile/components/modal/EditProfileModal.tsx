@@ -7,11 +7,11 @@ import {
   DialogFooter,
 } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
-import { supabase } from '@/shared/model/api/supabase'
 import { queryClient } from '@/shared/model/lib/queryClient'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { NicknameField } from './NicknameField'
 import { useNicknameField } from '../../hooks/useNicknameField'
+import { updateNickname } from '@/shared/model/api/auth'
 
 interface EditProfileModalProps {
   open: boolean
@@ -45,15 +45,23 @@ export const EditProfileModal = ({
     if (!isAvailable || isSameAsCurrent || !isValidFormat) return
 
     setIsSaving(true)
-    const { error } = await supabase.from('profiles').update({ nickname }).eq('id', profileId)
 
-    if (!error) {
-      // 바뀐 닉네임이 렌더될 수 있도록 패치
-      await queryClient.invalidateQueries({ queryKey: ['profile', profileId] })
-      onClose()
-    } else {
-      alert('닉네임 변경 실패: ' + error.message)
+    try {
+      // updateNickname을 사용하여 닉네임 업데이트
+      const success = await updateNickname(profileId, nickname)
+
+      if (success) {
+        // 바뀐 닉네임이 렌더될 수 있도록 패치
+        await queryClient.invalidateQueries({ queryKey: ['profile', profileId] })
+        onClose()
+      } else {
+        alert('닉네임 변경 실패')
+      }
+    } catch (error) {
+      console.error('닉네임 업데이트 중 오류 발생:', error)
+      alert('닉네임 변경 실패: ')
     }
+
     setIsSaving(false)
   }
 

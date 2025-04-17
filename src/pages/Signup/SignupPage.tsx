@@ -73,7 +73,7 @@ export default function SignupPage() {
   return (
     <div className="bg-c900 min-h-[100dvh]">
       <div className="mx-auto h-full w-full max-w-[390px] px-4">
-        <img className="text-h2 mx-auto mt-[3vh] mb-[2vh] w-32" src="/images/logo.svg" />
+        <img className="text-h2 mx-auto mt-[3vh] mb-[2vh] w-32" src="/images/logo.webp" />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">

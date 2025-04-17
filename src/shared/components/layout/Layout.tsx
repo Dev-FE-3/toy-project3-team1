@@ -5,7 +5,7 @@ import BottomNav from '../BottomNav/BottomNav'
 const Header = () => {
   return (
     <header className="border-c800 flex h-[50px] w-full items-center border-b pl-5">
-      <img src="/images/logo.svg" />
+      <img src="/images/header_logo.webp" width="130" />
     </header>
   )
 }

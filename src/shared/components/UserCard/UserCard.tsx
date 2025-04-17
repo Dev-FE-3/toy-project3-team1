@@ -1,5 +1,5 @@
 import Avatar from '@/shared/components/Avatar/Avatar'
-import { AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar'
+import { AvatarFallback } from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
 import { useNavigate } from 'react-router-dom'
 
