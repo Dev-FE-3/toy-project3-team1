@@ -142,7 +142,7 @@ export const PlaylistInfoForm = () => {
   // 제목 입력 핸들러
   const handleTitleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { text, count } = limitTextLength(e.target.value, MAX_TITLE_LENGTH)
-    e.target.value = text
+    setValue('title', text)
     setTitleCount(count)
   }
 
@@ -205,7 +205,7 @@ export const PlaylistInfoForm = () => {
         <FormField
           control={control}
           name="title"
-          render={({ field }) => (
+          render={({ field: { ref, ...fieldProps } }) => (
             <FormItem className="mb-2">
               <div className="flex items-center justify-between">
                 <FormLabel className="text-c100 text-base leading-relaxed font-medium">
@@ -220,8 +220,10 @@ export const PlaylistInfoForm = () => {
                 <Input
                   className="rounded-md bg-[#E4E4E7]"
                   placeholder="제목을 입력해주세요. (20자 제한)"
-                  onInput={handleTitleInput}
-                  {...field}
+                  onChange={handleTitleInput}
+                  value={title}
+                  ref={ref}
+                  {...fieldProps}
                 />
               </FormControl>
             </FormItem>
