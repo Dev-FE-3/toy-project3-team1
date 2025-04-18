@@ -1,13 +1,14 @@
 import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { Label } from '@/shared/components/ui/label'
+import { checkEmailExists, checkNicknameExists, signUpWithEmail } from '@/shared/model/api/auth'
+import { validateNickname } from '@/shared/model/utils/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useNavigate } from 'react-router-dom'
 import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
-import { signUpWithEmail, checkEmailExists, checkNicknameExists } from '@/shared/model/api/auth'
-import { useNavigate, Link } from 'react-router-dom'
-import { Label } from '@/shared/components/ui/label'
 
 const signupSchema = z
   .object({
@@ -15,11 +16,8 @@ const signupSchema = z
       .string()
       .min(2, '닉네임은 최소 2자 이상이어야 합니다.')
       .max(5, '닉네임은 5자 이하여야 합니다.')
-      .refine((value) => /\d/.test(value), {
-        message: '숫자를 포함해야 합니다.',
-      })
-      .refine((value) => /[a-zA-Z가-힣]/.test(value), {
-        message: '문자를 포함해야 합니다.',
+      .refine((value) => validateNickname(value).isValid, {
+        message: '문자(영문/한글)를 포함해야 합니다.',
       }),
     email: z.string().email('올바른 이메일을 입력하세요'),
     password: z
@@ -121,7 +119,7 @@ export default function SignupPage() {
                   >
                     {form.formState.errors.nickname
                       ? form.formState.errors.nickname.message
-                      : '숫자를 포함한 5자 이하를 입력해주세요'}
+                      : '2~5자 사이의 문자(영문/한글)를 입력해주세요'}
                   </div>
                 </FormItem>
               )}

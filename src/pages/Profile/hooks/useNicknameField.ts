@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { supabase } from '@/shared/model/api/supabase'
+import { validateNickname } from '@/shared/model/utils/validation'
 
 export const useNicknameField = (profileId: string, currentNickname: string) => {
   const [nickname, setNickname] = useState(currentNickname)
@@ -8,7 +9,8 @@ export const useNicknameField = (profileId: string, currentNickname: string) => 
   const [isChecking, setIsChecking] = useState(false)
 
   const isSameAsCurrent = nickname === currentNickname
-  const isValidFormat = /^[a-zA-Z0-9가-힣]+$/.test(nickname)
+  const validationResult = validateNickname(nickname)
+  const isValidFormat = validationResult.isValid
 
   const handleNicknameChange = (value: string) => {
     setNickname(value)
@@ -34,16 +36,19 @@ export const useNicknameField = (profileId: string, currentNickname: string) => 
 
     setIsChecking(false)
   }
+
   const initNicknameField = () => {
     setNickname(currentNickname)
     setIsAvailable(null)
   }
+
   return {
     nickname,
     isAvailable,
     isChecking,
     isSameAsCurrent,
     isValidFormat,
+    ...validationResult,
     initNicknameField,
     handleNicknameChange,
     checkDuplicate,
