@@ -1,9 +1,10 @@
 # TEAM1 - 리플레이 ▶️
 
-## 🔄 REPLAY(리플레이) (25.03.26~25.04.18) 🔗 [배포 주소]()
+## 🔄 REPLAY(리플레이) (25.03.26~25.04.18) 🔗 [배포 주소](https://replay-deploy.netlify.app/)
 
 - 이 서비스는 게이머들이 게임 관련 유튜브 영상을 효율적으로 관리하고 공유할 수 있는 플랫폼입니다. 사용자는 게임 카테고리별로 플레이리스트를 생성하고, 좋아하는 게임 영상을 저장하며, 다른 사용자들과 플레이리스트를 공유할 수 있습니다. 각 플레이리스트에는 댓글 시스템을 통해 게이머들 간의 소통이 가능하며, 구독 기능을 통해 관심 있는 플레이리스트의 업데이트를 받아볼 수 있습니다. 특히 게임 카테고리별 필터링과 무한 스크롤을 통해 사용자가 원하는 콘텐츠를 쉽게 찾을 수 있도록 하였으며, YouTube Data API를 활용하여 실시간으로 영상 정보를 제공합니다. 또한 Framer Motion을 활용한 부드러운 애니메이션과 스켈레톤 UI를 통해 사용자에게 쾌적한 브라우징 경험을 제공합니다.
 
+![목업](https://github.com/user-attachments/assets/fa641f2b-4b32-4439-bb10-26a3536144f6)
 
 ## 📱 페이지별 구현 기능
 
@@ -121,24 +122,24 @@ npm run dev
 ```bash
 📁 src/
 ├─📁 assets/          # 이미지, 아이콘 등의 정적 자원
-├─📁 pages/           # 페이지 컴포넌트
-│  ├─📁 (페이지명)/
+├─📁 pages/          
+│  ├─📁 (페이지명)/     # 페이지별
 │    ├── 📁 components/    # UI 컴포넌트
 │    ├── 📁 hooks/         # hook로직
 │    ├── 📁 stores/        # Zustand 스토어
 │    ├── 📁 queries/       # React Query
 │    ├── 📁 services/      # API 관련 함수
 │    └── 📁 model/         # 타입, 상수, 유틸 등
-├─📁 shared/         # 공통 유틸리티, 설정 등
+├─📁 shared/         # 공통
 │ ├── 📁 components/    # 공통 UI
-│ └── 📁 ui/        # shadcn 컴포넌트
+│ └── 📁 ui/            # shadcn 컴포넌트
 │ ├── 📁 hooks/         # hook로직
 │ ├── 📁 stores/        # Zustand 스토어
 │ ├── 📁 queries/       # React Query
 │ ├── 📁 services/      # API 관련 함수
 │ └── 📁 model/         # 타입, 상수, 유틸 등
-├── 📄 App.tsx
-└── 📄 router.tsx       #라우터
+├── 📁 router/      # 라우터
+└── 📄 App.tsx
 ```
 
 ## ⭐️ About Team
