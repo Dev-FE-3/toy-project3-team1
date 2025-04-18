@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/shared/model/api/supabase'
 
 import {
   CreatePlaylistParams,
@@ -6,11 +6,6 @@ import {
   UpdatePlaylistParams,
   Video,
 } from '@/pages/PlaylistForm/model/types/types'
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
-
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export const playlistService = {
   // === 플레이리스트 생성 ===

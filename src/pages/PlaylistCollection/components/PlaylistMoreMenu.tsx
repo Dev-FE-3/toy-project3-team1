@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { MoreVertical } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +13,8 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { cn } from '@/shared/model/lib/utils'
+import { useToast } from '@/shared/store/toastStore'
+import { playlistKeys } from '../queries/playlistCollectionQueries'
 import { playlistCollectionService } from '../services/playlistCollectionService'
 import { DeleteConfirmModal } from './DeleteConfirmModal'
 
@@ -33,16 +36,23 @@ export default function PlaylistMoreMenu({
   onUnsubscribe,
 }: PlaylistMoreMenuProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [isOpen, setIsOpen] = useState(false)
   const [isDeletePlaylistModalOpen, setIsDeletePlaylistModalOpen] = useState(false)
+  const { success, error: showError } = useToast()
 
   const handleDeletePlaylist = async () => {
     try {
       await playlistCollectionService.deletePlaylist(playlistId)
+      success('플레이리스트가 삭제되었습니다.')
+      queryClient.invalidateQueries({ queryKey: playlistKeys.lists() })
       onDelete?.()
       setIsOpen(false)
+      setIsDeletePlaylistModalOpen(false)
     } catch (error) {
-      alert(error instanceof Error ? error.message : '플레이리스트 삭제 중 오류가 발생했습니다.')
+      showError(
+        error instanceof Error ? error.message : '플레이리스트 삭제 중 오류가 발생했습니다.',
+      )
     }
   }
 
@@ -55,7 +65,7 @@ export default function PlaylistMoreMenu({
           onUnsubscribe?.()
           setIsOpen(false)
         } catch (error) {
-          alert(error instanceof Error ? error.message : '구독 취소 중 오류가 발생했습니다.')
+          showError(error instanceof Error ? error.message : '구독 취소 중 오류가 발생했습니다.')
         }
       },
     },

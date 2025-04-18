@@ -1,11 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/shared/model/api/supabase'
 
 import { Playlist } from '@/pages/PlaylistCollection/model'
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-)
 
 // DB에서 반환되는 플레이리스트 데이터 타입
 interface DBPlaylist {
