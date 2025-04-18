@@ -18,6 +18,17 @@ export const VideoListForm = () => {
   const videosWatch = watch('videos')
   const videos = videosWatch || []
 
+  // CSS 스타일 정의
+  const scrollbarHideStyles = `
+    .hide-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;             /* Chrome, Safari, Opera */
+    }
+  `
+
   // 비디오 관리 훅 사용
   const {
     videoUrl,
@@ -58,8 +69,8 @@ export const VideoListForm = () => {
     }
 
     return (
-      <div className="flex-1 overflow-y-scroll">
-        <div className="space-y-2 overflow-y-scroll">
+      <div className="hide-scrollbar flex-1 overflow-y-scroll">
+        <div className="hide-scrollbar space-y-2 overflow-y-scroll">
           {videos.map((video, index) => (
             <VideoItem
               key={video.id}
@@ -84,6 +95,8 @@ export const VideoListForm = () => {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
+      <style>{scrollbarHideStyles}</style>
+
       <FormField
         control={control}
         name="videos"

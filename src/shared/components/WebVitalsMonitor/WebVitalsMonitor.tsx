@@ -1,3 +1,4 @@
+import { X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { type Metric, onCLS, onINP, onLCP } from 'web-vitals'
 import { reportWebVitals } from './reportWebVitals'
@@ -41,6 +42,7 @@ const METRICS = {
 }
 
 const WebVitalsMonitorContent = () => {
+  const [isVisible, setIsVisible] = useState(true)
   const [metrics, setMetrics] = useState<Record<string, MetricData>>(() =>
     Object.keys(METRICS).reduce(
       (acc, key) => ({
@@ -218,6 +220,8 @@ const WebVitalsMonitorContent = () => {
     return Math.round(value).toString()
   }, [])
 
+  if (!isVisible) return null
+
   if (Object.keys(metrics).length === 0) {
     return (
       <div className="fixed bottom-4 left-4 z-50 rounded-lg bg-white p-4 shadow-lg">
@@ -231,7 +235,16 @@ const WebVitalsMonitorContent = () => {
 
   return (
     <div className="fixed bottom-4 left-4 z-50 max-w-md rounded-lg bg-white p-4 shadow-lg">
-      <h2 className="mb-4 text-lg font-semibold">Web Vitals 모니터링</h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Web Vitals 모니터링</h2>
+        <button
+          onClick={() => setIsVisible(false)}
+          className="rounded-full p-1 transition-colors hover:bg-gray-100"
+          aria-label="닫기"
+        >
+          <X size={20} />
+        </button>
+      </div>
       <div className="space-y-4">
         {Object.entries(metrics).map(([key, metric]) => {
           const metricInfo = METRICS[key as keyof typeof METRICS]
