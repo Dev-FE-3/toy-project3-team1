@@ -7,6 +7,8 @@ type UseDragAndDropProps<T> = {
 
 export const useDragAndDrop = <T>({ items, onItemsReorder }: UseDragAndDropProps<T>) => {
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null)
+  const [touchStartY, setTouchStartY] = useState<number | null>(null)
+  const [touchedItemIndex, setTouchedItemIndex] = useState<number | null>(null)
 
   const handleReorderItems = (dragIndex: number, dropIndex: number) => {
     if (dragIndex === dropIndex) return
@@ -45,6 +47,40 @@ export const useDragAndDrop = <T>({ items, onItemsReorder }: UseDragAndDropProps
     e.currentTarget.classList.remove('bg-c700')
   }
 
+  const handleTouchStart = (e: React.TouchEvent, index: number) => {
+    const touch = e.touches[0]
+    setTouchStartY(touch.clientY)
+    setTouchedItemIndex(index)
+    e.currentTarget.classList.add('opacity-50')
+  }
+
+  const handleTouchMove = (e: React.TouchEvent, currentIndex: number) => {
+    if (touchedItemIndex === null || touchStartY === null) return
+
+    const touch = e.touches[0]
+    const currentY = touch.clientY
+    const deltaY = currentY - touchStartY
+
+    if (Math.abs(deltaY) > 30) {
+      const direction = deltaY > 0 ? 1 : -1
+      const newIndex = currentIndex + direction
+
+      if (newIndex >= 0 && newIndex < items.length) {
+        handleReorderItems(currentIndex, newIndex)
+        setTouchStartY(currentY)
+        e.currentTarget.classList.remove('opacity-50')
+        e.currentTarget.classList.remove('bg-c700')
+      }
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setTouchStartY(null)
+    setTouchedItemIndex(null)
+    e.currentTarget.classList.remove('opacity-50')
+    e.currentTarget.classList.remove('bg-c700')
+  }
+
   return {
     draggedItemIndex,
     handleDragStart,
@@ -52,5 +88,8 @@ export const useDragAndDrop = <T>({ items, onItemsReorder }: UseDragAndDropProps
     handleDrop,
     handleDragOver,
     handleDragLeave,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
   }
 }

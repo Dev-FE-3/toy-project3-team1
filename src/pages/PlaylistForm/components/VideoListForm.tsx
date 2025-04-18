@@ -33,11 +33,19 @@ export const VideoListForm = () => {
   })
 
   // 드래그 앤 드롭 훅 사용
-  const { handleDragStart, handleDragEnd, handleDrop, handleDragOver, handleDragLeave } =
-    useDragAndDrop({
-      items: videos,
-      onItemsReorder: (newVideos) => setValue('videos', newVideos),
-    })
+  const {
+    handleDragStart,
+    handleDragEnd,
+    handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = useDragAndDrop({
+    items: videos,
+    onItemsReorder: (newVideos) => setValue('videos', newVideos),
+  })
 
   // 비디오 목록을 렌더링하는 함수
   const renderVideoList = () => {
@@ -50,7 +58,7 @@ export const VideoListForm = () => {
     }
 
     return (
-      <div className="overflow-y-scroll flex-1">
+      <div className="flex-1 overflow-y-scroll">
         <div className="space-y-2 overflow-y-scroll">
           {videos.map((video, index) => (
             <VideoItem
@@ -64,6 +72,9 @@ export const VideoListForm = () => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             />
           ))}
         </div>
@@ -107,8 +118,8 @@ export const VideoListForm = () => {
         )}
       />
 
-      <div className="flex h-full flex-col flex-1 overflow-hidden">
-        <div className="mb-3 pt-3 flex items-center justify-between">
+      <div className="flex h-full flex-1 flex-col overflow-hidden">
+        <div className="mb-3 flex items-center justify-between pt-3">
           <p className="text-c100 text-base font-medium">영상 목록</p>
           <span className="text-c300 text-sm">
             {videos.length > 0 ? `${videos.length}개의 영상` : ''}

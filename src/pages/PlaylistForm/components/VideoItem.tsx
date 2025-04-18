@@ -1,5 +1,5 @@
+import { GripVertical, X } from 'lucide-react'
 import React from 'react'
-import { X, GripVertical } from 'lucide-react'
 
 import { Button } from '@/shared/components/ui/button'
 
@@ -13,6 +13,9 @@ export interface VideoItemProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void
   onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void
   onDrop: (e: React.DragEvent<HTMLDivElement>, index: number) => void
+  onTouchStart: (e: React.TouchEvent<HTMLDivElement>, index: number) => void
+  onTouchMove: (e: React.TouchEvent<HTMLDivElement>, index: number) => void
+  onTouchEnd: (e: React.TouchEvent<HTMLDivElement>) => void
 }
 
 export const VideoItem = ({
@@ -25,6 +28,9 @@ export const VideoItem = ({
   onDragOver,
   onDragLeave,
   onDrop,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
 }: VideoItemProps) => {
   return (
     <div
@@ -35,6 +41,9 @@ export const VideoItem = ({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop(e, index)}
+      onTouchStart={(e) => onTouchStart(e, index)}
+      onTouchMove={(e) => onTouchMove(e, index)}
+      onTouchEnd={onTouchEnd}
       className="bg-c800 border-c700 relative overflow-hidden rounded-md border transition-colors"
     >
       <div className="flex h-12 items-center">
@@ -60,17 +69,15 @@ export const VideoItem = ({
             {title || '제목 없음'}
           </p>
         </div>
-        <div className="flex-shrink-0">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onRemove}
-            className="text-c400 hover:text-c100 mr-1 h-10 px-3"
-          >
-            <X size={18} />
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="hover:bg-c700 mr-2 h-8 w-8"
+          onClick={onRemove}
+        >
+          <X size={18} className="text-c400" />
+        </Button>
       </div>
     </div>
   )
