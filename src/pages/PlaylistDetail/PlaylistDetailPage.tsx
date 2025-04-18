@@ -210,7 +210,7 @@ const PlaylistDetailPage = () => {
                   />
                 </div>
                 {/* 댓글 입력 영역 */}
-                <div className="sticky bottom-0 mt-4">
+                <div className="absolute bottom-0 mt-4">
                   <CommentInput
                     playlistId={currentPlaylistId}
                     profileId={profile.id}
