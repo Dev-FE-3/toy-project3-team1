@@ -11,7 +11,7 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
       carouselRef.current.scrollLeft = 0
     }
     setActiveIndex(0)
-  }, [images])
+  }, [images.join('')])
 
   // 스크롤 감지해서 인덱스 계산
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
