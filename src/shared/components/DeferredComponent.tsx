@@ -4,10 +4,10 @@ export const DeferredComponent = ({ children }: PropsWithChildren<{}>) => {
   const [isDeferred, setIsDeferred] = useState(false)
 
   useEffect(() => {
-    // 200ms 지난 후 children Render
+    // 300ms 지난 후 children Render
     const timeoutId = setTimeout(() => {
       setIsDeferred(true)
-    }, 200)
+    }, 300)
     return () => clearTimeout(timeoutId)
   }, [])
 

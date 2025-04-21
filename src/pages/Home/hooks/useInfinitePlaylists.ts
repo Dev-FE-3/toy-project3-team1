@@ -6,7 +6,7 @@ export const useInfinitePlaylists = (userId?: string, category?: Category) => {
   const pageSize = 10
 
   return useSuspenseInfiniteQuery<Playlist[], Error>({
-    queryKey: ['playlists', userId, category],
+    queryKey: ['playlists', category],
     queryFn: async ({ pageParam = 0 }) => {
       const offset = pageParam as number
 

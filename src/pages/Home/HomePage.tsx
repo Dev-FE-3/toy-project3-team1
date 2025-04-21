@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
@@ -9,6 +9,7 @@ import { queryClient } from '@/shared/model/lib/queryClient'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import { DeferredComponent } from '@/shared/components/DeferredComponent'
 import PlaylistSection from './components/PlaylistSection'
+import { Category } from './model/types'
 
 const gameCount = limitCategoryCount(GAMES.length)
 
@@ -16,13 +17,25 @@ const HomePage = () => {
   const { profile } = useGetAuthState()
   const { selectedCategory, handleCategorySelect } = useCategoryFilter()
 
-  useEffect(() => {
-    if (profile?.id) {
-      queryClient.removeQueries({
-        queryKey: ['playlists', profile.id, selectedCategory],
-      })
-    }
-  }, [profile?.id, selectedCategory])
+  // const clearPlaylistsQuery = () => {
+  //   if (selectedCategory) {
+  //     queryClient.removeQueries({
+  //       queryKey: ['playlists', profile?.id, selectedCategory],
+  //     })
+  //   }
+  // }
+  // const handleCategoryChange = (category: Category) => {
+  //   handleCategorySelect(category)
+  //   clearPlaylistsQuery()
+  // }
+
+  // useEffect(() => {
+  //   if (selectedCategory) {
+  //     queryClient.removeQueries({
+  //       queryKey: ['playlists', profile?.id, selectedCategory],
+  //     })
+  //   }
+  // }, [selectedCategory])
 
   return (
     <div className="flex h-full flex-col">
@@ -37,7 +50,7 @@ const HomePage = () => {
         key={selectedCategory}
         fallback={
           <DeferredComponent>
-            {/* DeferredComponent : 2초 이상 지연이 걸릴 때 스켈레톤 UI 렌더 */}
+            {/* DeferredComponent : 0.3초 이상 지연이 걸릴 때 스켈레톤 UI 렌더 */}
             <AnimatePresence mode="wait">
               <motion.div
                 key="skeleton"

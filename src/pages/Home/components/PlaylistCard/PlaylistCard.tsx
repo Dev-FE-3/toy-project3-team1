@@ -7,16 +7,12 @@ import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
-import EmptyPlaylistCard from './EmptyPlaylistCard'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { usePlaylistLike } from '../../../../shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '../../../../shared/hooks/usePlaylistBookmark'
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
-  if (!playlist) {
-    return <EmptyPlaylistCard />
-  }
   const { isLiked, likeCount, toggleLike, likeLoading } = usePlaylistLike(playlist.id)
   const { isBookmarked, bookmarkCount, toggleBookmark, bookmarkLoading } = usePlaylistBookmark(
     playlist.id,
