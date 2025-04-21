@@ -12,6 +12,9 @@ import { useInView } from 'react-intersection-observer'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import EmptyPlaylistCard from './components/PlaylistCard/EmptyPlaylistCard'
 
+// 한 번만 계산해서 재사용해도 되는 값
+const gameCount = limitCategoryCount(GAMES.length)
+
 const HomePage = () => {
   const { profile } = useGetAuthState()
   const { selectedCategory, handleCategorySelect } = useCategoryFilter()
@@ -22,7 +25,6 @@ const HomePage = () => {
   )
 
   const { ref: loadMoreRef, inView } = useInView({ threshold: 1 })
-  const gameCount = limitCategoryCount(GAMES.length)
   const playlists = data?.pages.flat() ?? []
 
   const [showSkeleton, setShowSkeleton] = useState(true)
