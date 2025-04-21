@@ -4,19 +4,24 @@ import { Game } from '../constants/GAMES'
 export type SwipeDirection = 'up' | 'down'
 
 // Update Category type
-export type Category = string | '전체' | null
+export type Category = string | null
 
 export interface CategoryProps {
   children: ReactNode
   isSelected?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export interface CategoriesProps {
   gameList: Game[]
   count: number
-  onCategorySelect: (category: Category) => void
+  onCategorySelect: (category: string) => void
   selectedCategory: Category
+  onSearch: () => void
+  searchActive: boolean
+  onSearchQuery: (query: string) => void
+  handleCloseSearch: () => void
 }
 
 export interface VideoItem {

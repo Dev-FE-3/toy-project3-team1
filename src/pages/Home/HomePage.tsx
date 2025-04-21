@@ -11,10 +11,12 @@ import { queryClient } from '@/shared/model/lib/queryClient'
 import { useInView } from 'react-intersection-observer'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import EmptyPlaylistCard from './components/PlaylistCard/EmptyPlaylistCard'
+import { SearchBar } from './components/SearchBar/SearchBar'
 
 const HomePage = () => {
   const { profile } = useGetAuthState()
   const { selectedCategory, handleCategorySelect } = useCategoryFilter()
+  const [searchActive, setSearchActive] = useState(false)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfinitePlaylists(
     profile?.id,
@@ -26,6 +28,18 @@ const HomePage = () => {
   const playlists = data?.pages.flat() ?? []
 
   const [showSkeleton, setShowSkeleton] = useState(true)
+
+  const onSearchQuery = (query: string) => {
+    console.log(query)
+  }
+
+  const onSearch = () => {
+    setSearchActive(true)
+  }
+
+  const handleCloseSearch = () => {
+    setSearchActive(false)
+  }
 
   // 스켈레톤 상태 변경
   useEffect(() => {
@@ -54,12 +68,36 @@ const HomePage = () => {
   }, [profile?.id, selectedCategory])
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="home-content relative flex h-full flex-col">
+      <AnimatePresence mode="wait" initial={false}>
+        {searchActive && (
+          <motion.div
+            className="flex w-full items-center justify-center gap-3 px-4"
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{
+              type: 'spring',
+              stiffness: 200,
+              damping: 25,
+              mass: 0.8,
+              restDelta: 0.001,
+            }}
+          >
+            <SearchBar onClose={handleCloseSearch} onSearch={onSearchQuery} gameList={GAMES} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Categories
         gameList={GAMES}
         count={gameCount}
         onCategorySelect={handleCategorySelect}
         selectedCategory={selectedCategory}
+        onSearch={onSearch}
+        searchActive={searchActive}
+        onSearchQuery={onSearchQuery}
+        handleCloseSearch={handleCloseSearch}
       />
 
       {/* isLoading이 true일 때 스켈레톤을 보여주고, false일 때 실제 콘텐츠를 보여줌 */}
