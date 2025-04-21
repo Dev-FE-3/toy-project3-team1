@@ -29,7 +29,9 @@ export const useInfinitePlaylists = (userId?: string, category?: Category) => {
 
       // 카테고리 필터링
       if (category && category !== '전체') {
-        query = query.or(`hashtag.is.null,hashtag.cs.{${category}}`)
+        query = query.or(`hashtag.cs.{${category}}`)
+      } else if (category === '전체') {
+        query = query.or(`hashtag.is.null,hashtag.cs.{}`)
       }
 
       const { data, error } = await query
