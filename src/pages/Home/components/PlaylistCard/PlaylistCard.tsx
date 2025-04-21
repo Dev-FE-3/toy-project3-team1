@@ -2,13 +2,21 @@ import { useMemo } from 'react'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
-import { PlaylistCardProps } from '@/pages/Home/model/types'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
 import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
+
+
+type PlaylistCardProps = {
+  videoItems: VideoItem[]
+  playlist: Playlist
+  carouselRef: React.RefObject<HTMLDivElement | null>
+  isBackground: boolean
+}
 
 const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: PlaylistCardProps) => {
   const { isLiked, likeCount, toggleLike, likeLoading } = usePlaylistLike(playlist.id)

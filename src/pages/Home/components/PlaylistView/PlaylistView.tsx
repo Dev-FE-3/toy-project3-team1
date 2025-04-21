@@ -1,10 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PlaylistCard from '../PlaylistCard/PlaylistCard'
-import { PlaylistViewProps, SwipeDirection } from '../../model/types'
+import { Playlist, SwipeDirection, VideoItem } from '../../model/types'
 import { usePrevious } from '../../hooks/usePrevious'
 import { cn } from '@/shared/model/lib/utils'
 
+interface PlaylistViewProps {
+  videoItems: VideoItem[]
+  playlists: Playlist[]
+  focusedIndex: number
+  currentImageIndex: number
+  carouselRef: React.RefObject<HTMLDivElement | null>
+  swipeDirection: SwipeDirection
+  setCurrentImageIndex: React.Dispatch<React.SetStateAction<number>>
+}
 export const PlaylistView = ({
   videoItems,
   playlists,

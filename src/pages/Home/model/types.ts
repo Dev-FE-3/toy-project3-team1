@@ -48,33 +48,3 @@ export interface Playlist {
   created_at: string
   description?: string
 }
-
-/** --- 컴포넌트 Props 타입 --- */
-export interface PlaylistViewProps {
-  videoItems: VideoItem[]
-  playlists: Playlist[]
-  focusedIndex: number
-  currentImageIndex: number
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  swipeDirection: SwipeDirection
-  setCurrentImageIndex: React.Dispatch<React.SetStateAction<number>>
-}
-
-export interface PlaylistCardProps {
-  videoItems: VideoItem[]
-  playlist: Playlist
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  isBackground: boolean
-}
-
-export interface CarouselViewProps {
-  images: string[]
-  title: string
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  isBackground: boolean
-}
-
-export interface PlaylistContainerProps {
-  playlists: Playlist[]
-  videoItems: VideoItem[]
-}
