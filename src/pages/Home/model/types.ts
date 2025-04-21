@@ -1,9 +1,8 @@
 import { ReactNode } from 'react'
 import { Game } from '../constants/GAMES'
 
+/** --- 카테고리 관련 타입 --- */
 export type SwipeDirection = 'up' | 'down'
-
-// Update Category type
 export type Category = string | '전체' | null
 
 export interface CategoryProps {
@@ -19,13 +18,19 @@ export interface CategoriesProps {
   selectedCategory: Category
 }
 
+/** --- 비디오 아이템 타입 --- */
 export interface VideoItem {
   id: string
+  playlist_id: string
+  video_id: string
   title: string
+  created_at: string
+  statistics: string[]
+  sort_order: number
   thumbnail_url: string
 }
 
-// Playlist Related Types
+/** --- 플레이리스트 타입 --- */
 export interface Playlist {
   id: string
   title: string
@@ -44,11 +49,9 @@ export interface Playlist {
   description?: string
 }
 
-export interface PlaylistWithItems extends Playlist {
-  playlist_items: VideoItem[]
-}
-// Component Props Types
+/** --- 컴포넌트 Props 타입 --- */
 export interface PlaylistViewProps {
+  videoItems: VideoItem[]
   playlists: Playlist[]
   focusedIndex: number
   currentImageIndex: number
@@ -58,18 +61,20 @@ export interface PlaylistViewProps {
 }
 
 export interface PlaylistCardProps {
+  videoItems: VideoItem[]
   playlist: Playlist
-  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
+  carouselRef: React.RefObject<HTMLDivElement | null>
   isBackground: boolean
 }
 
 export interface CarouselViewProps {
   images: string[]
   title: string
-  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
+  carouselRef: React.RefObject<HTMLDivElement | null>
   isBackground: boolean
 }
 
 export interface PlaylistContainerProps {
   playlists: Playlist[]
+  videoItems: VideoItem[]
 }

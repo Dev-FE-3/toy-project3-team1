@@ -5,7 +5,7 @@ import { usePlaylistControl } from '../hooks/usePlaylistControl'
 import { useScrollControl } from '../hooks/useScrollControl'
 import { PlaylistContainerProps } from '../model/types'
 
-export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
+export const PlaylistContainer = ({ playlists, videoItems }: PlaylistContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const {
     focusedIndex,
@@ -44,6 +44,7 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
     >
       <AnimatePresence mode="wait">
         <PlaylistView
+          videoItems={videoItems}
           playlists={playlists}
           focusedIndex={focusedIndex}
           currentImageIndex={currentImageIndex}

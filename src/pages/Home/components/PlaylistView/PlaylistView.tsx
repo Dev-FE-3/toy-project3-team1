@@ -6,6 +6,7 @@ import { usePrevious } from '../../hooks/usePrevious'
 import { cn } from '@/shared/model/lib/utils'
 
 export const PlaylistView = ({
+  videoItems,
   playlists,
   focusedIndex,
   currentImageIndex,
@@ -99,7 +100,12 @@ export const PlaylistView = ({
                   ease: [0.25, 0.8, 0.25, 1],
                 }}
               >
-                <PlaylistCard playlist={playlist} carouselRef={carouselRef} isBackground={true} />
+                <PlaylistCard
+                  videoItems={videoItems}
+                  playlist={playlist}
+                  carouselRef={carouselRef}
+                  isBackground={true}
+                />
               </motion.div>
             )
           })}
@@ -140,6 +146,7 @@ export const PlaylistView = ({
           }}
         >
           <PlaylistCard
+            videoItems={videoItems}
             playlist={playlists[focusedIndex]}
             carouselRef={carouselRef}
             isBackground={false}
