@@ -1,16 +1,6 @@
 import { supabase } from '@/shared/model/api/supabase'
 
-import { Playlist } from '@/pages/PlaylistCollection/model'
-
-// DB에서 반환되는 플레이리스트 데이터 타입
-interface DBPlaylist {
-  id: string
-  title: string
-  thumbnail_url: string
-  hashtag?: string[]
-  playlist_items: { count: number }[]
-  is_public: boolean
-}
+import { transformPlaylistForUi } from '@/pages/PlaylistCollection/model/utils'
 
 // 공통으로 사용되는 플레이리스트 선택 필드
 const PLAYLIST_SELECT = `
@@ -20,16 +10,6 @@ const PLAYLIST_SELECT = `
   playlist_items (count),
   is_public
 `
-
-// 플레이리스트 데이터 변환 유틸리티 함수
-const transformPlaylistData = (playlist: DBPlaylist): Playlist => ({
-  id: playlist.id,
-  title: playlist.title,
-  thumbnailUrl: playlist.thumbnail_url,
-  videoCount: playlist.playlist_items?.[0]?.count || 0,
-  isPublic: playlist.is_public,
-})
-
 interface PaginationParams {
   page: number
   pageSize: number
@@ -122,7 +102,7 @@ export const playlistCollectionService = {
           .range(from, to)
 
         return {
-          myPlaylists: myPlaylists?.map(transformPlaylistData) || [],
+          myPlaylists: myPlaylists?.map(transformPlaylistForUi) || [],
           subscribedPlaylists: [],
         }
       }

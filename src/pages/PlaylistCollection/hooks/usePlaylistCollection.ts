@@ -21,7 +21,7 @@ interface UsePlaylistCollectionReturn {
   activeKey: TabKey
   setActiveKey: (key: TabKey) => void
   handleLoadMore: () => void
-  handleUnsubscribe: (playlistId: string) => Promise<void>
+  handleUnsubscribe: (playlistId: string) => void
 }
 
 export const usePlaylistCollection = ({
@@ -52,10 +52,9 @@ export const usePlaylistCollection = ({
     }
   }
 
-  const handleUnsubscribe = async (playlistId: string) => {
-    await unsubscribeMutation.mutateAsync(playlistId, {
+  const handleUnsubscribe = (playlistId: string) => {
+    unsubscribeMutation.mutate(playlistId, {
       onSuccess: () => {
-        // 구독 취소 후 플레이리스트 목록 갱신
         queryClient.invalidateQueries({
           queryKey: playlistKeys.list(profileId, activeKey),
         })
