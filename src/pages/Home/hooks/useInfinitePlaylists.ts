@@ -40,6 +40,7 @@ export const useInfinitePlaylists = (userId?: string, category?: Category) => {
       return {
         playlists: data as Playlist[],
         videoItems: data.flatMap((playlist) => playlist.playlist_items as VideoItem[]),
+        //flatMap : 중첩된 배열 평탄화
       }
     },
     initialPageParam: 0,

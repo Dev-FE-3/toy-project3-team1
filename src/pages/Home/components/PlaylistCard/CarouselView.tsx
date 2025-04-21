@@ -16,7 +16,8 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
   // 스크롤 감지해서 인덱스 계산
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const scrollLeft = e.currentTarget.scrollLeft
-    const itemWidth = e.currentTarget.getBoundingClientRect().width - 100 // item width + padding (px-2)
+    const itemWidth = e.currentTarget.getBoundingClientRect().width - 100
+    // getBoundingClientRect : 요소의 크기 및 위치 정보를 담은 DOMRect 객체를 반환
     const newIndex = Math.round(scrollLeft / itemWidth)
     if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
       setActiveIndex(newIndex)
