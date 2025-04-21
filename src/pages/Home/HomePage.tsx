@@ -5,11 +5,9 @@ import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import { GAMES } from './constants/GAMES'
 import { limitCategoryCount } from './utils/limitCategoryCount'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
-import { queryClient } from '@/shared/model/lib/queryClient'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import { DeferredComponent } from '@/shared/components/DeferredComponent'
 import PlaylistSection from './components/PlaylistSection'
-import { Category } from './model/types'
 
 const gameCount = limitCategoryCount(GAMES.length)
 
