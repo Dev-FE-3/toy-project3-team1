@@ -60,13 +60,13 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         isBackground={isBackground}
       />
 
-      <div className={cn('relative left-0 w-full py-2 pr-4 pb-4 pl-5', isBackground && 'px-4')}>
+      <div className={cn('relative left-0 w-full py-2 pr-4 pb-4 pl-5', { 'px-4': isBackground })}>
         <div className="flex w-full justify-between">
           <div className="flex flex-1 flex-col gap-3">
             <h2 className="text-c50 text-h4 w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
               {playlist.title}
             </h2>
-            <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
+            <div className={cn('flex items-center gap-4', { 'opacity-0': isBackground })}>
               <UserCard
                 nickname={playlist.profiles.nickname}
                 profileId={playlist.profile_id}
@@ -76,7 +76,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
             </div>
           </div>
 
-          <div className={cn('mt-1 flex', isBackground && 'opacity-0')}>
+          <div className={cn('mt-1 flex', { 'opacity-0': isBackground })}>
             <button
               type="button"
               onClick={toggleLike}
@@ -99,7 +99,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           </div>
         </div>
 
-        <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
+        <div className={cn('mt-5 flex gap-[10px]', { 'opacity-0': isBackground })}>
           {playlist.hashtag?.map((tagName, index) => <HashTag key={index} tag={tagName} />)}
         </div>
       </div>
