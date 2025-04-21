@@ -17,26 +17,6 @@ const HomePage = () => {
   const { profile } = useGetAuthState()
   const { selectedCategory, handleCategorySelect } = useCategoryFilter()
 
-  // const clearPlaylistsQuery = () => {
-  //   if (selectedCategory) {
-  //     queryClient.removeQueries({
-  //       queryKey: ['playlists', profile?.id, selectedCategory],
-  //     })
-  //   }
-  // }
-  // const handleCategoryChange = (category: Category) => {
-  //   handleCategorySelect(category)
-  //   clearPlaylistsQuery()
-  // }
-
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     queryClient.removeQueries({
-  //       queryKey: ['playlists', profile?.id, selectedCategory],
-  //     })
-  //   }
-  // }, [selectedCategory])
-
   return (
     <div className="flex h-full flex-col">
       <Categories
