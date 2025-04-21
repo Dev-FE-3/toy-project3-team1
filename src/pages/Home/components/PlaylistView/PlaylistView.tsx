@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PlaylistCard from '../PlaylistCard/PlaylistCard'
-import { PlaylistViewProps } from '../../model/types'
+import { PlaylistViewProps, SwipeDirection } from '../../model/types'
 import { usePrevious } from '../../hooks/usePrevious'
 import { cn } from '@/shared/model/lib/utils'
 
@@ -14,12 +14,14 @@ export const PlaylistView = ({
 }: PlaylistViewProps) => {
   const navigate = useNavigate()
   const previousFocusedIndex = usePrevious(focusedIndex)
-  const direction =
+
+  const direction: SwipeDirection =
     previousFocusedIndex === undefined
-      ? 0
+      ? 'Neutral' // "중립" 상태
       : focusedIndex > previousFocusedIndex
         ? 'Down' // 아래로 스와이프
         : 'Up' // 위로 스와이프
+
   const handlePlaylistClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return
     const focusedPlaylist = playlists[focusedIndex]
@@ -56,17 +58,17 @@ export const PlaylistView = ({
 
               if (index === previousFocusedIndex) {
                 // 포커스 카드 → 사라지는 방향
-                return focusedIndex > previousFocusedIndex ? '-60%' : '60%'
+                return direction === 'Down' ? '-60%' : '60%'
               }
 
               if (index > previousFocusedIndex) {
                 // 아래 카드
-                return focusedIndex > previousFocusedIndex ? '-30%' : '60%'
+                return direction === 'Down' ? '-30%' : '60%'
               }
 
               if (index < previousFocusedIndex) {
                 // 위 카드
-                return focusedIndex > previousFocusedIndex ? '-60%' : '30%'
+                return direction === 'Down' ? '-60%' : '30%'
               }
 
               return '0%'
@@ -119,26 +121,22 @@ export const PlaylistView = ({
           className={cn(
             'absolute inset-0 top-4 z-20 w-full origin-center cursor-pointer py-2',
             playlists[focusedIndex],
-            // ? 'from-c600 to-c800 border-c500 border-y-1 bg-gradient-to-b'
-            // : 'bg-c900 border-none',
           )}
           onClick={handlePlaylistClick}
           initial={{
             opacity: previousFocusedIndex === undefined ? 1 : 0,
             y: previousFocusedIndex === undefined ? 0 : direction === 'Down' ? '60%' : '-60%',
-            // 빈 플레이리스트일 때는 scale 애니메이션 제거
-            scale: playlists[focusedIndex] ? 0.95 : 1,
+            scale: 0.95,
           }}
           animate={{
             opacity: 1,
             y: 0,
-            // 빈 플레이리스트일 때는 scale 애니메이션 제거
-            scale: playlists[focusedIndex] ? [0.95, 1.02, 1] : 1,
+            scale: [0.95, 1.02, 1],
           }}
           exit={{
             opacity: 0,
             y: direction === 'Down' ? '-60%' : '60%',
-            scale: playlists[focusedIndex] ? 0.95 : 1,
+            scale: 0.95,
           }}
           transition={{
             duration: 0.4,

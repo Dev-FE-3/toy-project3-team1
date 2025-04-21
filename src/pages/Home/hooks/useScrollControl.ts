@@ -39,11 +39,11 @@ export const useScrollControl = ({
 
       if (Math.abs(delta) > WHEEL_SCROLL_THRESHOLD) {
         if (delta > 0 && focusedIndex < playlistLength - 1) {
-          if (swipeDirection !== 'up') setSwipeDirection('up')
+          if (swipeDirection !== 'Up') setSwipeDirection('Up')
           setFocusedIndex((prev) => prev + 1)
           setCurrentImageIndex(0)
         } else if (delta < 0 && focusedIndex > 0) {
-          if (swipeDirection !== 'down') setSwipeDirection('down')
+          if (swipeDirection !== 'Down') setSwipeDirection('Down')
           setFocusedIndex((prev) => prev - 1)
           setCurrentImageIndex(0)
         }
@@ -80,11 +80,11 @@ export const useScrollControl = ({
         setIsScrolling(true)
 
         if (delta > 0 && focusedIndex < playlistLength - 1) {
-          if (swipeDirection !== 'up') setSwipeDirection('up')
+          if (swipeDirection !== 'Up') setSwipeDirection('Up')
           setFocusedIndex((prev) => prev + 1)
           setCurrentImageIndex(0)
         } else if (delta < 0 && focusedIndex > 0) {
-          if (swipeDirection !== 'down') setSwipeDirection('down')
+          if (swipeDirection !== 'Down') setSwipeDirection('Down')
           setFocusedIndex((prev) => prev - 1)
           setCurrentImageIndex(0)
         }
