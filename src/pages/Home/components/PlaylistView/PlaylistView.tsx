@@ -18,8 +18,8 @@ export const PlaylistView = ({
     previousFocusedIndex === undefined
       ? 0
       : focusedIndex > previousFocusedIndex
-        ? 1 // 아래로 스와이프
-        : -1 // 위로 스와이프
+        ? 'Down' // 아래로 스와이프
+        : 'Up' // 위로 스와이프
   const handlePlaylistClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return
     const focusedPlaylist = playlists[focusedIndex]
@@ -80,7 +80,7 @@ export const PlaylistView = ({
                   y:
                     previousFocusedIndex === undefined
                       ? 0
-                      : direction === 1
+                      : direction === 'Down'
                         ? '60%' // 아래에서 올라옴
                         : '-60%', // 위에서 내려옴
                   scale: 0.9,
@@ -125,7 +125,7 @@ export const PlaylistView = ({
           onClick={handlePlaylistClick}
           initial={{
             opacity: previousFocusedIndex === undefined ? 1 : 0,
-            y: previousFocusedIndex === undefined ? 0 : direction === 1 ? '60%' : '-60%',
+            y: previousFocusedIndex === undefined ? 0 : direction === 'Down' ? '60%' : '-60%',
             // 빈 플레이리스트일 때는 scale 애니메이션 제거
             scale: playlists[focusedIndex] ? 0.95 : 1,
           }}
@@ -137,7 +137,7 @@ export const PlaylistView = ({
           }}
           exit={{
             opacity: 0,
-            y: direction === 1 ? '-60%' : '60%',
+            y: direction === 'Down' ? '-60%' : '60%',
             scale: playlists[focusedIndex] ? 0.95 : 1,
           }}
           transition={{
