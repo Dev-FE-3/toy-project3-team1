@@ -194,7 +194,7 @@ const PlaylistFormContent = () => {
         >
           <Tabs<FormTab>
             defaultKey="content"
-            initialStatus={{
+            tabStatus={{
               content: isTitleComplete,
               video: isVideoComplete,
             }}
@@ -221,7 +221,7 @@ const PlaylistFormContent = () => {
                 </div>
 
                 {/* 폼 컨텐츠 */}
-                <div className="no-scrollbar flex-1 overflow-y-scroll pt-3 flex flex-col">
+                <div className="no-scrollbar flex flex-1 flex-col overflow-y-scroll pt-3">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 
