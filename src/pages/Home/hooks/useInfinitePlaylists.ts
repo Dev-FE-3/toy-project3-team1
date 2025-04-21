@@ -1,11 +1,11 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import type { Category, Playlist } from '@/pages/Home/model/types'
 
 export const useInfinitePlaylists = (userId?: string, category?: Category) => {
   const pageSize = 10
 
-  return useInfiniteQuery<Playlist[], Error>({
+  return useSuspenseInfiniteQuery<Playlist[], Error>({
     queryKey: ['playlists', userId, category],
     queryFn: async ({ pageParam = 0 }) => {
       const offset = pageParam as number
