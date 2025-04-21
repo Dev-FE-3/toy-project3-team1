@@ -1,21 +1,20 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { PlaylistView } from './PlaylistView/PlaylistView'
 import { usePlaylistControl } from '../hooks/usePlaylistControl'
 import { useScrollControl } from '../hooks/useScrollControl'
-import { PlaylistContainerProps } from '../model/types'
+import { PlaylistContainerProps, SwipeDirection } from '../model/types'
 
 export const PlaylistContainer = ({ playlists, videoItems }: PlaylistContainerProps) => {
+  const [swipeDirection, setSwipeDirection] = useState<SwipeDirection>('Up')
   const containerRef = useRef<HTMLDivElement>(null)
   const {
     focusedIndex,
     currentImageIndex,
-    swipeDirection,
     isScrolling,
     setIsScrolling,
     setCurrentImageIndex,
     setFocusedIndex,
-    setSwipeDirection,
   } = usePlaylistControl(playlists.length)
 
   const { handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollControl({

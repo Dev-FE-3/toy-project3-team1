@@ -1,10 +1,8 @@
 import { useState, useCallback } from 'react'
-import { SwipeDirection } from '../model/types'
 
 export const usePlaylistControl = (playlistLength: number) => {
   const [focusedIndex, setFocusedIndex] = useState(0)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [swipeDirection, setSwipeDirection] = useState<SwipeDirection>('up')
   const [isScrolling, setIsScrolling] = useState(false)
 
   const setFocusedIndexWithBounds = useCallback(
@@ -20,11 +18,9 @@ export const usePlaylistControl = (playlistLength: number) => {
   return {
     focusedIndex,
     currentImageIndex,
-    swipeDirection,
     isScrolling,
     setIsScrolling,
     setCurrentImageIndex,
     setFocusedIndex: setFocusedIndexWithBounds,
-    setSwipeDirection,
   }
 }
