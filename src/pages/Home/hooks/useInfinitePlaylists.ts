@@ -44,5 +44,6 @@ export const useInfinitePlaylists = (userId?: string, category?: Category) => {
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length === pageSize ? allPages.length : undefined,
     staleTime: 1000 * 60 * 5,
+    refetchInterval: 1000 * 60 * 1,
   })
 }
