@@ -34,9 +34,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
   })
 
   const carouselImages = useMemo((): string[] => {
-    const thumbnailUrl = Array.isArray(playlist.thumbnail_url)
-      ? playlist.thumbnail_url[0]
-      : playlist.thumbnail_url
+    const thumbnailUrl = playlist.thumbnail_url
 
     const videoThumbnails = videoItems.map((item) => item.thumbnail_url)
     if (thumbnailUrl === videoThumbnails[0]) {
