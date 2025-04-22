@@ -1,9 +1,9 @@
 import { PlaylistWithItems } from '@/pages/Home/model/types'
 import { supabase } from '@/shared/model/api/supabase'
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
 export const useTargetUserPlaylists = (targetProfileId?: string) => {
-  return useQuery<PlaylistWithItems[]>({
+  return useSuspenseQuery<PlaylistWithItems[]>({
     queryKey: ['playlists_with_items', targetProfileId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -12,12 +12,9 @@ export const useTargetUserPlaylists = (targetProfileId?: string) => {
         .eq('profile_id', targetProfileId)
         .eq('is_public', true)
         .order('created_at', { ascending: false })
-
-      if (error) throw new Error('Error fetching playlists with items')
-
-      return data ?? []
+      if (error || !data) throw new Error('user not found')
+      return data
     },
-    enabled: !!targetProfileId,
     refetchOnWindowFocus: false,
   })
 }

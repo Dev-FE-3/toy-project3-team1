@@ -4,6 +4,7 @@ import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import { Link } from 'react-router-dom'
 
 const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) => {
+  console.log(playlist.thumbnail_url)
   return (
     <div key={playlist.id} className="mb-10">
       <Link to={`/playlist/${playlist.id}`}>
