@@ -64,7 +64,7 @@ export const usePlaylistBookmark = (playlistId: string) => {
 
       return { previousBookmark }
     },
-    onError: (err, newState, context) => {
+    onError: (_err, _newState, context) => {
       if (context?.previousBookmark) {
         queryClient.setQueryData(['playlist_bookmarked', playlistId], context.previousBookmark)
       }
