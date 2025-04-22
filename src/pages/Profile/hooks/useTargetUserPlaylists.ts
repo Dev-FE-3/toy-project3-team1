@@ -1,9 +1,9 @@
-import { PlaylistWithItems } from '@/pages/Home/model/types'
+import { Playlist } from '@/pages/Home/model/types'
 import { supabase } from '@/shared/model/api/supabase'
 import { useQuery } from '@tanstack/react-query'
 
 export const useTargetUserPlaylists = (targetProfileId?: string) => {
-  return useQuery<PlaylistWithItems[]>({
+  return useQuery<Playlist[]>({
     queryKey: ['playlists_with_items', targetProfileId],
     queryFn: async () => {
       const { data, error } = await supabase
