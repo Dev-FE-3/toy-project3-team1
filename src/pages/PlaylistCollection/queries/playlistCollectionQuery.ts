@@ -1,22 +1,16 @@
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 
 import { DBPlaylist } from '@/pages/PlaylistCollection/model'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 import { playlistCollectionService } from '@/pages/PlaylistCollection/services/playlistCollectionService'
 
-export const playlistKeys = {
-  all: ['playlists'] as const,
-  lists: () => [...playlistKeys.all, 'list'] as const,
-  list: (profileId: string | null, activeKey: string) =>
-    [...playlistKeys.lists(), profileId, activeKey] as const,
-}
-
-export const usePlaylistInfiniteQuery = (
+export const usePlaylistCollectionInfiniteQuery = (
   profileId: string | null,
   activeKey: string,
   pageSize: number,
 ) => {
   return useInfiniteQuery<DBPlaylist[], Error>({
-    queryKey: playlistKeys.list(profileId, activeKey),
+    queryKey: playlistCollectionKeys.list(profileId, activeKey),
     queryFn: async ({ pageParam = 1 }) => {
       if (!profileId) throw new Error('프로필 ID가 필요합니다')
 
@@ -38,7 +32,7 @@ export const usePlaylistInfiniteQuery = (
   })
 }
 
-export const usePlaylistUnsubscribeMutation = () => {
+export const usePlaylistCollectionUnsubscribeMutation = () => {
   return useMutation({
     mutationFn: playlistCollectionService.unsubscribePlaylist,
   })
