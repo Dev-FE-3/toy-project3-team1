@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
 import { GAMES } from './constants/GAMES'
