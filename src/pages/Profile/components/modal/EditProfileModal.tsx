@@ -28,31 +28,32 @@ export const EditProfileModal = ({
 }: EditProfileModalProps) => {
   const [isSaving, setIsSaving] = useState(false)
 
-  // 닉네임 중복 체크, 현재 닉네임과 동일한지 체크, 유효성 검사
+  // 닉네임 필드 관련 상태 및 로직
   const {
     nickname,
-    isAvailable,
+    availability,
     isChecking,
     isSameAsCurrent,
     isValidFormat,
     handleNicknameChange,
     checkDuplicate,
-    initNicknameField,
+    resetNickname,
   } = useNicknameField(profileId, currentNickname)
+
+  // 저장 버튼 비활성화 조건
+  const isDisabled = availability !== 'available' || isSaving || isSameAsCurrent || !isValidFormat
 
   // 닉네임 저장
   const handleSave = async () => {
-    if (!isAvailable || isSameAsCurrent || !isValidFormat) return
+    if (isDisabled) return
 
     setIsSaving(true)
 
     try {
-      // updateNickname을 사용하여 닉네임 업데이트
-      const success = await updateNickname(profileId, nickname)
+      const success = await updateNickname(profileId, nickname) // 닉네임 업데이트
 
       if (success) {
-        // 바뀐 닉네임이 렌더될 수 있도록 패치
-        await queryClient.invalidateQueries({ queryKey: ['profile', profileId] })
+        await queryClient.invalidateQueries({ queryKey: ['profile', profileId] }) // 캐시 무효화 & 쿼리 재요청
         onClose()
       } else {
         alert('닉네임 변경 실패')
@@ -65,8 +66,9 @@ export const EditProfileModal = ({
     setIsSaving(false)
   }
 
+  // 모달 닫기
   const handleClose = () => {
-    initNicknameField() // 모달 닫으면 사용자가 입력했던 닉네임 현재 닉네임으로 초기화
+    resetNickname()
     onClose()
   }
 
@@ -84,7 +86,7 @@ export const EditProfileModal = ({
           onChange={handleNicknameChange}
           onCheckDuplicate={checkDuplicate}
           isChecking={isChecking}
-          isAvailable={isAvailable}
+          availability={availability}
           isValidFormat={isValidFormat}
           isSameAsCurrent={isSameAsCurrent}
         />
@@ -102,9 +104,9 @@ export const EditProfileModal = ({
             variant="outline"
             className="bg-c300 text-c900 h-12 flex-1"
             onClick={handleSave}
-            disabled={!isAvailable || isSaving || isSameAsCurrent || !isValidFormat}
+            disabled={isDisabled}
           >
-            저장
+            {isSaving ? '저장 중...' : '저장'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -9,7 +9,7 @@ import ProfilePageHeader from './ProfilePageHeader'
 export const ProfilePageContent = () => {
   const { id: paramId } = useParams()
   const { profile } = useGetAuthState()
-  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false) // 모달 활성화 여부
 
   const targetUserProfileId = paramId ?? profile?.id
   const isMyProfile = !paramId || paramId === profile?.id // 프로필 편집 버튼 분기 처리를 위해 본인 프로필인지 아닌지 구분
@@ -28,7 +28,9 @@ export const ProfilePageContent = () => {
           targetUserProfile={targetUserProfile}
         />
         <div className="no-scrollbar flex-1 overflow-y-auto">
-          <TargetUserPlaylists playlists={playlistsWithItems} />
+          <TargetUserPlaylists // 프로필 주인 플레이리스트 렌더
+            playlists={playlistsWithItems}
+          />
         </div>
       </div>
     </div>

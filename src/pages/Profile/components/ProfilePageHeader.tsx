@@ -28,6 +28,7 @@ const ProfilePageHeader = ({
         profileId={targetUserProfile.id}
         listCount={playlists.length}
       />
+      {/* 현재 로그인 중인 사용자의 프로필일 경우 프로필 편집 버튼 활성화 */}
       {isMyProfile && (
         <>
           <Button

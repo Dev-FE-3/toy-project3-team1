@@ -12,6 +12,7 @@ const ProfilePage = () => {
       <Suspense
         fallback={
           <DeferredComponent>
+            {/* 0.3초 뒤에 스켈레톤 UI 렌더 */}
             <AnimatePresence mode="wait">
               <motion.div
                 key="skeleton"
@@ -26,7 +27,7 @@ const ProfilePage = () => {
           </DeferredComponent>
         }
       >
-        <ProfilePageContent />
+        <ProfilePageContent /> {/* 프로필 콘텐츠를 모아둔 컴포넌트 */}
       </Suspense>
     </ErrorBoundary>
   )
