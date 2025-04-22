@@ -52,20 +52,6 @@ const CommentPopupRoot = ({ open, onOpenChange, children, className }: CommentPo
   )
 }
 
-//
-// const Trigger = ({
-//   className,
-//   children,
-//   onClick,
-//   ...props
-// }: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
-//   return (
-//     <button className={cn('cursor-pointer', className)} onClick={onClick} {...props}>
-//       {children}
-//     </button>
-//   )
-// }
-
 const Header = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
