@@ -3,6 +3,7 @@ import { MoreVertical } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 import { Button } from '@/shared/components/ui/button'
 import {
   Drawer,
@@ -14,7 +15,6 @@ import {
 } from '@/shared/components/ui/drawer'
 import { cn } from '@/shared/model/lib/utils'
 import { useToast } from '@/shared/store/toastStore'
-import { playlistKeys } from '../queries/playlistCollectionQueries'
 import { playlistCollectionService } from '../services/playlistCollectionService'
 import { DeleteConfirmModal } from './DeleteConfirmModal'
 
@@ -45,7 +45,7 @@ export default function PlaylistMoreMenu({
     try {
       await playlistCollectionService.deletePlaylist(playlistId)
       success('플레이리스트가 삭제되었습니다.')
-      queryClient.invalidateQueries({ queryKey: playlistKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: playlistCollectionKeys.lists() })
       onDelete?.()
       setIsOpen(false)
       setIsDeletePlaylistModalOpen(false)

@@ -3,10 +3,10 @@ import { useState } from 'react'
 
 import { DBPlaylist, Playlist, TabKey } from '@/pages/PlaylistCollection/model'
 import {
-  playlistKeys,
-  usePlaylistInfiniteQuery,
-  usePlaylistUnsubscribeMutation,
-} from '@/pages/PlaylistCollection/queries/playlistCollectionQueries'
+  usePlaylistCollectionInfiniteQuery,
+  usePlaylistCollectionUnsubscribeMutation,
+} from '@/pages/PlaylistCollection/queries/playlistCollectionQuery'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 
 interface UsePlaylistCollectionProps {
   profileId: string | null
@@ -31,8 +31,8 @@ export const usePlaylistCollection = ({
   const [activeKey, setActiveKey] = useState<TabKey>('myPlaylists')
   const queryClient = useQueryClient()
 
-  const playlistsQuery = usePlaylistInfiniteQuery(profileId, activeKey, pageSize)
-  const unsubscribeMutation = usePlaylistUnsubscribeMutation()
+  const playlistsQuery = usePlaylistCollectionInfiniteQuery(profileId, activeKey, pageSize)
+  const unsubscribeMutation = usePlaylistCollectionUnsubscribeMutation()
 
   const playlists =
     playlistsQuery.data?.pages.flat().map((playlist: DBPlaylist) => ({
@@ -56,7 +56,7 @@ export const usePlaylistCollection = ({
     unsubscribeMutation.mutate(playlistId, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: playlistKeys.list(profileId, activeKey),
+          queryKey: playlistCollectionKeys.list(profileId, activeKey),
         })
       },
     })
