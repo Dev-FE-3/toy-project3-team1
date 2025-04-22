@@ -10,6 +10,7 @@ import { DeferredComponent } from '@/shared/components/DeferredComponent'
 import PlaylistSection from './components/PlaylistSection'
 import PlaylistNotFound from './components/PlaylistNotFound'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
 
 const gameCount = limitCategoryCount(GAMES.length)
 
@@ -31,18 +32,7 @@ const HomePage = () => {
           fallback={
             <DeferredComponent>
               {/* DeferredComponent : 0.3초 이상 지연이 걸릴 때 스켈레톤 UI 렌더 */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key="skeleton"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute inset-0 top-27 z-10"
-                >
-                  <HomePageSkeleton />
-                </motion.div>
-              </AnimatePresence>
+              <SkeletonAnimation children={<HomePageSkeleton />} />
             </DeferredComponent>
           }
         >
