@@ -12,21 +12,22 @@ interface ToastContainerProps {
     | 'top-center'
     | 'bottom-center'
   /** 컨테이너와 화면 가장자리 사이의 간격 (px) */
-  spacing?: number
+
   /** 추가 스타일 클래스 */
   className?: string
+  mode?: 'default' | 'icon'
 }
 
 const POSITION_STYLES = {
   'top-right': 'top-0 right-0',
   'top-left': 'top-0 left-0',
-  'bottom-right': 'bottom-0 right-0',
-  'bottom-left': 'bottom-0 left-0',
+  'bottom-right': 'bottom-4 right-4',
+  'bottom-left': 'bottom-4 left-4',
   'top-center': 'top-0 left-1/2 -translate-x-1/2',
-  'bottom-center': 'bottom-0 left-1/2 -translate-x-1/2',
+  'bottom-center': 'bottom-28 left-1/2 -translate-x-1/2',
 }
 
-export const ToastContainer = ({ position, spacing = 16, className }: ToastContainerProps) => {
+export const ToastContainer = ({ position, className, mode }: ToastContainerProps) => {
   const { toasts, removeToast } = useToastStore()
 
   if (toasts.length === 0) return null
@@ -38,9 +39,6 @@ export const ToastContainer = ({ position, spacing = 16, className }: ToastConta
         position && POSITION_STYLES[position],
         className,
       )}
-      style={{
-        margin: spacing,
-      }}
     >
       {toasts.map((toast) => (
         <ToastMessage
@@ -49,6 +47,7 @@ export const ToastContainer = ({ position, spacing = 16, className }: ToastConta
           message={toast.message}
           duration={toast.duration}
           onClose={() => removeToast(toast.id)}
+          mode={mode}
         />
       ))}
     </div>

@@ -2,54 +2,40 @@ import { useMemo } from 'react'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
-import { PlaylistCardProps, VideoItem } from '@/pages/Home/model/types'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
 import CarouselView from './CarouselView'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { cn } from '@/shared/model/lib/utils'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
-import EmptyPlaylistCard from './EmptyPlaylistCard'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/shared/model/api/supabase'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 
-const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps) => {
-  if (!playlist) {
-    return <EmptyPlaylistCard />
-  }
+
+type PlaylistCardProps = {
+  videoItems: VideoItem[]
+  playlist: Playlist
+  carouselRef: React.RefObject<HTMLDivElement | null>
+  isBackground: boolean
+}
+
+const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: PlaylistCardProps) => {
   const { isLiked, likeCount, toggleLike, likeLoading } = usePlaylistLike(playlist.id)
   const { isBookmarked, bookmarkCount, toggleBookmark, bookmarkLoading } = usePlaylistBookmark(
     playlist.id,
   )
-
-  const { data: videoItems = [] } = useQuery({
-    queryKey: ['playlist_items', playlist.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('playlist_items')
-        .select('*')
-        .eq('playlist_id', playlist.id)
-      if (error) {
-        throw new Error('Error fetching playlists:')
-      }
-      return data as VideoItem[]
-    },
-    refetchOnWindowFocus: false,
-  })
+  const playlistVideoItems = useMemo(() => {
+    return videoItems.filter((item) => item.playlist_id === playlist.id)
+  }, [videoItems, playlist.id])
 
   const carouselImages = useMemo((): string[] => {
-    const thumbnailUrl = Array.isArray(playlist.thumbnail_url)
-      ? playlist.thumbnail_url[0]
-      : playlist.thumbnail_url
-
-    const videoThumbnails = videoItems.map((item) => item.thumbnail_url)
-    if (thumbnailUrl === videoThumbnails[0]) {
-      return [...videoThumbnails]
-    }
+    const thumbnailUrl = playlist.thumbnail_url
+    const videoThumbnails = playlistVideoItems.map((item) => item.thumbnail_url)
+    if (thumbnailUrl === videoThumbnails[0]) return [...videoThumbnails]
     return [thumbnailUrl, ...videoThumbnails]
   }, [playlist.thumbnail_url, videoItems])
 
   const uploadedDate = getRelativeTime(playlist.created_at)
+
   return (
     <div
       className={cn(
@@ -66,13 +52,13 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
         isBackground={isBackground}
       />
 
-      <div className={cn('relative left-0 w-full py-2 pr-4 pb-4 pl-5', isBackground && 'px-4')}>
+      <div className={cn('relative left-0 w-full py-2 pr-4 pb-4 pl-5', { 'px-4': isBackground })}>
         <div className="flex w-full justify-between">
           <div className="flex flex-1 flex-col gap-3">
             <h2 className="text-c50 text-h4 w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
               {playlist.title}
             </h2>
-            <div className={cn('flex items-center gap-4', isBackground && 'opacity-0')}>
+            <div className={cn('flex items-center gap-4', { 'opacity-0': isBackground })}>
               <UserCard
                 nickname={playlist.profiles.nickname}
                 profileId={playlist.profile_id}
@@ -82,7 +68,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
             </div>
           </div>
 
-          <div className={cn('mt-1 flex', isBackground && 'opacity-0')}>
+          <div className={cn('mt-1 flex', { 'opacity-0': isBackground })}>
             <button
               type="button"
               onClick={toggleLike}
@@ -105,7 +91,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground }: PlaylistCardProps
           </div>
         </div>
 
-        <div className={cn('mt-5 flex gap-[10px]', isBackground && 'opacity-0')}>
+        <div className={cn('mt-5 flex gap-[10px]', { 'opacity-0': isBackground })}>
           {playlist.hashtag?.map((tagName, index) => <HashTag key={index} tag={tagName} />)}
         </div>
       </div>

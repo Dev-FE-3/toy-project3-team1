@@ -1,55 +1,19 @@
-import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
-import { PlaylistFormValues } from '@/pages//PlaylistForm/model/types'
-import { useSubmitPlaylistMutation } from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
+import { PlaylistFormValues } from '@/pages/PlaylistForm/model/types'
+import { playlistFormKeys } from '@/pages/PlaylistForm/queries/playlistQueryKeys'
+import { playlistService } from '@/pages/PlaylistForm/services/playlistService'
+import { useToast } from '@/shared/store/toastStore'
+import { useUserStore } from '@/shared/store/userStore'
 
-interface UseSubmitPlaylistProps {
-  onSuccess?: () => void
-  onError?: (error: Error) => void
-}
-
-interface FormattedPlaylistData {
-  title: string
-  description: string
-  hashtags: string
-  isPublic: string
-  videoCount: number
-  videoList: string
-  thumbnail: string
-}
-
-export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps = {}) => {
-  const [formattedData, setFormattedData] = useState<FormattedPlaylistData | null>(null)
-  const submitPlaylistMutation = useSubmitPlaylistMutation()
-
-  const formatPlaylistData = (data: PlaylistFormValues): FormattedPlaylistData => {
-    return {
-      title: data.title,
-      description: data.description || '(내용 없음)',
-      hashtags: data.hashtags.length > 0 ? data.hashtags.join(', ') : '(해시태그 없음)',
-      isPublic: data.isPublic ? '공개' : '비공개',
-      videoCount: data.videos.length,
-      videoList: data.videos.map((v) => `${v.title} (ID: ${v.id})`).join('\n- '),
-      thumbnail: data.thumbnail ? '등록됨' : '첫 번째 영상 썸네일 사용',
-    }
-  }
-
-  const submitPlaylist = async (data: PlaylistFormValues) => {
-    try {
-      await submitPlaylistMutation.mutateAsync(data)
-
-      // 데이터 형식 변환 (표시용)
-      const formatted = formatPlaylistData(data)
-      setFormattedData(formatted)
-
-      onSuccess?.()
-      return true
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('알 수 없는 오류가 발생했습니다.')
-      onError?.(err)
-      return false
-    }
-  }
+export const useSubmitPlaylist = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const { success: toastSuccess, error: toastError } = useToast()
+  const profileId = useUserStore((s) => s.profileId)
+  if (!profileId) throw new Error('로그인이 필요합니다.')
 
   const validatePlaylist = (data: PlaylistFormValues) => {
     const errors: string[] = []
@@ -81,10 +45,52 @@ export const useSubmitPlaylist = ({ onSuccess, onError }: UseSubmitPlaylistProps
   }
 
   return {
-    submitPlaylist,
     validatePlaylist,
-    isSubmitting: submitPlaylistMutation.isPending,
-    submitError: submitPlaylistMutation.error as Error | null,
-    formattedData,
+    ...useMutation<boolean, Error, PlaylistFormValues>({
+      mutationFn: async (data: PlaylistFormValues) => {
+        // 1. 플레이리스트 생성
+        const newPlaylist = await playlistService.createPlaylist({
+          title: data.title,
+          description: data.description || null,
+          profile_id: profileId,
+          is_public: data.isPublic,
+          hashtag: data.hashtags.length ? data.hashtags : undefined,
+          thumbnail_url: null,
+        })
+
+        // 2. 플레이리스트 아이템 생성
+        if (data.videos.length > 0) {
+          await playlistService.createPlaylistItems(newPlaylist.id, data.videos)
+        }
+
+        // 3. 썸네일 처리
+        if (data.thumbnail) {
+          // 썸네일 업로드
+          const thumbnailUrl = await playlistService.uploadThumbnail(
+            data.thumbnail,
+            profileId,
+            newPlaylist.id,
+          )
+
+          // 썸네일 URL 업데이트
+          await playlistService.updateThumbnailUrl(newPlaylist.id, thumbnailUrl)
+        } else if (data.videos.length > 0) {
+          await playlistService.updateThumbnailUrl(newPlaylist.id, data.videos[0].thumbnailUrl)
+        }
+
+        return true
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: playlistFormKeys.lists() })
+        queryClient.invalidateQueries({ queryKey: playlistCollectionKeys.lists() })
+
+        // 화면 효과
+        toastSuccess('플레이리스트가 성공적으로 생성되었습니다.')
+        navigate('/playlists')
+      },
+      onError: (err: Error) => {
+        toastError(err.message)
+      },
+    }),
   }
 }

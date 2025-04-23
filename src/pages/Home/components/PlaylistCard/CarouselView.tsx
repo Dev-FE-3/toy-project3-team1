@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CarouselViewProps } from '../../model/types'
+
+type CarouselViewProps = {
+  images: string[]
+  title: string
+  carouselRef: React.RefObject<HTMLDivElement | null>
+  isBackground: boolean
+}
 
 const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselViewProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -11,13 +17,13 @@ const CarouselView = ({ images, title, carouselRef, isBackground }: CarouselView
       carouselRef.current.scrollLeft = 0
     }
     setActiveIndex(0)
-  }, [images])
+  }, [images.join('')])
 
   // 스크롤 감지해서 인덱스 계산
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const container = e.currentTarget
-    const scrollLeft = container.scrollLeft
-    const itemWidth = 370 // item width + padding (px-2)
+    const scrollLeft = e.currentTarget.scrollLeft
+    const itemWidth = e.currentTarget.getBoundingClientRect().width - 100
+    // getBoundingClientRect : 요소의 크기 및 위치 정보를 담은 DOMRect 객체를 반환
     const newIndex = Math.round(scrollLeft / itemWidth)
     if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
       setActiveIndex(newIndex)
