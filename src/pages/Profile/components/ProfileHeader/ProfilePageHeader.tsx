@@ -1,6 +1,6 @@
 import { Button } from '@/shared/components/ui/button'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
-import { EditProfileModal } from './modal/EditProfileModal'
+import { EditProfileModal } from '../modal/EditProfileModal'
 import { Playlist, VideoItem } from '@/pages/Home/model/types'
 
 interface Props extends Playlist {

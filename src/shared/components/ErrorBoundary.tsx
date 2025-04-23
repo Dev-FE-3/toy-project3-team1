@@ -1,4 +1,6 @@
+import { AlertTriangle } from 'lucide-react'
 import React from 'react'
+import { Button } from './ui/button'
 
 interface Props {
   children: React.ReactNode
@@ -28,11 +30,20 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-lg font-semibold text-red-500">오류가 발생했습니다</h2>
-              <p className="mt-2 text-sm text-gray-500">{this.state.error?.message}</p>
+          <div className="bg-c900 relative flex h-full flex-col items-center justify-center gap-12 py-4">
+            <div className="flex flex-col items-center justify-center">
+              <AlertTriangle size={48} className="text-c400 mb-4" />
+              <h3 className="text-c300 text-h3 mb-2">무언가 잘못된 것 같아요</h3>
+              <p className="text-c400 text-textR">새로고침 해주세요</p>
             </div>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => window.location.reload()}
+              className="bg-c600 text-c200 h-10"
+            >
+              새로고침
+            </Button>
           </div>
         )
       )

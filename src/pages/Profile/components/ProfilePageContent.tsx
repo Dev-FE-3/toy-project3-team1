@@ -1,36 +1,48 @@
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { Suspense, useState } from 'react'
+import { ProfileHeaderSection } from './ProfileHeader/ProfileHeaderSection'
+import { useLocation, useParams } from 'react-router-dom'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
-import { useParams } from 'react-router-dom'
-import { useState } from 'react'
-import { useTargetUserPlaylists } from '../queries/useTargetUserPlaylists'
-import { useTargetUserProfileInfo } from '../queries/useTargetUserProfileInfo'
-import TargetUserPlaylists from './TargetUserPlaylists/TargetUserPlaylists'
-import ProfilePageHeader from './ProfilePageHeader'
+import { PlaylistsSection } from './PlaylistSection/PlaylistSection'
+import { PlaylistSkeleton, ProfileHeaderSkeleton } from './skeletons/ProfilePageSkeleton'
+import UserNotFound from './UserNotFound'
+import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
 
 export const ProfilePageContent = () => {
   const { id: paramId } = useParams()
   const { profile } = useGetAuthState()
-  const [editModalOpen, setEditModalOpen] = useState(false) // 모달 활성화 여부
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const targetUserProfileId = paramId ?? profile?.id
-  const isMyProfile = !paramId || paramId === profile?.id // 프로필 편집 버튼 분기 처리를 위해 본인 프로필인지 아닌지 구분
-
-  const { data: targetUserProfile } = useTargetUserProfileInfo(targetUserProfileId) // 타겟 유저의 프로필 정보 데이터 관리 훅 : nickname 데이터 추출
-  const { data: playlistsWithItems = [] } = useTargetUserPlaylists(targetUserProfileId) // 타겟 유저의 플레이리스트 데이터 관리 훅
+  const isMyProfile = !paramId || paramId === profile?.id
 
   return (
     <div className="relative h-full">
       <div className="flex h-full flex-col px-5 pt-4">
-        <ProfilePageHeader // 프로필 페이지 헤더 영역 : 프로필 사진, 이름, 플레이리스트 개수, 프로필 편집 버튼
-          playlists={playlistsWithItems}
-          isMyProfile={isMyProfile}
-          editModalOpen={editModalOpen}
-          setEditModalOpen={setEditModalOpen}
-          targetUserProfile={targetUserProfile}
-        />
-        <div className="no-scrollbar flex-1 overflow-y-auto">
-          <TargetUserPlaylists // 프로필 주인 플레이리스트 렌더
-            playlists={playlistsWithItems}
-          />
+        <div>
+          {/* 프로필 정보 로딩 별도 처리 */}
+          <ErrorBoundary fallback={<UserNotFound />} key={targetUserProfileId}>
+            <Suspense fallback={<SkeletonAnimation children={<ProfileHeaderSkeleton />} />}>
+              <ProfileHeaderSection
+                profileId={targetUserProfileId}
+                isMyProfile={isMyProfile}
+                editModalOpen={editModalOpen}
+                setEditModalOpen={setEditModalOpen}
+              />
+              {/* <ProfileHeaderSkeleton /> */}
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+        {/* 플레이리스트 로딩 별도 처리 */}
+        <div className="no-scrollbar mt-4 flex-1 overflow-y-auto">
+          <ErrorBoundary
+            fallback={<div>플레이리스트를 불러오지 못했어요.</div>}
+            key={targetUserProfileId}
+          >
+            <Suspense fallback={<SkeletonAnimation children={<PlaylistSkeleton />} />}>
+              <PlaylistsSection profileId={targetUserProfileId} />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
     </div>
