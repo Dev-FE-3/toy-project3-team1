@@ -1,14 +1,18 @@
 import { Button } from '@/shared/components/ui/button'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { EditProfileModal } from './modal/EditProfileModal'
-import { PlaylistWithItems } from '@/pages/Home/model/types'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
+
+interface Props extends Playlist {
+  playlist_items: VideoItem[]
+}
 
 interface ProfilePageHeaderProps {
   isMyProfile: boolean
   editModalOpen: boolean
   setEditModalOpen: (props: boolean) => void
   targetUserProfile: { nickname: string; id: string }
-  playlists: PlaylistWithItems[]
+  playlists: Props[]
 }
 
 // 유저 정보와 프로필 편집 버튼 관리 컴포넌트

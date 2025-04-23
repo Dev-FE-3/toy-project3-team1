@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import { TabItemProps } from '@/pages/PlaylistForm/model/types'
 
@@ -6,45 +6,29 @@ type TabItemStatus = Record<string, boolean>
 
 interface TabsProps<T extends string = string> {
   defaultKey: T
-  initialStatus?: TabItemStatus
+  tabStatus: TabItemStatus
   children: (props: {
     activeKey: T
     setActiveKey: (key: T) => void
     tabStatus: TabItemStatus
-    setTabStatus: (status: TabItemStatus) => void
   }) => ReactNode
 }
 
 export const Tabs = <T extends string = string>({
   defaultKey,
-  initialStatus = {},
+  tabStatus,
   children,
 }: TabsProps<T>) => {
-  // 로컬 상태로 activeKey 관리
   const [activeKey, setActiveKey] = useState<T>(defaultKey)
-  const [tabStatus, setTabStatus] = useState<TabItemStatus>(initialStatus)
 
-  // 초기 상태 설정
-  useEffect(() => {
-    if (initialStatus && Object.keys(initialStatus).length > 0) {
-      setTabStatus((prev) => ({ ...prev, ...initialStatus }))
-    }
-  }, [initialStatus])
-
-  // 상태 업데이트 함수
   const handleSetActiveKey = (key: T) => {
     setActiveKey(key)
-  }
-
-  const handleSetTabStatus = (status: TabItemStatus) => {
-    setTabStatus(status)
   }
 
   return children({
     activeKey,
     setActiveKey: handleSetActiveKey,
     tabStatus,
-    setTabStatus: handleSetTabStatus,
   })
 }
 

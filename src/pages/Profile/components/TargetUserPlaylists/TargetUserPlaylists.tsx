@@ -1,8 +1,12 @@
-import { PlaylistWithItems } from '@/pages/Home/model/types'
 import { Ghost } from 'lucide-react'
 import TargetUserPlaylistItem from './TargetUserPlaylistItem'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
 
-const TargetUserPlaylists = ({ playlists }: { playlists: PlaylistWithItems[] }) => {
+interface Props extends Playlist {
+  playlist_items: VideoItem[]
+}
+
+const TargetUserPlaylists = ({ playlists }: { playlists: Props[] }) => {
   return (
     <>
       {playlists.length > 0 ? ( // 공개로 설정한 플레이리스트가 있을 때

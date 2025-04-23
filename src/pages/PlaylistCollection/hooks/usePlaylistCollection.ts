@@ -3,10 +3,10 @@ import { useState } from 'react'
 
 import { DBPlaylist, Playlist, TabKey } from '@/pages/PlaylistCollection/model'
 import {
-  playlistKeys,
-  usePlaylistInfiniteQuery,
-  usePlaylistUnsubscribeMutation,
-} from '@/pages/PlaylistCollection/queries/playlistCollectionQueries'
+  usePlaylistCollectionInfiniteQuery,
+  usePlaylistCollectionUnsubscribeMutation,
+} from '@/pages/PlaylistCollection/queries/playlistCollectionQuery'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 
 interface UsePlaylistCollectionProps {
   profileId: string | null
@@ -21,7 +21,7 @@ interface UsePlaylistCollectionReturn {
   activeKey: TabKey
   setActiveKey: (key: TabKey) => void
   handleLoadMore: () => void
-  handleUnsubscribe: (playlistId: string) => Promise<void>
+  handleUnsubscribe: (playlistId: string) => void
 }
 
 export const usePlaylistCollection = ({
@@ -31,8 +31,8 @@ export const usePlaylistCollection = ({
   const [activeKey, setActiveKey] = useState<TabKey>('myPlaylists')
   const queryClient = useQueryClient()
 
-  const playlistsQuery = usePlaylistInfiniteQuery(profileId, activeKey, pageSize)
-  const unsubscribeMutation = usePlaylistUnsubscribeMutation()
+  const playlistsQuery = usePlaylistCollectionInfiniteQuery(profileId, activeKey, pageSize)
+  const unsubscribeMutation = usePlaylistCollectionUnsubscribeMutation()
 
   const playlists =
     playlistsQuery.data?.pages.flat().map((playlist: DBPlaylist) => ({
@@ -52,12 +52,11 @@ export const usePlaylistCollection = ({
     }
   }
 
-  const handleUnsubscribe = async (playlistId: string) => {
-    await unsubscribeMutation.mutateAsync(playlistId, {
+  const handleUnsubscribe = (playlistId: string) => {
+    unsubscribeMutation.mutate(playlistId, {
       onSuccess: () => {
-        // 구독 취소 후 플레이리스트 목록 갱신
         queryClient.invalidateQueries({
-          queryKey: playlistKeys.list(profileId, activeKey),
+          queryKey: playlistCollectionKeys.list(profileId, activeKey),
         })
       },
     })

@@ -13,7 +13,7 @@ import {
 } from '@/pages/PlaylistForm/components'
 import { useSubmitPlaylist, useUpdatePlaylistForm } from '@/pages/PlaylistForm/hooks'
 import { PlaylistFormValues, playlistFormSchema } from '@/pages/PlaylistForm/model/types'
-import { useGetPlaylist } from '@/pages/PlaylistForm/queries/usePlaylistQuery'
+import { useGetPlaylistQuery } from '@/pages/PlaylistForm/queries/playlistQuery'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { Button } from '@/shared/components/ui/button'
 import { Form } from '@/shared/components/ui/form'
@@ -27,24 +27,16 @@ const PlaylistFormContent = () => {
   const { id: playlistId } = useParams<{ id: string }>()
   const isEditMode = !!playlistId
   const profileId = useUserStore((state) => state.profileId)
-  const { success, error } = useToast()
-
-  // 수정 모드일 때 기존 데이터 조회
-  const { data: playlist, isLoading: isLoadingPlaylist } = useGetPlaylist(playlistId || '')
+  const { error } = useToast()
 
   // Form hooks
-  const { submitPlaylist, validatePlaylist, isSubmitting } = useSubmitPlaylist({
-    onError: (err: Error) => error(err.message),
+  const { validatePlaylist, mutate: submitPlaylist, isPending: isSubmitting } = useSubmitPlaylist()
+  const { mutate: updatePlaylist, isPending: isUpdating } = useUpdatePlaylistForm({
+    playlistId: playlistId || '',
   })
 
-  const { updatePlaylist, isUpdating } = useUpdatePlaylistForm({
-    playlistId: playlistId || '',
-    onSuccess: () => {
-      success('플레이리스트가 성공적으로 수정되었습니다.')
-      navigate('/playlists')
-    },
-    onError: (err: Error) => error(err.message),
-  })
+  // 수정 모드일 때 기존 데이터 조회
+  const { data: playlist, isLoading: isLoadingPlaylist } = useGetPlaylistQuery(playlistId || '')
 
   // Form 상태 관리 - mode를 onChange로 설정하여 실시간 검증
   const form = useForm<PlaylistFormValues>({
@@ -121,13 +113,11 @@ const PlaylistFormContent = () => {
       }
 
       if (isEditMode) {
-        await updatePlaylist(values)
+        // 수정 모드: updatePlaylist mutation 호출
+        updatePlaylist(values)
       } else {
-        const result = await submitPlaylist(values)
-        if (result) {
-          success('플레이리스트가 성공적으로 생성되었습니다.')
-          navigate('/playlists')
-        }
+        // 생성 모드: submitPlaylist mutation 호출
+        submitPlaylist(values)
       }
     } catch (err: unknown) {
       const errorMessage =
@@ -194,7 +184,7 @@ const PlaylistFormContent = () => {
         >
           <Tabs<FormTab>
             defaultKey="content"
-            initialStatus={{
+            tabStatus={{
               content: isTitleComplete,
               video: isVideoComplete,
             }}
@@ -221,7 +211,7 @@ const PlaylistFormContent = () => {
                 </div>
 
                 {/* 폼 컨텐츠 */}
-                <div className="no-scrollbar flex-1 overflow-y-scroll pt-3 flex flex-col">
+                <div className="no-scrollbar flex flex-1 flex-col overflow-y-scroll pt-3">
                   {activeKey === 'content' ? <PlaylistInfoForm /> : <VideoListForm />}
                 </div>
 

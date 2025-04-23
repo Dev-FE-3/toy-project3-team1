@@ -1,9 +1,12 @@
-import { PlaylistWithItems } from '@/pages/Home/model/types'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
 import { supabase } from '@/shared/model/api/supabase'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
+interface Props extends Playlist {
+  playlist_items: VideoItem[]
+}
 export const useTargetUserPlaylists = (targetProfileId?: string) => {
-  return useSuspenseQuery<PlaylistWithItems[]>({
+  return useSuspenseQuery<Props[]>({
     queryKey: ['playlists_with_items', targetProfileId],
     queryFn: async () => {
       const { data, error } = await supabase

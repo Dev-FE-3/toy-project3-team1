@@ -25,10 +25,6 @@ export default function DesignSystem() {
     return completed
   }, [inputValue, imageCount])
 
-  // const handleTabChange = (tabId: string) => {
-  //   console.log('Selected tab:', tabId)
-  // }
-
   // MoreMenu 예제를 위한 아이템 설정
   const menuItems: MenuItem[] = [
     { label: '삭제', onClick: () => console.log('삭제 클릭됨') },
