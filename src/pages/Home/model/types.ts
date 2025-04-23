@@ -3,7 +3,7 @@ import { Game } from '../constants/GAMES'
 
 /** --- 카테고리 관련 타입 --- */
 export type SwipeDirection = 'Up' | 'Down' | 'Neutral'
-export type Category = string | '전체' | null
+export type Category = string | '전체' | undefined
 
 export interface CategoryProps {
   children: ReactNode
