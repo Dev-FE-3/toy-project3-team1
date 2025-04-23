@@ -21,7 +21,7 @@ interface UsePlaylistCollectionReturn {
   activeKey: TabKey
   setActiveKey: (key: TabKey) => void
   handleLoadMore: () => void
-  handleUnsubscribe: (playlistId: string) => void
+  handleUnsubscribe: (playlistId: string) => Promise<void>
 }
 
 export const usePlaylistCollection = ({
@@ -52,14 +52,22 @@ export const usePlaylistCollection = ({
     }
   }
 
-  const handleUnsubscribe = (playlistId: string) => {
-    unsubscribeMutation.mutate(playlistId, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: playlistCollectionKeys.list(profileId, activeKey),
+  const handleUnsubscribe = async (playlistId: string): Promise<void> => {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        unsubscribeMutation.mutate(playlistId, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
         })
-      },
-    })
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: playlistCollectionKeys.list(profileId, activeKey),
+      })
+    } catch (error) {
+      console.error('구독 취소 중 오류가 발생했습니다:', error)
+      throw error
+    }
   }
 
   return {
