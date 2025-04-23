@@ -15,7 +15,6 @@ export const ProfileHeaderSection = ({
 }) => {
   const { data: profileIfo } = useTargetUserProfileInfo(profileId)
   const playlistCount = useCachedPlaylistCount(profileId)
-  console.log(playlistCount)
   return (
     <ProfilePageHeader
       targetUserProfile={profileIfo}
