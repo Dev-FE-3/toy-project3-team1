@@ -2,9 +2,11 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { supabase } from '@/shared/model/api/supabase'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { queryClient } from '../model/lib/queryClient'
+import { useToast } from '../store/toastStore'
 
 export const usePlaylistBookmark = (playlistId: string) => {
   const { profile } = useGetAuthState()
+  const { success: toastSuccess, error: toastError } = useToast()
 
   // 사용자가 북마크했는지 여부와 북마크 수를 가져오기
   const { data: fetchedBookmark } = useQuery({
@@ -43,12 +45,14 @@ export const usePlaylistBookmark = (playlistId: string) => {
           user_id: profile.id,
           playlist_id: playlistId,
         })
+        toastSuccess('구독 리스트에 추가되었습니다.')
       } else {
         await supabase
           .from('playlists_subscribers')
           .delete()
           .eq('user_id', profile.id)
           .eq('playlist_id', playlistId)
+        toastSuccess('구독 리스트에서 제외되었습니다.')
       }
     },
     onMutate: async (newState) => {
@@ -68,6 +72,7 @@ export const usePlaylistBookmark = (playlistId: string) => {
       if (context?.previousBookmark) {
         queryClient.setQueryData(['playlist_bookmarked', playlistId], context.previousBookmark)
       }
+      toastError('구독 리스트 업데이트를 실패했습니다.')
     },
     onSettled: () => {
       // 쿼리 무효화 및 데이터 최신화

@@ -10,7 +10,6 @@ import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 
-
 type PlaylistCardProps = {
   videoItems: VideoItem[]
   playlist: Playlist
@@ -73,7 +72,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: Playl
               type="button"
               onClick={toggleLike}
               disabled={likeLoading}
-              className="flex flex-col items-center gap-1 px-1"
+              className="flex h-15 flex-col items-center gap-1 px-1"
             >
               <LikeIcon isLiked={isLiked} size={34} />
               <span className="text-c400 text-captionM">{likeCount}</span>
@@ -83,7 +82,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: Playl
               type="button"
               onClick={toggleBookmark}
               disabled={bookmarkLoading}
-              className="flex flex-col items-center gap-1 pl-1"
+              className="flex h-15 flex-col items-center gap-1 pl-1"
             >
               <BookmarkIcon isBookmarked={isBookmarked} size={34} />
               <span className="text-c400 text-captionM">{bookmarkCount}</span>
