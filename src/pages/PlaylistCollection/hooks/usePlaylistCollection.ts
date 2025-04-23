@@ -21,7 +21,7 @@ interface UsePlaylistCollectionReturn {
   activeKey: TabKey
   setActiveKey: (key: TabKey) => void
   handleLoadMore: () => void
-  handleUnsubscribe: (playlistId: string) => void
+  handleUnsubscribe: (playlistId: string) => Promise<void>
 }
 
 export const usePlaylistCollection = ({
