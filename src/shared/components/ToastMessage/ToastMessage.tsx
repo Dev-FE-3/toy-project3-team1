@@ -49,7 +49,7 @@ export interface ToastMessageProps {
 export const ToastMessage = ({
   type,
   message,
-  duration = 5000,
+  duration = 3000,
   onClose,
   className = '',
   mode = 'default',
