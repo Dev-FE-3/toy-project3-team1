@@ -12,11 +12,10 @@ export const ProfileHeaderSection = ({
   editModalOpen: boolean
   setEditModalOpen: (open: boolean) => void
 }) => {
-  const { data: profile } = useTargetUserProfileInfo(profileId)
-
+  const { data: profileIfo } = useTargetUserProfileInfo(profileId)
   return (
     <ProfilePageHeader
-      targetUserProfile={profile}
+      targetUserProfile={profileIfo}
       playlists={[]} // 여기선 안 써도 됨
       isMyProfile={isMyProfile}
       editModalOpen={editModalOpen}

@@ -1,12 +1,9 @@
-import { Playlist, VideoItem } from '@/pages/Home/model/types'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import { Link } from 'react-router-dom'
+import { PlaylistWithItems } from '../../model/type'
 
-interface Props extends Playlist {
-  playlist_items: VideoItem[]
-}
-const TargetUserPlaylistItem = ({ playlist }: { playlist: Props }) => {
+const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) => {
   return (
     <div key={playlist.id} className="mb-10">
       <Link to={`/playlist/${playlist.id}`}>
