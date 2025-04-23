@@ -7,11 +7,10 @@ import {
   DialogFooter,
 } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
-import { queryClient } from '@/shared/model/lib/queryClient'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { NicknameField } from './NicknameField'
 import { useNicknameField } from '../../hooks/useNicknameField'
-import { updateNickname } from '@/shared/model/api/auth'
+import { useUpdateNickname } from '../../queries/useUpdateNickname'
 
 interface EditProfileModalProps {
   open: boolean
@@ -40,27 +39,20 @@ export const EditProfileModal = ({
     resetNickname,
   } = useNicknameField(profileId, currentNickname)
 
+  const { mutateAsync: update } = useUpdateNickname()
   // 저장 버튼 비활성화 조건
   const isDisabled = availability !== 'available' || isSaving || isSameAsCurrent || !isValidFormat
 
   // 닉네임 저장
   const handleSave = async () => {
-    if (isDisabled) return
-
     setIsSaving(true)
 
     try {
-      const success = await updateNickname(profileId, nickname) // 닉네임 업데이트
-
-      if (success) {
-        await queryClient.invalidateQueries({ queryKey: ['profile', profileId] }) // 캐시 무효화 & 쿼리 재요청
-        onClose()
-      } else {
-        alert('닉네임 변경 실패')
-      }
+      await update({ profileId, nickname })
+      onClose()
     } catch (error) {
       console.error('닉네임 업데이트 중 오류 발생:', error)
-      alert('닉네임 변경 실패: ')
+      alert('닉네임 변경 실패')
     }
 
     setIsSaving(false)
