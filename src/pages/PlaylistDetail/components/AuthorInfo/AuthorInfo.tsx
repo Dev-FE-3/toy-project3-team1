@@ -9,7 +9,6 @@ interface AuthorInfoProps {
   ownerId: string
   authorName: string | undefined
   isOwner: boolean
-  // likeCount: number | undefined
   subscriberCount: number | undefined
   playlistId: string
 }
@@ -18,8 +17,6 @@ export default function AuthorInfo({
   ownerId,
   authorName = 'R',
   isOwner = false,
-  // likeCount = 0,
-  // subscriberCount = 0,
   playlistId,
 }: AuthorInfoProps) {
   const { isLiked, likeCount, toggleLike } = usePlaylistLike(playlistId)
