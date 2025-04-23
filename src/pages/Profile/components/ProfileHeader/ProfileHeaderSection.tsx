@@ -1,5 +1,6 @@
 import { useTargetUserProfileInfo } from '../../queries/useTargetUserProfileInfo'
 import ProfilePageHeader from './ProfilePageHeader'
+import { useCachedPlaylistCount } from '../../queries/useCahedPlaylistCount'
 
 export const ProfileHeaderSection = ({
   profileId,
@@ -13,10 +14,12 @@ export const ProfileHeaderSection = ({
   setEditModalOpen: (open: boolean) => void
 }) => {
   const { data: profileIfo } = useTargetUserProfileInfo(profileId)
+  const playlistCount = useCachedPlaylistCount(profileId)
+  console.log(playlistCount)
   return (
     <ProfilePageHeader
       targetUserProfile={profileIfo}
-      playlists={[]} // 여기선 안 써도 됨
+      playlistCount={playlistCount}
       isMyProfile={isMyProfile}
       editModalOpen={editModalOpen}
       setEditModalOpen={setEditModalOpen}

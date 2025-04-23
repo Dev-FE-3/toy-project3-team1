@@ -8,7 +8,7 @@ import { PlaylistSkeleton, ProfileHeaderSkeleton } from './components/skeletons/
 import UserNotFound from './components/UserNotFound'
 import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
   const { id: paramId } = useParams()
   const { profile } = useGetAuthState()
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -40,3 +40,4 @@ export const ProfilePage = () => {
     </div>
   )
 }
+export default ProfilePage
