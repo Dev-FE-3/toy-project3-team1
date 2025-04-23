@@ -71,31 +71,31 @@ export const useToast = () => {
     /**
      * 일반 토스트 메시지 표시
      */
-    show: (type: ToastType, message: string | string[], duration = 5000) =>
+    show: (type: ToastType, message: string | string[], duration = 3000) =>
       addToast({ type, message, duration }),
 
     /**
      * 성공 메시지 표시
      */
-    success: (message: string | string[], duration = 5000) =>
+    success: (message: string | string[], duration = 3000) =>
       addToast({ type: 'success', message, duration }),
 
     /**
      * 오류 메시지 표시
      */
-    error: (message: string | string[], duration = 5000) =>
+    error: (message: string | string[], duration = 3000) =>
       addToast({ type: 'error', message, duration }),
 
     /**
      * 정보 메시지 표시
      */
-    info: (message: string | string[], duration = 5000) =>
+    info: (message: string | string[], duration = 3000) =>
       addToast({ type: 'info', message, duration }),
 
     /**
      * 경고 메시지 표시
      */
-    warning: (message: string | string[], duration = 5000) =>
+    warning: (message: string | string[], duration = 3000) =>
       addToast({ type: 'warning', message, duration }),
   }
 }

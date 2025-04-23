@@ -1,7 +1,7 @@
 export const playlistFormKeys = {
-  all: ['playlistForm'] as const,
-  lists: () => [...playlistFormKeys.all, 'lists'] as const,
-  list: () => [...playlistFormKeys.lists()] as const,
-  details: () => [...playlistFormKeys.all, 'detail'] as const,
-  detail: (id: string) => [...playlistFormKeys.details(), id] as const,
-}
+  all: ['playlistForm'],
+  lists: () => [...playlistFormKeys.all, 'lists'],
+  list: () => [...playlistFormKeys.lists()],
+  details: () => [...playlistFormKeys.all, 'detail'],
+  detail: (id: string) => [...playlistFormKeys.details(), id],
+} as const
