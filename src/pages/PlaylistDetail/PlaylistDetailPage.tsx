@@ -200,7 +200,7 @@ const PlaylistDetailPage = () => {
           </CommentPopup.Header>
           <CommentPopup.Content>
             {profile && isAuthenticated ? (
-              <div className="contentInside flex h-full flex-col">
+              <div className="contentInside relative flex h-full flex-col">
                 {/* 댓글 목록 영역 */}
                 <div className="[&::-webkit-scrollbar-thumb]:bg-c700 [&::-webkit-scrollbar-track]:bg-c800 flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full">
                   <CommentList
@@ -210,7 +210,7 @@ const PlaylistDetailPage = () => {
                   />
                 </div>
                 {/* 댓글 입력 영역 */}
-                <div className="absolute bottom-0 mt-4">
+                <div className="absolute bottom-0 mt-4 w-full">
                   <CommentInput
                     playlistId={currentPlaylistId}
                     profileId={profile.id}
