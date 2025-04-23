@@ -1,8 +1,8 @@
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { useTargetUserPlaylists } from '../hooks/useTargetUserPlaylists'
-import { useTargetUserProfileInfo } from '../hooks/useTargetUserProfileInfo'
+import { useTargetUserPlaylists } from '../queries/useTargetUserPlaylists'
+import { useTargetUserProfileInfo } from '../queries/useTargetUserProfileInfo'
 import TargetUserPlaylists from './TargetUserPlaylists/TargetUserPlaylists'
 import ProfilePageHeader from './ProfilePageHeader'
 
