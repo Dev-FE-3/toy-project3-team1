@@ -217,7 +217,7 @@ const PlaylistFormContent = () => {
                 <div className="py-4">
                   <Button
                     type={isComplete ? 'submit' : 'button'}
-                    className="bg-c700 text-c100 text-textM h-12 w-full rounded-md py-2"
+                    className="bg-c700 text-textM text-c100 h-12 w-full rounded-md py-2"
                     disabled={getButtonDisabled(activeKey, title, videos, isSubmitting, isUpdating)}
                     onClick={() =>
                       handleButtonClick(isComplete, activeKey, title, videos, setActiveKey)
