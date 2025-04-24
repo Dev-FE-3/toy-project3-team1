@@ -1,6 +1,6 @@
 export * from './Card'
 export * from './CardList'
 export * from './CardSkeleton'
-export { default as PlaylistContent } from './PlaylistContent'
+export * from './PlaylistContent'
 export * from './PlaylistLoadingFallback'
 export * from './Tab'

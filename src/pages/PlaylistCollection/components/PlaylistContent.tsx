@@ -17,7 +17,7 @@ const hideScrollbarStyles = {
   WebkitOverflowScrolling: 'touch',
 } as const
 
-const PlaylistContent = () => {
+export const PlaylistContent = () => {
   const { profileId } = useParams()
   const storeProfileId = useUserStore((state) => state.profileId)
 
@@ -63,5 +63,3 @@ const PlaylistContent = () => {
     </div>
   )
 }
-
-export default PlaylistContent

@@ -34,7 +34,7 @@ const PlaylistFormContent = () => {
   })
 
   // 수정 모드일 때 기존 데이터 조회
-  const { data: playlist, isLoading: isLoadingPlaylist } = useGetPlaylistQuery(playlistId || '')
+  const { data: playlist } = useGetPlaylistQuery(playlistId || '')
 
   // Form 상태 관리 - mode를 onChange로 설정하여 실시간 검증
   const form = useForm<PlaylistFormValues>({
@@ -165,7 +165,7 @@ const PlaylistFormContent = () => {
     return (activeKey === 'content' ? !title : videos.length === 0) || isSubmitting || isUpdating
   }
 
-  if (isEditMode && isLoadingPlaylist) {
+  if (isEditMode) {
     return <div>로딩 중...</div>
   }
 

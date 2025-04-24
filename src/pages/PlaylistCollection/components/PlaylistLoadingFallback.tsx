@@ -7,5 +7,3 @@ export const PlaylistLoadingFallback = () => (
     ))}
   </div>
 )
-
-export default PlaylistLoadingFallback
