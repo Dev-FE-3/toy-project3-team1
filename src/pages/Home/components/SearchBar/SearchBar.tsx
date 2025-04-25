@@ -1,58 +1,69 @@
 // src/pages/Home/components/SearchBar/SearchBar.tsx
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Search, ArrowLeft } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
 import { useDebounce } from '@/shared/hooks/useDebounce'
-import SearchBarContent from './SearchBarContent'
+import SearchBarContent from './components/SearchBarContent'
+import { SlideContainer } from '@/shared/components/animations/SlideContainer'
+import { useSearchParams } from 'react-router-dom'
+import SearchBarHeader from './components/SearchBarHeader'
 
-interface SearchBarProps {
-  onClose: () => void
-  onSearch: (query: string) => void
-}
-
-export const SearchBar = ({ onClose, onSearch }: SearchBarProps) => {
-  const [searchTerm, setSearchTerm] = useState('')
+export const SearchBar = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '')
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      onSearch(debouncedSearchTerm)
-    }
-  }, [debouncedSearchTerm, onSearch])
+  // 검색어 변경 시 URL 파라미터 업데이트
+  const onSearchTermChange = useCallback(
+    (term: string) => {
+      setSearchTerm(term)
 
-  const transitionProps = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 30,
-  }
+      // URL 파라미터 업데이트
+      if (term) {
+        searchParams.set('query', term)
+      } else {
+        searchParams.delete('query')
+      }
+      setSearchParams(searchParams)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // 검색창 닫기
+  const onCloseSearch = useCallback(() => {
+    const newParams = new URLSearchParams()
+    newParams.delete('search')
+    setSearchParams(newParams)
+    setSearchTerm('')
+  }, [setSearchParams])
+
+  // URL 파라미터 변경 시 검색어 상태 업데이트
+  useEffect(() => {
+    const query = searchParams.get('query') || ''
+    if (query !== searchTerm) {
+      setSearchTerm(query)
+    }
+  }, [searchParams, searchTerm])
+
+  // 디바운스된 검색어로 검색 실행
+  // useEffect(() => {
+  //   if (debouncedSearchTerm) {
+  //     console.log('debouncedSearchTerm', debouncedSearchTerm)
+  //   }
+  // }, [debouncedSearchTerm])
 
   return (
-    <motion.div
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%', transition: transitionProps }}
-      transition={transitionProps}
+    <SlideContainer
+      direction="right"
       className="searchbarContainer bg-c900 absolute inset-0 top-0 left-0 z-50 flex h-full flex-col"
     >
-      <div className="border-c800 flex items-center gap-3 border-b p-4">
-        <button onClick={onClose} className="text-c200" aria-label="뒤로 가기">
-          <ArrowLeft size={24} />
-        </button>
+      {/* 검색 헤더 컴포넌트 */}
+      <SearchBarHeader
+        searchTerm={searchTerm}
+        onSearchTermChange={onSearchTermChange}
+        onCloseSearch={onCloseSearch}
+      />
 
-        <div className="relative flex flex-1">
-          <Search className="text-c200 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="검색어를 입력해주세요."
-            className="bg-c800 h-12 w-full rounded-full pr-4 pl-12 text-white outline-none"
-            autoFocus
-          />
-        </div>
-      </div>
-
+      {/* 검색 결과 컴포넌트 */}
       <SearchBarContent searchTerm={searchTerm} />
-    </motion.div>
+    </SlideContainer>
   )
 }

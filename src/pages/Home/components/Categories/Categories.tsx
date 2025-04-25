@@ -12,7 +12,7 @@ export const Categories = ({
   onSearch,
   searchActive,
   onSearchQuery,
-  handleCloseSearch,
+  // handleCloseSearch,
 }: CategoriesProps) => {
   return (
     <div className="bg-c900 flex h-22 w-full items-center justify-center gap-4">

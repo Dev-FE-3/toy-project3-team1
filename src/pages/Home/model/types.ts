@@ -5,6 +5,7 @@ export type SwipeDirection = 'up' | 'down'
 
 // Update Category type
 export type Category = string | null
+export type SelectedTag = string | null
 
 export interface CategoryProps {
   children: ReactNode
@@ -20,8 +21,8 @@ export interface CategoriesProps {
   selectedCategory: Category
   onSearch: () => void
   searchActive: boolean
-  onSearchQuery: (query: string) => void
-  handleCloseSearch: () => void
+  onSearchQuery?: (query: string) => void
+  // handleCloseSearch: () => void
 }
 
 export interface VideoItem {

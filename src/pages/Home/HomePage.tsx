@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Categories } from '@/pages/Home/components/Categories/Categories'
 import { useCategoryFilter } from '@/pages/Home/hooks/useCategoryFilter'
@@ -12,11 +12,15 @@ import { useInView } from 'react-intersection-observer'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import EmptyPlaylistCard from './components/PlaylistCard/EmptyPlaylistCard'
 import { SearchBar } from './components/SearchBar/SearchBar'
+import { useSearchParams } from 'react-router-dom'
 
 const HomePage = () => {
   const { profile } = useGetAuthState()
-  const { selectedCategory, handleCategorySelect } = useCategoryFilter()
-  const [searchActive, setSearchActive] = useState(false)
+  const { selectedCategory, onCategorySelect } = useCategoryFilter()
+
+  // URL 쿼리 파라미터 관리를 위한 훅 사용
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchActive = searchParams.get('search') === 'true'
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfinitePlaylists(
     profile?.id,
@@ -29,17 +33,12 @@ const HomePage = () => {
 
   const [showSkeleton, setShowSkeleton] = useState(true)
 
-  const onSearchQuery = (query: string) => {
-    console.log(query)
-  }
-
-  const onSearch = () => {
-    setSearchActive(true)
-  }
-
-  const handleCloseSearch = () => {
-    setSearchActive(false)
-  }
+  // 검색 활성화 함수
+  const onSearch = useCallback(() => {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('search', 'true')
+    setSearchParams(newParams)
+  }, [searchParams, setSearchParams])
 
   // 스켈레톤 상태 변경
   useEffect(() => {
@@ -84,7 +83,7 @@ const HomePage = () => {
               restDelta: 0.001,
             }}
           >
-            <SearchBar onClose={handleCloseSearch} onSearch={onSearchQuery} gameList={GAMES} />
+            <SearchBar />
           </motion.div>
         )}
       </AnimatePresence>
@@ -92,12 +91,10 @@ const HomePage = () => {
       <Categories
         gameList={GAMES}
         count={gameCount}
-        onCategorySelect={handleCategorySelect}
+        onCategorySelect={onCategorySelect}
         selectedCategory={selectedCategory}
         onSearch={onSearch}
         searchActive={searchActive}
-        onSearchQuery={onSearchQuery}
-        handleCloseSearch={handleCloseSearch}
       />
 
       {/* isLoading이 true일 때 스켈레톤을 보여주고, false일 때 실제 콘텐츠를 보여줌 */}

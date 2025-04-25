@@ -18,7 +18,7 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
     setSwipeDirection,
   } = usePlaylistControl(playlists.length)
 
-  const { handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollControl({
+  const { onWheel, onTouchStart, onTouchMove, onTouchEnd } = useScrollControl({
     focusedIndex,
     isScrolling,
     playlistLength: playlists.length,
@@ -37,10 +37,10 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
         perspective: '1200px',
         transformStyle: 'preserve-3d',
       }}
-      onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      onWheel={onWheel}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <AnimatePresence mode="wait">
         <PlaylistView
