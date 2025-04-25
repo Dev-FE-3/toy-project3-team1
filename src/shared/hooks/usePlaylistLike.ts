@@ -1,35 +1,14 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { supabase } from '@/shared/model/api/supabase'
+import { useMutation } from '@tanstack/react-query'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { queryClient } from '../model/lib/queryClient'
+import { deletePlaylistLike, updatePlaylistLike } from '../services/playlistLikeServiece'
+import { fetchLikes } from '../queries/usePlaylistLikeQuery'
 
 export const usePlaylistLike = (playlistId?: string) => {
   const { profile } = useGetAuthState()
 
   // 사용자가 좋아요를 눌렀는지 여부
-  const { data: fetchedIsLiked } = useQuery({
-    queryKey: ['playlist_liked', playlistId],
-    queryFn: async () => {
-      if (!profile) return { isLiked: false, likeCount: 0 }
-
-      const { data: isLikedData } = await supabase
-        .from('playlists_likes')
-        .select('id')
-        .eq('user_id', profile.id)
-        .eq('playlist_id', playlistId)
-        .maybeSingle()
-
-      const isLiked = !!isLikedData
-
-      const { count } = await supabase
-        .from('playlists_likes')
-        .select('id', { count: 'exact' })
-        .eq('playlist_id', playlistId)
-
-      return { isLiked, likeCount: count || 0 }
-    },
-    enabled: !!profile && !!playlistId,
-  })
+  const { data: fetchedIsLiked } = fetchLikes(profile, playlistId)
 
   const isLiked = fetchedIsLiked?.isLiked ?? false
   const likeCount = fetchedIsLiked?.likeCount ?? 0
@@ -40,16 +19,9 @@ export const usePlaylistLike = (playlistId?: string) => {
       if (!profile) return
 
       if (newState) {
-        await supabase.from('playlists_likes').insert({
-          user_id: profile.id,
-          playlist_id: playlistId,
-        })
+        await updatePlaylistLike(profile.id, playlistId)
       } else {
-        await supabase
-          .from('playlists_likes')
-          .delete()
-          .eq('user_id', profile.id)
-          .eq('playlist_id', playlistId)
+        await deletePlaylistLike(profile.id, playlistId)
       }
     },
     onMutate: async (newState) => {
