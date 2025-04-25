@@ -2,7 +2,8 @@ import { useState, Suspense } from 'react'
 import SearchBarResult from './SearchBarResult'
 import useHashtag from '../hooks/useHashtag'
 import HashtagFilterButton from './HashtagFilterButton'
-import SearchLoadingUI from './SearchLoadingUI'
+import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
+import HomePageSkeleton from '../../HomePageSkeleton'
 
 interface SearchBarContentProps {
   searchTerm: string
@@ -36,7 +37,7 @@ export default function SearchBarContent({ searchTerm }: SearchBarContentProps) 
       </div>
 
       {/* 검색 결과 영역 */}
-      <Suspense fallback={<SearchLoadingUI />}>
+      <Suspense fallback={<SkeletonAnimation children={<HomePageSkeleton />} />}>
         <SearchBarResult
           searchTerm={searchTerm}
           selectedTag={selectedTag !== '' ? selectedTag : null}

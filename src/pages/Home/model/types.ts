@@ -1,10 +1,9 @@
 import { ReactNode } from 'react'
 import { Game } from '../constants/GAMES'
 
-export type SwipeDirection = 'up' | 'down'
-
-// Update Category type
-export type Category = string | null
+/** --- 카테고리 관련 타입 --- */
+export type SwipeDirection = 'Up' | 'Down' | 'Neutral'
+export type Category = string | null | '전체'
 export type SelectedTag = string | null
 
 export interface CategoryProps {
@@ -20,18 +19,21 @@ export interface CategoriesProps {
   onCategorySelect: (category: string) => void
   selectedCategory: Category
   onSearch: () => void
-  searchActive: boolean
-  onSearchQuery?: (query: string) => void
-  // handleCloseSearch: () => void
 }
 
+/** --- 비디오 아이템 타입 --- */
 export interface VideoItem {
   id: string
+  playlist_id: string
+  video_id: string
   title: string
+  created_at: string
+  statistics: string[]
+  sort_order: number
   thumbnail_url: string
 }
 
-// Playlist Related Types
+/** --- 플레이리스트 타입 --- */
 export interface Playlist {
   id: string
   title: string
@@ -48,34 +50,4 @@ export interface Playlist {
   isBookmarked?: boolean
   created_at: string
   description?: string
-}
-
-export interface PlaylistWithItems extends Playlist {
-  playlist_items: VideoItem[]
-}
-// Component Props Types
-export interface PlaylistViewProps {
-  playlists: Playlist[]
-  focusedIndex: number
-  currentImageIndex: number
-  carouselRef: React.RefObject<HTMLDivElement | null>
-  swipeDirection: SwipeDirection
-  setCurrentImageIndex: React.Dispatch<React.SetStateAction<number>>
-}
-
-export interface PlaylistCardProps {
-  playlist: Playlist
-  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
-  isBackground: boolean
-}
-
-export interface CarouselViewProps {
-  images: string[]
-  title: string
-  carouselRef: React.RefObject<HTMLDivElement | null> // null 허용
-  isBackground: boolean
-}
-
-export interface PlaylistContainerProps {
-  playlists: Playlist[]
 }

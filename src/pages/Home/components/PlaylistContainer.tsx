@@ -1,24 +1,28 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { PlaylistView } from './PlaylistView/PlaylistView'
 import { usePlaylistControl } from '../hooks/usePlaylistControl'
 import { useScrollControl } from '../hooks/useScrollControl'
-import { PlaylistContainerProps } from '../model/types'
+import { Playlist, SwipeDirection, VideoItem } from '../model/types'
 
-export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
+type PlaylistContainerProps = {
+  playlists: Playlist[]
+  videoItems?: VideoItem[] | undefined
+}
+
+export const PlaylistContainer = ({ playlists, videoItems }: PlaylistContainerProps) => {
+  const [swipeDirection, setSwipeDirection] = useState<SwipeDirection>('Up')
   const containerRef = useRef<HTMLDivElement>(null)
   const {
     focusedIndex,
     currentImageIndex,
-    swipeDirection,
     isScrolling,
     setIsScrolling,
     setCurrentImageIndex,
     setFocusedIndex,
-    setSwipeDirection,
   } = usePlaylistControl(playlists.length)
 
-  const { onWheel, onTouchStart, onTouchMove, onTouchEnd } = useScrollControl({
+  const { handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollControl({
     focusedIndex,
     isScrolling,
     playlistLength: playlists.length,
@@ -37,13 +41,14 @@ export const PlaylistContainer = ({ playlists }: PlaylistContainerProps) => {
         perspective: '1200px',
         transformStyle: 'preserve-3d',
       }}
-      onWheel={onWheel}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <AnimatePresence mode="wait">
         <PlaylistView
+          videoItems={videoItems}
           playlists={playlists}
           focusedIndex={focusedIndex}
           currentImageIndex={currentImageIndex}

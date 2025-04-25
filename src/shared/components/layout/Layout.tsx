@@ -1,4 +1,4 @@
-import { ToastContainer } from '@/shared/components/ui/toast/ToastContainer'
+import { ToastContainer } from '@/shared/components/ToastMessage/ToastContainer'
 import { Outlet } from 'react-router-dom'
 import BottomNav from '../BottomNav/BottomNav'
 
@@ -16,7 +16,7 @@ const Layout = () => {
       <Header />
       <main id="main" className="no-scrollbar h-[calc(100dvh-50px-60px)] overflow-x-clip">
         <Outlet />
-        <ToastContainer position="top-right" spacing={2} />
+        <ToastContainer position="bottom-center" mode="icon" />
       </main>
       <BottomNav />
     </div>

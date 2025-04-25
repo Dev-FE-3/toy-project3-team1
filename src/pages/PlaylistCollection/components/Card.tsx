@@ -19,7 +19,6 @@ export const Card = ({
   title,
   thumbnailUrl,
   videoCount,
-  isDragging,
   isSubscribed,
   isPublic = true,
   onUnsubscribe,
@@ -27,12 +26,10 @@ export const Card = ({
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (isDragging) return
     navigate(`/playlist/${id}`)
   }
 
   const handleMoreMenuClick = (e: React.MouseEvent) => {
-    if (isDragging) return
     e.stopPropagation()
   }
 
@@ -56,7 +53,7 @@ export const Card = ({
           )}
         </figure>
         <section className="relative flex items-start justify-between p-2">
-          <div className="flex-1 overflow-hidden ">
+          <div className="flex-1 overflow-hidden">
             <h3 className="text-c100 text-captionM mb-1 overflow-hidden text-ellipsis whitespace-nowrap">
               {title}
             </h3>

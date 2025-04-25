@@ -20,6 +20,7 @@ export default function SearchBarResult({ searchTerm, selectedTag }: SearchBarRe
     profile?.id,
   )
   const playlists = data.pages.flat() ?? []
+  console.log(' SearchBarResult ~ playlists: ', playlists)
 
   // 무한 스크롤 로딩
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function SearchBarResult({ searchTerm, selectedTag }: SearchBarRe
       )}
 
       <div className="flex-1">
-        <PlaylistContainer playlists={playlists} />
+        <PlaylistContainer playlists={playlists} videoItems={[]} />
       </div>
 
       {/* 무한 스크롤 로딩 표시 */}
