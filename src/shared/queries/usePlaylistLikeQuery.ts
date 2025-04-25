@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchedPlaylistLikes, fetchedUserLikes } from '../services/playlistLikeServiece'
 import { User } from '@supabase/supabase-js'
+import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
 
-export const fetchLikes = (profile: User | null, playlistId: string | undefined) => {
+export const usefetchLikes = (profile: User | null, playlistId: string | undefined) => {
   return useQuery({
-    queryKey: ['playlist_liked', playlistId],
+    queryKey: [LikeBookmarkQueryKeys.like(playlistId)],
     queryFn: async () => {
       if (!profile) return { isLiked: false, likeCount: 0 }
 
