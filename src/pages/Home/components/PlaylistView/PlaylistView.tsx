@@ -6,7 +6,7 @@ import { usePrevious } from '../../hooks/usePrevious'
 import { cn } from '@/shared/model/lib/utils'
 
 interface PlaylistViewProps {
-  videoItems: VideoItem[]
+  videoItems?: VideoItem[] | undefined
   playlists: Playlist[]
   focusedIndex: number
   currentImageIndex: number
