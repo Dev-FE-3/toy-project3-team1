@@ -3,18 +3,27 @@ import { fetchedPlaylistLikes, fetchedUserLikes } from '../services/playlistLike
 import { User } from '@supabase/supabase-js'
 import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
 
-export const usefetchLikes = (profile: User | null, playlistId: string | undefined) => {
+export const useUserLike = (profile: User | null, playlistId: string | undefined) => {
   return useQuery({
-    queryKey: [LikeBookmarkQueryKeys.like(playlistId)],
+    queryKey: LikeBookmarkQueryKeys.userLike(playlistId),
     queryFn: async () => {
-      if (!profile) return { isLiked: false, likeCount: 0 }
+      if (!profile) return false
 
       const isLiked = !!(await fetchedUserLikes(profile.id, playlistId))
 
-      const count = await fetchedPlaylistLikes(playlistId)
-
-      return { isLiked, likeCount: count || 0 }
+      return isLiked
     },
     enabled: !!profile && !!playlistId,
+  })
+}
+
+export const usePlaylistLikeCount = (playlistId: string | undefined) => {
+  return useQuery({
+    queryKey: LikeBookmarkQueryKeys.likeCount(playlistId),
+    queryFn: async () => {
+      const count = await fetchedPlaylistLikes(playlistId)
+      return count ?? 0
+    },
+    enabled: !!playlistId,
   })
 }

@@ -2,17 +2,17 @@ import { useMutation } from '@tanstack/react-query'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { queryClient } from '../model/lib/queryClient'
 import { deletePlaylistLike, updatePlaylistLike } from '../services/playlistLikeServiece'
-import { usefetchLikes } from '../queries/usePlaylistLikeQuery'
+import { usePlaylistLikeCount, useUserLike } from '../queries/usePlaylistLikeQuery'
 import { LikeBookmarkQueryKeys } from '../queries/LikeBookmarkQueryKeys'
 
 export const usePlaylistLike = (playlistId?: string) => {
   const { profile } = useGetAuthState()
 
   // 사용자가 좋아요를 눌렀는지 여부
-  const { data: fetchedLikes } = usefetchLikes(profile, playlistId)
+  // const { data: fetchedLikes } = usefetchLikes(profile, playlistId)
 
-  const isLiked = fetchedLikes?.isLiked ?? false
-  const likeCount = fetchedLikes?.likeCount ?? 0
+  const { data: isLiked = false } = useUserLike(profile, playlistId)
+  const { data: likeCount = 0 } = usePlaylistLikeCount(playlistId)
 
   // Mutation 적용: 좋아요 추가/삭제
   const { mutate: toggleLike, isPending: likeLoading } = useMutation({
@@ -26,25 +26,42 @@ export const usePlaylistLike = (playlistId?: string) => {
       }
     },
     onMutate: async (newState) => {
-      const previousLike = queryClient.getQueryData([LikeBookmarkQueryKeys.like(playlistId)])
+      const previousUserLike = queryClient.getQueryData([
+        LikeBookmarkQueryKeys.userLike(playlistId),
+      ])
+      const previousPlaylistLikes = queryClient.getQueryData([
+        LikeBookmarkQueryKeys.likeCount(playlistId),
+      ])
 
       const updatedLikeCount = newState ? likeCount + 1 : likeCount - 1
 
-      queryClient.setQueryData([LikeBookmarkQueryKeys.like(playlistId)], {
-        isLiked: newState,
+      queryClient.setQueryData(LikeBookmarkQueryKeys.userLike(playlistId), {
+        newState,
+      })
+      queryClient.setQueryData(LikeBookmarkQueryKeys.likeCount(playlistId), {
         likeCount: updatedLikeCount,
       })
 
-      return { previousLike }
+      return { previousUserLike, previousPlaylistLikes }
     },
     onError: (_error, _newState, context) => {
-      if (context?.previousLike) {
-        queryClient.setQueryData([LikeBookmarkQueryKeys.like(playlistId)], context.previousLike)
+      if (context?.previousUserLike || context?.previousPlaylistLikes) {
+        queryClient.setQueryData(
+          LikeBookmarkQueryKeys.userLike(playlistId),
+          context.previousUserLike,
+        )
+        queryClient.setQueryData(
+          LikeBookmarkQueryKeys.likeCount(playlistId),
+          context.previousUserLike,
+        )
       }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [LikeBookmarkQueryKeys.like(playlistId)],
+        queryKey: LikeBookmarkQueryKeys.userLike(playlistId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: LikeBookmarkQueryKeys.likeCount(playlistId),
       })
     },
   })
