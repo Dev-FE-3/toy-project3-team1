@@ -1,22 +1,23 @@
 import { supabase } from '../model/api/supabase'
 
 export const fetchedUserLikes = async (profileId: string, playlistId: string | undefined) => {
-  const { data: isLikedData } = await supabase
+  const { data: isLikedData, error } = await supabase
     .from('playlists_likes')
     .select('id')
     .eq('user_id', profileId)
     .eq('playlist_id', playlistId)
     .maybeSingle()
-
+  if (error) throw new Error('플레이리스트 좋아요 수를 로드하는 데 실패했습니다.')
   return isLikedData
 }
 
 export const fetchedPlaylistLikes = async (playlistId: string | undefined) => {
-  const { count } = await supabase
+  const { count, error } = await supabase
     .from('playlists_likes')
     .select('id', { count: 'exact' })
     .eq('playlist_id', playlistId)
 
+  if (error) throw new Error('플레이리스트 좋아요 수를 로드하는 데 실패했습니다.')
   return count
 }
 
