@@ -1,6 +1,6 @@
 import { supabase } from '../model/api/supabase'
 
-export const fetchedUserBookmarkes = async (profileId: string, playlistId: string | undefined) => {
+export const fetchedUserBookmarks = async (profileId: string, playlistId: string | undefined) => {
   const { data: isBookmarkedData } = await supabase
     .from('playlists_subscribers')
     .select('id')
