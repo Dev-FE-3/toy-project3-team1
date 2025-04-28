@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from '../model/lib/queryClient'
 import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
-import { deletePlaylistBookmark, updatePlaylistBookmark } from '../services/playlistBookmarkService'
 import { useToast } from '../store/toastStore'
 import { User } from '@supabase/supabase-js'
+import { playlistBookmarkService } from '../services/playlistBookmarkService'
 
 interface Props {
   bookmarkCount: number
@@ -18,10 +18,10 @@ export const usePlaylistBookmarkMutation = ({ bookmarkCount, profile, playlistId
       if (!profile) return
 
       if (newState) {
-        await updatePlaylistBookmark(profile.id, playlistId)
+        await playlistBookmarkService.updatePlaylistBookmark(profile.id, playlistId)
         toastSuccess('구독 리스트에 추가되었습니다.')
       } else {
-        await deletePlaylistBookmark(profile.id, playlistId)
+        await playlistBookmarkService.deletePlaylistBookmark(profile.id, playlistId)
         toastSuccess('구독 리스트에서 제외되었습니다.')
       }
     },

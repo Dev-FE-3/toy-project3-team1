@@ -1,7 +1,7 @@
 import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
 import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
-import { fetchedPlaylistBookmarks, fetchedUserBookmarks } from '../services/playlistBookmarkService'
+import { playlistBookmarkService } from '../services/playlistBookmarkService'
 
 export const useUserPlaylistBookmark = (profile: User | null, playlistId: string | undefined) => {
   return useQuery({
@@ -9,7 +9,10 @@ export const useUserPlaylistBookmark = (profile: User | null, playlistId: string
     queryFn: async () => {
       if (!profile) return false
 
-      const isBookmarked = !!(await fetchedUserBookmarks(profile.id, playlistId))
+      const isBookmarked = !!(await playlistBookmarkService.fetchedUserBookmark(
+        profile.id,
+        playlistId,
+      ))
 
       return isBookmarked
     },
@@ -21,7 +24,7 @@ export const usePlaylistBookmarkCount = (playlistId: string | undefined) => {
   return useQuery({
     queryKey: LikeBookmarkQueryKeys.bookmarkCount(playlistId),
     queryFn: async () => {
-      const count = await fetchedPlaylistBookmarks(playlistId)
+      const count = await playlistBookmarkService.fetchedPlaylistBookmarks(playlistId)
       return count ?? 0
     },
     enabled: !!playlistId,
