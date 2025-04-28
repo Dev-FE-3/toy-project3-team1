@@ -9,7 +9,7 @@ interface UserCardProps {
   size?: 'xsmall' | 'small' | 'medium' | 'large'
   nicknameActive?: boolean
   className?: string
-  listCount?: number
+  listCount?: number | null
 }
 
 export function UserCard({

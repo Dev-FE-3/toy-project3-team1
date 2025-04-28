@@ -1,12 +1,13 @@
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import type { Category } from '@/pages/Home/model/types'
 import { playlistService } from '../services/playlistService'
+import { homePageQueryKeys } from './homePageQueryKeys'
 
 const PAGE_SIZE = 10
 
 export const useInfinitePlaylists = (userId?: string, category?: Category) => {
   return useSuspenseInfiniteQuery({
-    queryKey: ['playlists', category],
+    queryKey: homePageQueryKeys.playlists(category),
     queryFn: ({ pageParam = 0 }) =>
       playlistService.fetchPlaylists(pageParam, PAGE_SIZE, userId, category),
     initialPageParam: 0,

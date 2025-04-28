@@ -4,9 +4,10 @@ import { DeferredComponent } from './DeferredComponent'
 
 type Props = {
   children: ReactNode
+  className?: string
 }
 
-const SkeletonAnimation = ({ children }: Props) => {
+const SkeletonAnimation = ({ children, className }: Props) => {
   return (
     <DeferredComponent>
       {/* DeferredComponent : 0.3초 이상 지연이 걸릴 때 스켈레톤 UI 렌더 */}
@@ -17,7 +18,7 @@ const SkeletonAnimation = ({ children }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute inset-0 top-27 z-10"
+          className={className}
         >
           {children}
         </motion.div>

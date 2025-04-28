@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabase'
+import { queryClient } from '../lib/queryClient'
 
 // 이메일 로그인 함수
 export const signInWithEmail = async (email: string, password: string) => {
@@ -77,18 +79,28 @@ export const resetPassword = async (email: string) => {
 }
 
 // 로그아웃 함수
-export const signOut = async () => {
-  try {
-    const { error } = await supabase.auth.signOut()
-    if (error) {
-      console.error('로그아웃 중 오류 발생:', error)
-      throw error
+export const useLogout = () => {
+  const navigate = useNavigate()
+  const logout = async () => {
+    try {
+      // 1. Supabase 로그아웃
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('로그아웃 중 오류:', error)
+        throw error
+      }
+
+      // 2. React Query 캐시 전부 초기화
+      await queryClient.clear()
+
+      // 3. 홈이나 로그인으로 이동 (히스토리 리셋)
+      navigate('/login', { replace: true }) // ← 히스토리 스택 날림
+    } catch (error) {
+      console.error('로그아웃 실패:', error)
     }
-    return true
-  } catch (error) {
-    console.error('로그아웃 프로세스 오류:', error)
-    return false
   }
+
+  return logout
 }
 
 // 현재 로그인된 사용자 정보 가져오기
