@@ -22,9 +22,8 @@ const PlaylistDetailPage = () => {
   const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
-  if (!id) return
 
-  const currentPlaylistId = id
+  const currentPlaylistId = id ?? ''
 
   const {
     data: playlistData,
@@ -41,6 +40,7 @@ const PlaylistDetailPage = () => {
       return result
     },
     refetchOnWindowFocus: false,
+    enabled: !!currentPlaylistId,
   })
 
   const { data: latestYoutubeVideos } = useQuery({
@@ -54,7 +54,8 @@ const PlaylistDetailPage = () => {
       const result = await fetchMultipleYouTubeVideos(videoIds)
       return result
     },
-    enabled: !!playlistData?.playlist_items?.length && !playlistData?.isPrivate, // 플레이리스트가 비공개가 아닐 때만 실행
+    enabled:
+      !!playlistData?.playlist_items?.length && !playlistData?.isPrivate && !!currentPlaylistId,
   })
 
   const videoItems =

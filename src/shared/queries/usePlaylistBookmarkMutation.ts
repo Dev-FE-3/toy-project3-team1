@@ -1,9 +1,10 @@
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
+import { User } from '@supabase/supabase-js'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from '../model/lib/queryClient'
-import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
-import { useToast } from '../store/toastStore'
-import { User } from '@supabase/supabase-js'
 import { playlistBookmarkService } from '../services/playlistBookmarkService'
+import { useToast } from '../store/toastStore'
+import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
 
 interface Props {
   bookmarkCount: number
@@ -57,6 +58,13 @@ export const usePlaylistBookmarkMutation = ({ bookmarkCount, profile, playlistId
       }
       toastError('구독 리스트 업데이트를 실패했습니다.')
     },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: playlistCollectionKeys.list(profile!.id, 'subscribedPlaylists'),
+      })
+    },
+
     onSettled: () => {
       // 쿼리 무효화 및 데이터 최신화
       queryClient.invalidateQueries({

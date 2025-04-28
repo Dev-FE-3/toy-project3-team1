@@ -4,11 +4,7 @@ import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { cn } from '@/shared/model/lib/utils'
-<<<<<<< HEAD
 import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
-import { Bookmark, Heart } from 'lucide-react'
-=======
->>>>>>> dev
 
 interface AuthorInfoProps {
   ownerId: string
