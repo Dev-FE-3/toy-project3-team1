@@ -5,9 +5,7 @@ import { profilePageQueryKeys } from './profilePageQueryKeys'
 export const useTargetUserProfileInfo = (targetProfileId?: string) => {
   return useSuspenseQuery({
     queryKey: profilePageQueryKeys.profile(targetProfileId),
-    queryFn: async () => {
-      return await fetchTargetUserProfileInfo(targetProfileId)
-    },
+    queryFn: async () => fetchTargetUserProfileInfo(targetProfileId),
     refetchOnWindowFocus: false,
   })
 }

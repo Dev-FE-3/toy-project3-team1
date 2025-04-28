@@ -9,9 +9,7 @@ interface Props extends Playlist {
 export const useTargetUserPlaylists = (targetProfileId?: string) => {
   return useSuspenseQuery<Props[]>({
     queryKey: profilePageQueryKeys.playlists(targetProfileId),
-    queryFn: async () => {
-      return await fetchPlaylistWithItems(targetProfileId)
-    },
+    queryFn: () => fetchPlaylistWithItems(targetProfileId),
     refetchOnWindowFocus: false,
   })
 }
