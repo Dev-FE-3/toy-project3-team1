@@ -6,7 +6,7 @@ interface NicknameFieldProps {
   onChange: (value: string) => void
   onCheckDuplicate: () => void
   isChecking: boolean
-  isAvailable: boolean | null
+  availability: 'idle' | 'checking' | 'available' | 'unavailable'
   isValidFormat: boolean
   isSameAsCurrent: boolean
 }
@@ -16,7 +16,7 @@ export const NicknameField = ({
   onChange,
   onCheckDuplicate,
   isChecking,
-  isAvailable,
+  availability,
   isValidFormat,
   isSameAsCurrent,
 }: NicknameFieldProps) => {
@@ -29,15 +29,19 @@ export const NicknameField = ({
       return <p className="text-c200">현재 닉네임입니다.</p>
     }
 
-    if (isAvailable === false) {
+    if (availability === 'unavailable') {
       return <p className="text-red">이미 사용 중인 닉네임입니다.</p>
     }
 
-    if (isAvailable === true) {
+    if (availability === 'available') {
       return <p className="text-dark-green">사용 가능한 닉네임입니다.</p>
     }
 
-    return <p className="text-c400 mt-1">공백과 특수기호를 포함할 수 없습니다.</p>
+    if (availability === 'checking') {
+      return <p className="text-c300">중복 확인 중입니다...</p>
+    }
+
+    return null
   }
 
   return (
@@ -46,7 +50,7 @@ export const NicknameField = ({
         <Input
           value={nickname}
           onChange={(e) => {
-            const value = e.target.value.slice(0, 5) // 5글자 제한
+            const value = e.target.value.slice(0, 5) // 5자 제한
             onChange(value)
           }}
           placeholder="5자 이내 입력"

@@ -4,8 +4,9 @@ import { useInView } from 'react-intersection-observer'
 import { PlaylistContainer } from '@/pages/Home/components/PlaylistContainer'
 import EmptyPlaylistCard from './PlaylistCard/EmptyPlaylistCard'
 import { useInfinitePlaylists } from '../queries/useInfinitePlaylists'
+import { Category } from '../model/types'
 
-const PlaylistSection = ({ userId, category }: { userId?: string; category?: string | null }) => {
+const PlaylistSection = ({ userId, category }: { userId?: string; category?: Category }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfinitePlaylists(
     userId,
     category,

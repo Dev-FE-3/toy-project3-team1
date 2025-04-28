@@ -1,6 +1,6 @@
-import { PlaylistWithItems } from '@/pages/Home/model/types'
 import { Ghost } from 'lucide-react'
 import TargetUserPlaylistItem from './TargetUserPlaylistItem'
+import { PlaylistWithItems } from '../../model/type'
 
 const TargetUserPlaylists = ({ playlists }: { playlists: PlaylistWithItems[] }) => {
   return (

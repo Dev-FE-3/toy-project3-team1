@@ -14,7 +14,7 @@ export interface NicknameValidationResult {
  */
 export const validateNickname = (nickname: string): NicknameValidationResult => {
   const isValidLength = nickname.length >= 2 && nickname.length <= 5
-  const hasLetter = /[a-zA-Z가-힣]/.test(nickname)
+  const hasLetter = /^[a-zA-Z가-힣0-9]+$/.test(nickname)
   const isValid = isValidLength && hasLetter
 
   return {
