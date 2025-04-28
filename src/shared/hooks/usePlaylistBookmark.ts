@@ -1,7 +1,8 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 import { supabase } from '@/shared/model/api/supabase'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { queryClient } from '../model/lib/queryClient'
 
 export const usePlaylistBookmark = (playlistId: string) => {
@@ -85,6 +86,12 @@ export const usePlaylistBookmark = (playlistId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['playlist_bookmarked', playlistId, profile?.id],
       })
+      // 구독(북마크) 컬렉션 쿼리도 invalidate
+      if (profile?.id) {
+        queryClient.invalidateQueries({
+          queryKey: playlistCollectionKeys.list(profile.id, 'subscribedPlaylists'),
+        })
+      }
     },
   })
 

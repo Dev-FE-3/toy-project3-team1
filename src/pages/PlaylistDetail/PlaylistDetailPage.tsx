@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { Skeleton } from '@/shared/components/ui/skeleton'
-import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
-import { CommentPopup } from '@/pages/PlaylistDetail/components/CommentPopup/CommentPopup'
-import PlaylistInfo from '@/pages/PlaylistDetail/components/PlaylistInfo/PlaylistInfo'
 import AuthorInfo from '@/pages/PlaylistDetail/components/AuthorInfo/AuthorInfo'
-import CommentTrigger from '@/pages/PlaylistDetail/components/CommentTrigger/CommentTrigger'
 import CommentInput from '@/pages/PlaylistDetail/components/CommentInput/CommentInput'
 import CommentList from '@/pages/PlaylistDetail/components/CommentList/CommentList'
-import VideoList from '@/pages/PlaylistDetail/components/VideoList/VideoList'
-import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
-import { useParams } from 'react-router-dom'
-import VideoPlayer from '@/pages/PlaylistDetail/components/VideoPlayer/VideoPlayer'
+import { CommentPopup } from '@/pages/PlaylistDetail/components/CommentPopup/CommentPopup'
+import CommentTrigger from '@/pages/PlaylistDetail/components/CommentTrigger/CommentTrigger'
 import LoginPrompt from '@/pages/PlaylistDetail/components/LoginPrompt/LoginPrompt'
-import { getPlaylistById } from '@/shared/model/api/playlist'
+import PlaylistInfo from '@/pages/PlaylistDetail/components/PlaylistInfo/PlaylistInfo'
+import VideoList from '@/pages/PlaylistDetail/components/VideoList/VideoList'
+import VideoPlayer from '@/pages/PlaylistDetail/components/VideoPlayer/VideoPlayer'
+import { AspectRatio } from '@/shared/components/ui/aspect-ratio'
+import { Skeleton } from '@/shared/components/ui/skeleton'
+import { getPlaylistByIdWithSupabase } from '@/shared/model/api/playlist'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import { queryClient } from '@/shared/model/lib/queryClient'
 import { fetchMultipleYouTubeVideos } from '@/shared/services/youtubeVideoApi'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
@@ -34,7 +34,7 @@ const PlaylistDetailPage = () => {
   } = useQuery({
     queryKey: ['playlist', currentPlaylistId],
     queryFn: async () => {
-      const result = await getPlaylistById(currentPlaylistId, profile?.id as string)
+      const result = await getPlaylistByIdWithSupabase(currentPlaylistId)
       if (!result) {
         throw new Error('플레이리스트를 찾을 수 없습니다.')
       }
@@ -68,6 +68,8 @@ const PlaylistDetailPage = () => {
     })) || []
 
   const playListAuthorProfileId = playlistData?.profile_id
+
+  const isOwner = playlistData?.profile_id === profile?.id
 
   const handleOpenCommentPopup = async () => {
     // 로그인된 경우 댓글 팝업 열기
@@ -126,8 +128,8 @@ const PlaylistDetailPage = () => {
     )
   }
 
-  // 비공개 플레이리스트인 경우 간단한 메시지 표시
-  if (!playlistData?.is_public) {
+  // 비공개 플레이리스트인 경우(소유자가 아닌 경우) 간단한 메시지 표시
+  if (!playlistData?.is_public && !isOwner) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="bg-c900 rounded-xl p-6 text-center">
