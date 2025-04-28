@@ -11,7 +11,7 @@ import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 
 type PlaylistCardProps = {
-  videoItems: VideoItem[]
+  videoItems?: VideoItem[] | undefined
   playlist: Playlist
   carouselRef: React.RefObject<HTMLDivElement | null>
   isBackground: boolean
@@ -23,7 +23,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: Playl
     playlist.id,
   )
   const playlistVideoItems = useMemo(() => {
-    return videoItems.filter((item) => item.playlist_id === playlist.id)
+    return videoItems?.filter((item) => item.playlist_id === playlist.id) ?? []
   }, [videoItems, playlist.id])
 
   const carouselImages = useMemo((): string[] => {

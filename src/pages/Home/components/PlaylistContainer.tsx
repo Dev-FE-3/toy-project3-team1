@@ -7,7 +7,7 @@ import { Playlist, SwipeDirection, VideoItem } from '../model/types'
 
 type PlaylistContainerProps = {
   playlists: Playlist[]
-  videoItems: VideoItem[]
+  videoItems?: VideoItem[] | undefined
 }
 
 export const PlaylistContainer = ({ playlists, videoItems }: PlaylistContainerProps) => {
