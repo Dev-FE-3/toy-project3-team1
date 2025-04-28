@@ -7,12 +7,7 @@ export const ProfileHeaderSection = ({
   isMyProfile,
   editModalOpen,
   setEditModalOpen,
-}: {
-  profileId: string | undefined
-  isMyProfile: boolean
-  editModalOpen: boolean
-  setEditModalOpen: (open: boolean) => void
-}) => {
+}: Props) => {
   const { data: profileIfo } = useTargetUserProfileInfo(profileId)
   const playlistCount = useCachedPlaylistCount(profileId)
   return (
@@ -24,4 +19,11 @@ export const ProfileHeaderSection = ({
       setEditModalOpen={setEditModalOpen}
     />
   )
+}
+
+interface Props {
+  profileId: string | undefined
+  isMyProfile: boolean
+  editModalOpen: boolean
+  setEditModalOpen: (open: boolean) => void
 }
