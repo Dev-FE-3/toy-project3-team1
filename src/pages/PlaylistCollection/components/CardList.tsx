@@ -6,6 +6,7 @@ import {
   usePlaylistCollectionUnsubscribeMutation,
 } from '@/pages/PlaylistCollection/queries/playlistCollectionQuery'
 import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
+import { useToast } from '@/shared/store/toastStore'
 import { useQueryClient } from '@tanstack/react-query'
 import { Card } from './Card'
 import { CardSkeleton } from './CardSkeleton'
@@ -19,6 +20,7 @@ export const CardList = ({ profileId, activeKey }: CardListProps) => {
   const queryClient = useQueryClient()
   const playlistsQuery = usePlaylistCollectionInfiniteQuery(profileId, activeKey, 12)
   const unsubscribeMutation = usePlaylistCollectionUnsubscribeMutation()
+  const { success, error: showError } = useToast()
 
   const playlists = playlistsQuery.data?.pages.flat().map(transformPlaylistForUi) ?? []
   const isLoading = playlistsQuery.isLoading || playlistsQuery.isFetching
@@ -35,15 +37,20 @@ export const CardList = ({ profileId, activeKey }: CardListProps) => {
   })
 
   const handleUnsubscribe = async (playlistId: string) => {
-    await new Promise<void>((resolve, reject) => {
-      unsubscribeMutation.mutate(playlistId, {
-        onSuccess: () => resolve(),
-        onError: (err) => reject(err),
+    try {
+      await new Promise<void>((resolve, reject) => {
+        unsubscribeMutation.mutate(playlistId, {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        })
       })
-    })
-    queryClient.invalidateQueries({
-      queryKey: playlistCollectionKeys.list(profileId, activeKey),
-    })
+      queryClient.invalidateQueries({
+        queryKey: playlistCollectionKeys.list(profileId, activeKey),
+      })
+      success('구독이 취소되었습니다.')
+    } catch {
+      showError('구독 취소 중 오류가 발생했습니다.')
+    }
   }
 
   if (error) {
