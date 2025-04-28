@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { CardList, CardListSkeleton, Tab } from '@/pages/PlaylistCollection/components'
 import { TabKey } from '@/pages/PlaylistCollection/model'
 import HashTag from '@/shared/components/HashTag/HashTag'
+import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
 import { useUserStore } from '@/shared/store/userStore'
 
 const TAB_ITEMS = [
@@ -40,7 +41,13 @@ export const PlaylistContent = () => {
         <div className="mb-4">
           <HashTag tag="전체" size="medium" />
         </div>
-        <Suspense fallback={<CardListSkeleton />}>
+        <Suspense
+          fallback={
+            <SkeletonAnimation className="absolute inset-0">
+              <CardListSkeleton />
+            </SkeletonAnimation>
+          }
+        >
           <CardList profileId={profileId || storeProfileId} activeKey={activeKey} />
         </Suspense>
       </div>
