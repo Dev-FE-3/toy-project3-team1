@@ -1,56 +1,51 @@
+// shared/hooks/useNicknameField.ts
 import { useState } from 'react'
-
-import { supabase } from '@/shared/model/api/supabase'
 import { validateNickname } from '@/shared/model/utils/validation'
+import { checkNicknameDuplicate } from '../services/nicknameServiece'
 
 export const useNicknameField = (profileId: string, currentNickname: string) => {
   const [nickname, setNickname] = useState(currentNickname)
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
-  const [isChecking, setIsChecking] = useState(false)
+  const [availability, setAvailability] = useState<
+    'idle' | 'checking' | 'available' | 'unavailable'
+  >('idle')
 
+  const isValidFormat = validateNickname(nickname).isValid
   const isSameAsCurrent = nickname === currentNickname
-  const validationResult = validateNickname(nickname)
-  const isValidFormat = validationResult.isValid
+  const isChecking = availability === 'checking'
+  const isAvailable = availability === 'available'
 
   const handleNicknameChange = (value: string) => {
     setNickname(value)
-    setIsAvailable(null) // 상태 초기화
+    setAvailability('idle')
   }
 
   const checkDuplicate = async () => {
     if (!isValidFormat || isSameAsCurrent) return
 
-    setIsChecking(true)
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('nickname', nickname)
-      .neq('id', profileId) // 해당 사용자의 닉네임을 setIsAvailable에서 제외
-
-    if (error) {
-      alert('중복 확인 실패: ' + error.message)
-      setIsAvailable(null)
-    } else {
-      setIsAvailable(data.length === 0)
+    setAvailability('checking')
+    try {
+      const available = await checkNicknameDuplicate(nickname, profileId)
+      setAvailability(available ? 'available' : 'unavailable')
+    } catch (err) {
+      console.error('닉네임 중복 확인 실패:', err)
+      setAvailability('idle')
     }
-
-    setIsChecking(false)
   }
 
-  const initNicknameField = () => {
+  const resetNickname = () => {
     setNickname(currentNickname)
-    setIsAvailable(null)
+    setAvailability('idle')
   }
 
   return {
     nickname,
-    isAvailable,
-    isChecking,
     isSameAsCurrent,
+    isChecking,
+    isAvailable,
+    availability,
     isValidFormat,
-    ...validationResult,
-    initNicknameField,
     handleNicknameChange,
     checkDuplicate,
+    resetNickname,
   }
 }

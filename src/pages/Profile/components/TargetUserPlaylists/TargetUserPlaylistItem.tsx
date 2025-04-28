@@ -1,7 +1,7 @@
-import { PlaylistWithItems } from '@/pages/Home/model/types'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
 import { Link } from 'react-router-dom'
+import { PlaylistWithItems } from '../../model/type'
 
 const TargetUserPlaylistItem = ({ playlist }: { playlist: PlaylistWithItems }) => {
   return (

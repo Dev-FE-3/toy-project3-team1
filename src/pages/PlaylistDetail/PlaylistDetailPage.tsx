@@ -17,16 +17,14 @@ import { getPlaylistById } from '@/shared/model/api/playlist'
 import { queryClient } from '@/shared/model/lib/queryClient'
 import { fetchMultipleYouTubeVideos } from '@/shared/services/youtubeVideoApi'
 
-export const DEFAULT_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
-export const SUB_PLAYLIST_ID = 'd276b4f1-d2bf-4325-baab-7ee0dbc314c2'
-export const PRIVATE_PLAYLIST_ID = '44aa498e-a9df-461a-b18e-fed3d0378994'
-
 const PlaylistDetailPage = () => {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false)
   const { profile, isAuthenticated } = useGetAuthState()
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const { id } = useParams()
-  const currentPlaylistId = id || SUB_PLAYLIST_ID
+  if (!id) return
+
+  const currentPlaylistId = id
 
   const {
     data: playlistData,
@@ -200,7 +198,7 @@ const PlaylistDetailPage = () => {
           </CommentPopup.Header>
           <CommentPopup.Content>
             {profile && isAuthenticated ? (
-              <div className="contentInside flex h-full flex-col">
+              <div className="contentInside relative flex h-full flex-col">
                 {/* 댓글 목록 영역 */}
                 <div className="[&::-webkit-scrollbar-thumb]:bg-c700 [&::-webkit-scrollbar-track]:bg-c800 flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full">
                   <CommentList
@@ -210,7 +208,7 @@ const PlaylistDetailPage = () => {
                   />
                 </div>
                 {/* 댓글 입력 영역 */}
-                <div className="absolute bottom-0 mt-4">
+                <div className="absolute bottom-0 mt-4 w-full">
                   <CommentInput
                     playlistId={currentPlaylistId}
                     profileId={profile.id}

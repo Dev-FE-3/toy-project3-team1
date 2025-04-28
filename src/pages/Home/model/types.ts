@@ -3,19 +3,22 @@ import { Game } from '../constants/GAMES'
 
 /** --- 카테고리 관련 타입 --- */
 export type SwipeDirection = 'Up' | 'Down' | 'Neutral'
-export type Category = string | '전체' | null
+export type Category = string | null | '전체'
+export type SelectedTag = string | null
 
 export interface CategoryProps {
   children: ReactNode
   isSelected?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export interface CategoriesProps {
   gameList: Game[]
   count: number
-  onCategorySelect: (category: Category) => void
+  onCategorySelect: (category: string) => void
   selectedCategory: Category
+  onSearch: () => void
 }
 
 /** --- 비디오 아이템 타입 --- */

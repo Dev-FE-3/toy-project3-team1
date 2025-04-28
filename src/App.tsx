@@ -19,7 +19,7 @@ function App() {
       </AuthProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />
-      <WebVitalsMonitor />
+      {/* <WebVitalsMonitor /> */}
     </QueryClientProvider>
   )
 }
