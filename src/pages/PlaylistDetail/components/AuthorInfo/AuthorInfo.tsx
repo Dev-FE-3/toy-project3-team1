@@ -1,15 +1,19 @@
+import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
+import LikeIcon from '@/shared/components/stats/LikeIcon'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
 import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { cn } from '@/shared/model/lib/utils'
+<<<<<<< HEAD
 import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
 import { Bookmark, Heart } from 'lucide-react'
+=======
+>>>>>>> dev
 
 interface AuthorInfoProps {
   ownerId: string
   authorName: string | undefined
   isOwner: boolean
-  // likeCount: number | undefined
   subscriberCount: number | undefined
   playlistId: string
 }
@@ -18,8 +22,6 @@ export default function AuthorInfo({
   ownerId,
   authorName = 'R',
   isOwner = false,
-  // likeCount = 0,
-  // subscriberCount = 0,
   playlistId,
 }: AuthorInfoProps) {
   const { isLiked, likeCount, toggleLike } = usePlaylistLike(playlistId)
@@ -45,9 +47,9 @@ export default function AuthorInfo({
           imageSrc={authorImageSrc || undefined}
         />
         {/* 오른쪽: 좋아요/북마크 버튼 */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2">
           <div className="flex flex-col items-center">
-            <Heart
+            <LikeIcon
               className={cn('text-c300 h-7 w-7 cursor-pointer', isLiked ? 'fill-c300' : '')}
               onClick={handleLike}
             />
@@ -56,7 +58,7 @@ export default function AuthorInfo({
           </div>
           <div className="flex flex-col items-center">
             {/* 작성자 본인일 경우 색상 칠하기 */}
-            <Bookmark
+            <BookmarkIcon
               className={cn(
                 'text-c300 h-7 w-7',
                 isOwner || isBookmarked ? 'fill-c300' : 'cursor-pointer',
