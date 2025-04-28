@@ -1,6 +1,7 @@
 import Avatar from '@/shared/components/Avatar/Avatar'
-import { AvatarFallback } from '@/shared/components/ui/avatar'
+import { AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
+import { Camera } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 interface UserCardProps {
@@ -10,6 +11,9 @@ interface UserCardProps {
   nicknameActive?: boolean
   className?: string
   listCount?: number | null
+  showEditButton?: boolean
+  onEditClick?: () => void
+  imageSrc?: string
 }
 
 export function UserCard({
@@ -19,6 +23,9 @@ export function UserCard({
   size = 'small',
   nicknameActive = true,
   listCount,
+  showEditButton = false,
+  onEditClick,
+  imageSrc,
 }: UserCardProps) {
   const navigate = useNavigate()
 
@@ -49,7 +56,7 @@ export function UserCard({
   return (
     <div
       className={cn(
-        'text-captionM flex items-center',
+        'text-captionM flex cursor-pointer items-center',
         size === 'xsmall' && 'text-captionS',
         size === 'small' && 'gap-3',
         size === 'medium' && 'text-h3 gap-[24px]',
@@ -58,9 +65,23 @@ export function UserCard({
       )}
       onClick={handleClick}
     >
-      <Avatar size={size}>
-        <AvatarFallback className="text-c400">{fallbackText}</AvatarFallback>
-      </Avatar>
+      <div className="relative">
+        <Avatar size={size}>
+          {imageSrc && <AvatarImage src={imageSrc} />}
+          <AvatarFallback className="text-c400">{fallbackText}</AvatarFallback>
+        </Avatar>
+        {showEditButton && (
+          <span
+            className="bg-c700/70 text-c100 absolute right-0 bottom-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow"
+            onClick={(e) => {
+              e.stopPropagation()
+              onEditClick?.()
+            }}
+          >
+            <Camera size={20} />
+          </span>
+        )}
+      </div>
       {nicknameActive && renderText()}
     </div>
   )

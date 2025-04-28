@@ -1,5 +1,7 @@
 import { Button } from '@/shared/components/ui/button'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { useRef } from 'react'
 import { EditProfileModal } from '../modal/EditProfileModal'
 
 interface ProfilePageHeaderProps {
@@ -18,6 +20,11 @@ const ProfilePageHeader = ({
   targetUserProfile,
   playlistCount,
 }: ProfilePageHeaderProps) => {
+  const { data: imageData } = useProfileSharedQuery(targetUserProfile.id)
+  const uploadedUrl = imageData ?? undefined
+  // 최초 렌더링 시에만 캐시 버스터를 붙이지 않고, uploadedUrl만 할당
+  const imageSrcRef = useRef<string | undefined>(uploadedUrl)
+
   return (
     <div className="mb-[20px]">
       <UserCard
@@ -26,6 +33,7 @@ const ProfilePageHeader = ({
         className="mb-[10px]"
         profileId={targetUserProfile.id}
         listCount={playlistCount}
+        imageSrc={imageSrcRef.current}
       />
       {/* 현재 로그인 중인 사용자의 프로필일 경우 프로필 편집 버튼 활성화 */}
       {isMyProfile && (
@@ -43,6 +51,7 @@ const ProfilePageHeader = ({
             onClose={() => setEditModalOpen(false)}
             profileId={targetUserProfile.id}
             currentNickname={targetUserProfile.nickname}
+            initialImageSrc={imageSrcRef.current}
           />
         </>
       )}
