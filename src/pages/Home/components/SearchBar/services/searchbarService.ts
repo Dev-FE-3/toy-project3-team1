@@ -43,14 +43,23 @@ export const searchbarService = {
         query = query.range(offset * pageSize, offset * pageSize + (pageSize - 1))
       }
 
-      // 해시태그 필터가 있으면 적용
+      // 검색 필터 적용 (해시태그 필터와 검색어를 OR 조건으로 처리)
+      const filterConditions = []
+
+      // 해시태그 필터 조건
       if (hashtag) {
-        query = query.contains('hashtag', [hashtag])
+        filterConditions.push(`hashtag.cs.{${hashtag}}`)
       }
 
-      // 검색어가 있으면 제목/해시태그 검색 적용
+      // 검색어 필터 조건
       if (searchTerm && searchTerm.trim()) {
-        query = query.or(`title.ilike.%${searchTerm}%,hashtag.cs.{${searchTerm}}`)
+        filterConditions.push(`title.ilike.%${searchTerm}%`)
+        filterConditions.push(`hashtag.cs.{${searchTerm}}`)
+      }
+
+      // 필터 조건이 있으면 OR 조건으로 적용
+      if (filterConditions.length > 0) {
+        query = query.or(filterConditions.join(','))
       }
 
       // 유저 필터링(본인 제외)

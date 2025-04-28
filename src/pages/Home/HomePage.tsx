@@ -6,7 +6,6 @@ import { limitCategoryCount } from './utils/limitCategoryCount'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
 import HomePageSkeleton from './components/HomePageSkeleton'
 import PlaylistSection from './components/PlaylistSection'
-import PlaylistNotFound from './components/PlaylistNotFound'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import SkeletonAnimation from '@/shared/components/SkeletonAnimation'
 import { SearchBar } from './components/SearchBar/SearchBar'
@@ -59,10 +58,15 @@ const HomePage = () => {
         selectedCategory={selectedCategory}
         onSearch={onSearch}
       />
-      <ErrorBoundary fallback={<PlaylistNotFound />}>
+      <ErrorBoundary>
         <Suspense
           key={selectedCategory}
-          fallback={<SkeletonAnimation children={<HomePageSkeleton />} />}
+          fallback={
+            <SkeletonAnimation
+              className='z-10" absolute inset-0 top-27'
+              children={<HomePageSkeleton />}
+            />
+          }
         >
           <PlaylistSection userId={profile?.id} category={selectedCategory} />
         </Suspense>
