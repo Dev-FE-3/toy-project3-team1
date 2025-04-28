@@ -162,6 +162,7 @@ const PlaylistDetailPage = () => {
 
           {/* 비디오 정보 - 플레이리스트 제목과 설명 표시 */}
           <PlaylistInfo
+            playlistId={playlistData?.id}
             title={playlistData?.title || ''}
             description={playlistData?.description || ''}
             isOwner={playlistData?.isOwner}
@@ -207,7 +208,7 @@ const PlaylistDetailPage = () => {
                     playListAuthorProfileId={playListAuthorProfileId}
                   />
                 </div>
-                {/* 댓글 입력 영역 */}
+                {/* 댓글 입력 폼 */}
                 <div className="absolute bottom-0 mt-4 w-full">
                   <CommentInput
                     playlistId={currentPlaylistId}
