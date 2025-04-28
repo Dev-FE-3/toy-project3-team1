@@ -1,7 +1,7 @@
+import { Suspense, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { CardList, Tab } from '@/pages/PlaylistCollection/components'
-import { usePlaylistCollection } from '@/pages/PlaylistCollection/hooks'
+import { CardList, CardListSkeleton, Tab } from '@/pages/PlaylistCollection/components'
 import { TabKey } from '@/pages/PlaylistCollection/model'
 import HashTag from '@/shared/components/HashTag/HashTag'
 import { useUserStore } from '@/shared/store/userStore'
@@ -20,18 +20,7 @@ const hideScrollbarStyles = {
 export const PlaylistContent = () => {
   const { profileId } = useParams()
   const storeProfileId = useUserStore((state) => state.profileId)
-
-  const {
-    playlists,
-    isLoading,
-    hasMore,
-    activeKey,
-    setActiveKey,
-    handleLoadMore,
-    handleUnsubscribe,
-  } = usePlaylistCollection({
-    profileId: profileId || storeProfileId || null,
-  })
+  const [activeKey, setActiveKey] = useState<TabKey>('myPlaylists')
 
   if (!storeProfileId) {
     return <div className="mt-4 text-center text-red-500">로그인이 필요합니다.</div>
@@ -51,14 +40,9 @@ export const PlaylistContent = () => {
         <div className="mb-4">
           <HashTag tag="전체" size="medium" />
         </div>
-        <CardList
-          playlists={playlists}
-          isLoading={isLoading}
-          hasMore={hasMore}
-          onLoadMore={handleLoadMore}
-          onUnsubscribe={handleUnsubscribe}
-          isSubscribedTab={activeKey === 'subscribedPlaylists'}
-        />
+        <Suspense fallback={<CardListSkeleton />}>
+          <CardList profileId={profileId || storeProfileId} activeKey={activeKey} />
+        </Suspense>
       </div>
     </div>
   )
