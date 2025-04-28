@@ -1,12 +1,13 @@
-import { useState, forwardRef } from 'react'
 import Avatar, { type AvatarSize } from '@/shared/components/Avatar/Avatar'
 import { AvatarFallback } from '@/shared/components/ui/avatar'
 import { Button } from '@/shared/components/ui/button'
-import { addComment } from '@/shared/model/api/comments'
-import { SendHorizontal } from 'lucide-react'
 import { Input } from '@/shared/components/ui/input'
-import { cn } from '@/shared/model/lib/utils'
+import { addComment } from '@/shared/model/api/comments'
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { cn } from '@/shared/model/lib/utils'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { SendHorizontal } from 'lucide-react'
+import { forwardRef, useState } from 'react'
 
 interface CommentInputProps {
   playlistId: string
@@ -22,7 +23,9 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
     const [comment, setComment] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { profile } = useGetAuthState()
+    const myId = profile?.id
     const userNickname = profile?.user_metadata?.nickname
+    const { data: myImageSrc } = useProfileSharedQuery(myId ?? '')
 
     const handleSubmit = async () => {
       if (!comment.trim()) return
@@ -52,6 +55,7 @@ const CommentInput = forwardRef<HTMLInputElement, CommentInputProps>(
       >
         <div className="flex items-center gap-3">
           <Avatar size={'small'}>
+            {myImageSrc && <img src={myImageSrc} alt="내 프로필 이미지" />}
             <AvatarFallback>{userNickname.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="relative flex-grow">

@@ -1,14 +1,15 @@
-import { useMemo } from 'react'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
+import HashTag from '@/shared/components/HashTag/HashTag'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
-import { Playlist, VideoItem } from '@/pages/Home/model/types'
-import CarouselView from './CarouselView'
-import HashTag from '@/shared/components/HashTag/HashTag'
-import { cn } from '@/shared/model/lib/utils'
-import { getRelativeTime } from '@/shared/utils/getRelativeTime'
-import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
+import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
+import { cn } from '@/shared/model/lib/utils'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { useMemo } from 'react'
+import CarouselView from './CarouselView'
 
 type PlaylistCardProps = {
   videoItems?: VideoItem[] | undefined
@@ -34,6 +35,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: Playl
   }, [playlist.thumbnail_url, videoItems])
 
   const uploadedDate = getRelativeTime(playlist.created_at)
+  const { data: authorImageSrc } = useProfileSharedQuery(playlist.profile_id)
 
   return (
     <div
@@ -62,6 +64,7 @@ const PlaylistCard = ({ playlist, carouselRef, isBackground, videoItems }: Playl
                 nickname={playlist.profiles.nickname}
                 profileId={playlist.profile_id}
                 size="small"
+                imageSrc={authorImageSrc ?? undefined}
               />
               <p className="text-textR text-c500">{uploadedDate}</p>
             </div>

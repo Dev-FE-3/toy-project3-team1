@@ -1,5 +1,8 @@
 import { UserCard } from '@/shared/components/UserCard/UserCard'
+import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
 import { SendHorizontal } from 'lucide-react'
+
 interface CommentTriggerProps {
   nickname: string
   commentCount?: number
@@ -11,6 +14,10 @@ export default function CommentTrigger({
   commentCount = 0,
   onToggleCommentPopup,
 }: CommentTriggerProps) {
+  const { profile } = useGetAuthState()
+  const myId = profile?.id
+  const { data: myImageSrc } = useProfileSharedQuery(myId ?? '')
+
   return (
     <div className="border-c700 bg-c800 rounded-xl border-t px-3 pt-2 pb-2">
       <div className="flex items-center justify-between">
@@ -20,13 +27,17 @@ export default function CommentTrigger({
           <span>{commentCount}</span>
         </p>
       </div>
-
       <button
         onClick={onToggleCommentPopup}
-        className="bg-c700 text-c400 mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left"
+        className="bg-c700 text-c400 mt-2 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left"
         aria-label="댓글 작성하기"
       >
-        <UserCard nickname={nickname} size="xsmall" nicknameActive={false} />
+        <UserCard
+          nickname={nickname}
+          size="xsmall"
+          nicknameActive={false}
+          imageSrc={myImageSrc ?? undefined}
+        />
         <span>댓글 달기...</span>
         <SendHorizontal className="ml-auto h-4 w-4" />
       </button>
