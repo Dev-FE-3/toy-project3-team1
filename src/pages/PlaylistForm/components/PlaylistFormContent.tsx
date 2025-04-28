@@ -22,7 +22,8 @@ type FormTab = 'content' | 'video'
 
 const PlaylistFormContent = () => {
   const navigate = useNavigate()
-  const { id: playlistId } = useParams<{ id: string }>()
+  const { id: playlistIdParam } = useParams<{ id: string }>()
+  const playlistId = playlistIdParam
   const isEditMode = !!playlistId
   const profileId = useUserStore((state) => state.profileId)
   const { error } = useToast()
@@ -163,10 +164,6 @@ const PlaylistFormContent = () => {
     isUpdating: boolean,
   ) => {
     return (activeKey === 'content' ? !title : videos.length === 0) || isSubmitting || isUpdating
-  }
-
-  if (isEditMode) {
-    return <div>로딩 중...</div>
   }
 
   return (

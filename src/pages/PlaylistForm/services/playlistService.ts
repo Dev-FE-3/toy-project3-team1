@@ -155,7 +155,10 @@ export const playlistService = {
           if (deleteError) throw deleteError
         }
       }
-
+      const res = await supabase.storage
+        .from('images')
+        .upload('test.txt', new Blob(['hello']), { upsert: true })
+      console.log(res)
       // 2. 새 파일 업로드
       const { error: uploadError } = await supabase.storage
         .from('images')

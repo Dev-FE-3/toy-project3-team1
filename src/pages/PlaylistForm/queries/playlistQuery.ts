@@ -1,5 +1,5 @@
 import { playlistFormKeys } from '@/pages/PlaylistForm/queries/playlistQueryKeys'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import type {
   Playlist,
@@ -88,9 +88,10 @@ export const useResetThumbnailMutation = () => {
 
 // === 플레이리스트 조회 ===
 export const useGetPlaylistQuery = (playlistId: string) => {
-  return useSuspenseQuery<Playlist>({
+  return useQuery<Playlist>({
     queryKey: playlistFormKeys.detail(playlistId),
     queryFn: () => playlistService.getPlaylist(playlistId),
+    enabled: !!playlistId,
   })
 }
 
