@@ -47,8 +47,6 @@ export const useUploadAndSaveProfileImageMutation = (profileId: string) => {
     },
     meta: {
       toastError: true,
-      toastSuccess: true,
-      toastSuccessMessage: '프로필 이미지가 정상적으로 업로드되었습니다',
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: profileSharedQueryKeys.image(profileId) })

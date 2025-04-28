@@ -9,6 +9,7 @@ import {
 } from '@/shared/components/ui/dialog'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { useToast } from '@/shared/store/toastStore'
 import { useRef, useState } from 'react'
 import { useNicknameField } from '../../hooks/useNicknameField'
 import { useUpdateNickname } from '../../queries/useUpdateNickname'
@@ -50,6 +51,7 @@ export const EditProfileModal = ({
   const { data: imageData } = useProfileSharedQuery(profileId)
   const uploadedUrl = imageData ?? undefined
   const uploadMutation = useUploadAndSaveProfileImageMutation(profileId)
+  const { success, error: showError } = useToast()
 
   // 파일 선택 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,10 +76,11 @@ export const EditProfileModal = ({
         await uploadMutation.mutateAsync({ file })
       }
       await update({ profileId, nickname })
+      success('프로필이 성공적으로 변경되었습니다.')
       window.location.reload()
     } catch (error) {
       console.error('프로필 저장 중 오류 발생:', error)
-      alert('프로필 저장 실패')
+      showError('프로필 저장에 실패했습니다.')
     }
     setIsSaving(false)
   }
