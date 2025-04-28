@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
-import { deletePlaylistLike, updatePlaylistLike } from '../services/playlistLikeServiece'
 import { queryClient } from '../model/lib/queryClient'
 import { LikeBookmarkQueryKeys } from './LikeBookmarkQueryKeys'
 import { User } from '@supabase/supabase-js'
+import { playlistLikeService } from '../services/playlistLikeServiece'
 
 interface Props {
   likeCount: number
@@ -16,9 +16,9 @@ export const usePlaylistLikeMutation = ({ likeCount, profile, playlistId }: Prop
       if (!profile) return
 
       if (newState) {
-        await updatePlaylistLike(profile.id, playlistId)
+        await playlistLikeService.updatePlaylistLike(profile.id, playlistId)
       } else {
-        await deletePlaylistLike(profile.id, playlistId)
+        await playlistLikeService.deletePlaylistLike(profile.id, playlistId)
       }
     },
     onMutate: async (newState) => {
