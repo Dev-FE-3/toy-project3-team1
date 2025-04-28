@@ -38,9 +38,7 @@ export const usePlaylistLike = (playlistId?: string) => {
       queryClient.setQueryData(LikeBookmarkQueryKeys.userLike(playlistId), {
         newState,
       })
-      queryClient.setQueryData(LikeBookmarkQueryKeys.likeCount(playlistId), {
-        likeCount: updatedLikeCount,
-      })
+      queryClient.setQueryData(LikeBookmarkQueryKeys.likeCount(playlistId), updatedLikeCount)
 
       return { previousUserLike, previousPlaylistLikes }
     },
