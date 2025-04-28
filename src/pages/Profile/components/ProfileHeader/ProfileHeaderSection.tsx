@@ -1,6 +1,6 @@
 import { useTargetUserProfileInfo } from '../../queries/useTargetUserProfileInfo'
 import ProfilePageHeader from './ProfilePageHeader'
-import { useCachedPlaylistCount } from '../../queries/useCahedPlaylistCount'
+import { useCachedPlaylistCount } from '../../hooks/useCachedPlaylistCount'
 
 export const ProfileHeaderSection = ({
   profileId,

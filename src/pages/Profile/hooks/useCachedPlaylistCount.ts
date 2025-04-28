@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
-import { Playlist } from '@/pages/Home/model/types'
-import { profilePageQueryKeys } from './profilePageQueryKeys'
+import { profilePageQueryKeys } from '../queries/profilePageQueryKeys'
 import { queryClient } from '@/shared/model/lib/queryClient'
+import { getCachedPlaylists } from '../queries/getCachedPlaylists'
 
 export const useCachedPlaylistCount = (profileId?: string) => {
   const [playlistCount, setPlaylistCount] = useState(0)
 
   useEffect(() => {
     const updatePlaylistCount = () => {
-      const data = queryClient.getQueryData<Playlist[]>(profilePageQueryKeys.playlists(profileId))
+      const data = getCachedPlaylists(profileId)
+
+      if (!Array.isArray(data)) {
+        console.error('Unexpected cache data:', data)
+        return
+      } // 에러 처리
+
       if (data) {
         // 캐시된 데이터가 변경되었을 때만 상태 업데이트
         const newCount = data.length
