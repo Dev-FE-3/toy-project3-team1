@@ -7,10 +7,11 @@ const SURVEY_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSfUbS-Ugip-EJBQKB6RVJJo88qPN3e1_IU7vV4DB8uZZzI9sg/viewform?usp=dialog'
 
 export default function Settings() {
+  const logout = useLogout()
   const handleLogout = () => {
     if (window.confirm('로그아웃 하시겠습니까?')) {
-      useUserStore.getState().setProfileId(null)
-      useLogout()
+      useUserStore.getState().clearProfile()
+      logout()
     }
   }
 
