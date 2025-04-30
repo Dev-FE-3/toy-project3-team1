@@ -7,21 +7,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui/dialog'
-import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { queryClient } from '@/shared/model/lib/queryClient'
+import { profileSharedQueryKeys } from '@/shared/queries/profileSharedQueryKeys'
 import { useToast } from '@/shared/store/toastStore'
+import { Camera } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useNicknameField } from '../../hooks/useNicknameField'
 import { useUpdateNickname } from '../../queries/useUpdateNickname'
 import { NicknameField } from './NicknameField'
-import { queryClient } from '@/shared/model/lib/queryClient'
-import { profileSharedQueryKeys } from '@/shared/queries/profileSharedQueryKeys'
-import { Camera } from 'lucide-react'
 
 interface EditProfileModalProps {
   open: boolean
   onClose: () => void
   profileId: string
   currentNickname: string
+  initialImageUrl?: string | null
 }
 
 export const EditProfileModal = ({
@@ -29,6 +29,7 @@ export const EditProfileModal = ({
   onClose,
   profileId,
   currentNickname,
+  initialImageUrl,
 }: EditProfileModalProps) => {
   const [isSaving, setIsSaving] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -48,7 +49,6 @@ export const EditProfileModal = ({
   } = useNicknameField(profileId, currentNickname)
 
   const { mutateAsync: update } = useUpdateNickname()
-  const { data: imageData } = useProfileSharedQuery(profileId)
   const uploadMutation = useUploadAndSaveProfileImageMutation(profileId)
   const { success, error: showError } = useToast()
 
@@ -95,8 +95,8 @@ export const EditProfileModal = ({
     onClose()
   }
 
-  // 미리보기 우선, 없으면 initialImageSrc, 없으면 업로드된 이미지
-  const imageSrc = previewUrl || (imageData ? `${imageData}?t=${Date.now()}` : undefined)
+  // 미리보기 우선, 없으면 부모가 전달한 initialImageUrl 사용
+  const imageSrc = previewUrl ?? initialImageUrl
   const fallbackText = nickname?.slice(0, 2).toUpperCase() ?? ''
   // 저장 버튼 비활성화 조건
   const isDisabled =
