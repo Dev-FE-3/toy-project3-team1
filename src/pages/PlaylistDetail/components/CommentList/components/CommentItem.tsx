@@ -192,7 +192,7 @@ const CommentItem = ({
                 parentId={comment.id}
                 onCommentAdded={handleReplyAdded}
                 size="small"
-                className="bg-c700 border-0"
+                className="border-c700 bg-c800 border-t p-3 pb-10"
               />
             </div>
           )}

@@ -1,7 +1,9 @@
 import { Button } from '@/shared/components/ui/button'
 import { PenBox } from 'lucide-react'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { Link } from 'react-router-dom'
 interface VideoInfoProps {
+  playlistId?: string
   title?: string
   description?: string
   isOwner: boolean
@@ -12,6 +14,7 @@ interface VideoInfoProps {
 }
 
 export default function PlaylistInfo({
+  playlistId,
   title,
   description,
   isOwner,
@@ -44,9 +47,11 @@ export default function PlaylistInfo({
           {/* 플레이리스트 제목 */}
           <h1 className="text-c100 mt-2 text-xl font-medium">{title || ''}</h1>
           {/* 플레이리스트 수정 버튼 */}
-          <Button className="cursor-pointer items-end !p-0 align-bottom">
-            {isOwner && <PenBox className="text-c300 !h-6 !w-6" />}
-          </Button>
+          {isOwner && (
+            <Link to={`/playlist/edit/${playlistId}`} className="content-end">
+              <PenBox className="text-c300 !h-6 !w-6" />
+            </Link>
+          )}
         </div>
         {/* 플레이리스트 설명 */}
         <p className="text-c300 mt-1">{description || ''}</p>
