@@ -1,19 +1,17 @@
-import Avatar from '@/shared/components/Avatar/Avatar'
-import { AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
-import { Camera } from 'lucide-react'
+import { Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AvatarContainer } from './AvatarContainer'
+import Avatar from '../Avatar/Avatar'
 
 interface UserCardProps {
-  profileId?: string
+  profileId?: string | undefined
   nickname?: string
   size?: 'xsmall' | 'small' | 'medium' | 'large'
   nicknameActive?: boolean
   className?: string
   listCount?: number | null
   showEditButton?: boolean
-  onEditClick?: () => void
-  imageSrc?: string
 }
 
 export function UserCard({
@@ -23,15 +21,10 @@ export function UserCard({
   size = 'small',
   nicknameActive = true,
   listCount,
-  showEditButton = false,
-  onEditClick,
-  imageSrc,
 }: UserCardProps) {
   const navigate = useNavigate()
-
   const fallbackText = nickname?.slice(0, 2).toUpperCase() ?? ''
   const isLoading = !nickname
-
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (profileId) navigate(`/profile/${profileId}`)
@@ -66,21 +59,13 @@ export function UserCard({
       onClick={handleClick}
     >
       <div className="relative">
-        <Avatar size={size}>
-          {imageSrc && <AvatarImage src={imageSrc} />}
-          <AvatarFallback className="text-c400">{fallbackText}</AvatarFallback>
-        </Avatar>
-        {showEditButton && (
-          <span
-            className="bg-c700/70 text-c100 absolute right-0 bottom-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow"
-            onClick={(e) => {
-              e.stopPropagation()
-              onEditClick?.()
-            }}
-          >
-            <Camera size={20} />
-          </span>
-        )}
+        <Suspense fallback={<Avatar size={size} fallback={fallbackText} />}>
+          <AvatarContainer
+            size={size}
+            profileId={profileId}
+            fallback={fallbackText}
+          ></AvatarContainer>
+        </Suspense>
       </div>
       {nicknameActive && renderText()}
     </div>
