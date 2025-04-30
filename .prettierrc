@@ -9,5 +9,6 @@
   "arrowParens": "always",
   "proseWrap": "never",
   "endOfLine": "auto",
-  "requireConfig": true
+  "requireConfig": true,
+  "plugins": ["prettier-plugin-tailwindcss"]
 }

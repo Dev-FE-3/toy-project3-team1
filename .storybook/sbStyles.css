@@ -1,0 +1,9 @@
+.sbdocs.sbdocs-wrapper {
+  overflow: auto !important;
+  max-height: 100vh;
+}
+
+.sbdocs-content {
+  overflow: auto !important;
+  max-height: 100vh;
+}

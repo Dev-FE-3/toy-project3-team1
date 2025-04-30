@@ -1,0 +1,221 @@
+import CommentInput from '@/pages/PlaylistDetail/components/CommentInput/CommentInput'
+import Avatar from '@/shared/components/Avatar/Avatar'
+import { AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
+import { Button } from '@/shared/components/ui/button'
+import { Comment, deleteComment } from '@/shared/model/api/comments'
+import { cn } from '@/shared/model/lib/utils'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
+import { getRelativeTime } from '@/shared/utils/getRelativeTime'
+import { CircleCheck, Trash2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+
+interface CommentItemProps {
+  comment: Comment
+  playlistId: string
+  currentProfileId: string
+  playListAuthorProfileId: string
+  onReplyAdded: () => void
+  onCommentDeleted: () => void
+}
+
+const CommentItem = ({
+  comment,
+  playlistId,
+  currentProfileId,
+  playListAuthorProfileId,
+  onReplyAdded,
+  onCommentDeleted,
+}: CommentItemProps) => {
+  const [showReplyForm, setShowReplyForm] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const replyInputRef = useRef<HTMLInputElement>(null)
+
+  // 답글 폼이 표시될 때 input에 focus
+
+  // 댓글 작성자별 닉네임
+  const nickname = comment.profiles?.nickname || '사용자'
+
+  // 댓글 작성자 프로필 이미지
+  const { data: commentProfileImage } = useProfileSharedQuery(comment.profile_id)
+
+  const isOwnComment = comment.profile_id === currentProfileId
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) return
+
+    setIsDeleting(true)
+    try {
+      await deleteComment(commentId)
+      onCommentDeleted()
+    } catch (error) {
+      console.error('댓글 삭제 중 오류:', error)
+      alert('댓글 삭제에 실패했습니다.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  // 댓글, 대댓글 작성 후 핸들링
+  const handleReplyAdded = () => {
+    onReplyAdded()
+    setShowReplyForm(false)
+  }
+
+  useEffect(() => {
+    if (showReplyForm) {
+      replyInputRef.current?.focus()
+    }
+  }, [showReplyForm])
+
+  // ReplyItem 컴포넌트 복구
+  const ReplyItem = ({
+    reply,
+    playListAuthorProfileId,
+    currentProfileId,
+    handleDeleteComment,
+    isDeleting,
+  }: {
+    reply: Comment
+    playListAuthorProfileId: string
+    currentProfileId: string
+    handleDeleteComment: (id: string) => void
+    isDeleting: boolean
+  }) => {
+    const { data: replyProfileImage } = useProfileSharedQuery(reply.profile_id)
+    return (
+      <div className="bg-c700 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Avatar size="small">
+            {replyProfileImage ? <AvatarImage src={replyProfileImage ?? undefined} /> : null}
+            <AvatarFallback>{reply?.profiles?.nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <div className="flex h-5 items-center justify-between">
+              <div className="flex gap-2">
+                <div
+                  className={cn(
+                    'flex items-center gap-1',
+                    reply.profile_id === playListAuthorProfileId
+                      ? 'bg-c300 text-c700 mb-2 rounded-2xl px-2'
+                      : 'text-c50',
+                  )}
+                >
+                  {/* 대댓글 작성자 닉네임 */}
+                  <span className="text-sm">{reply.profiles?.nickname || '사용자'}</span>
+                  {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
+                  {reply.profile_id === playListAuthorProfileId && (
+                    <CircleCheck size={16} className="text-c700" />
+                  )}
+                </div>
+                {/* 대댓글 작성일 */}
+                <span className="text-c400 mt-1 text-sm">{getRelativeTime(reply.created_at)}</span>
+              </div>
+              {reply.profile_id === currentProfileId && (
+                <Button
+                  onClick={() => handleDeleteComment(reply.id)}
+                  disabled={isDeleting}
+                  className="text-c400 transition-colors hover:text-red-500"
+                  title="댓글 삭제"
+                >
+                  <Trash2 size={16} />
+                </Button>
+              )}
+            </div>
+            {/* 대댓글 내용 */}
+            <p className="text-c200">{reply.content}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="commentItemContainer bg-c800 rounded-lg">
+      {/* 댓글 목록 */}
+      <div className="commentItem flex items-start gap-3">
+        <Avatar size="small">
+          {commentProfileImage ? <AvatarImage src={commentProfileImage ?? undefined} /> : null}
+          <AvatarFallback>{nickname.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="mb-2 flex-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {/* 댓글 작성자 정보 */}
+              <div
+                className={cn(
+                  'flex items-center gap-1',
+                  comment.profile_id === playListAuthorProfileId
+                    ? 'bg-c300 text-c700 rounded-2xl px-2'
+                    : 'text-c50',
+                )}
+              >
+                {/* 댓글 작성자 닉네임 */}
+                <span className="text-captionM">{nickname}</span>
+                {/* 플레이리스트 게시자와 댓글 작성자가 동일할 때 마크 표시 */}
+                {comment.profile_id === playListAuthorProfileId && (
+                  <CircleCheck size={16} className="text-c700" />
+                )}
+              </div>
+              {/* 댓글 작성일 */}
+              <span className="text-c400 text-captionS">{getRelativeTime(comment.created_at)}</span>
+            </div>
+            {isOwnComment && (
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                disabled={isDeleting}
+                className="text-c400 transition-colors hover:text-red-500"
+                title="댓글 삭제"
+              >
+                <Trash2 size={16} />
+              </button>
+            )}
+          </div>
+          {/* 댓글 내용 */}
+          <p className="text-c200 text-textR mt-1">{comment.content}</p>
+          {/* 댓글 달기 버튼 */}
+          <div className="mt-2">
+            <button
+              className="text-c400 hover:text-c50 text-xs"
+              onClick={() => setShowReplyForm(!showReplyForm)}
+            >
+              {showReplyForm ? '취소' : '답글 달기'}
+            </button>
+          </div>
+
+          {/* 대댓글 입력 폼 */}
+          {showReplyForm && (
+            <div className="mt-3">
+              <CommentInput
+                ref={replyInputRef}
+                playlistId={playlistId}
+                profileId={currentProfileId}
+                parentId={comment.id}
+                onCommentAdded={handleReplyAdded}
+                size="small"
+                className="border-c700 bg-c800 border-t p-3 pb-10"
+              />
+            </div>
+          )}
+
+          {/* 대댓글 목록 */}
+          {comment.replies && comment.replies.length > 0 && (
+            <div className="text-textR mt-3 space-y-3 pl-4">
+              {comment.replies.map((reply) => (
+                <ReplyItem
+                  key={reply.id}
+                  reply={reply}
+                  playListAuthorProfileId={playListAuthorProfileId}
+                  currentProfileId={currentProfileId}
+                  handleDeleteComment={handleDeleteComment}
+                  isDeleting={isDeleting}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CommentItem

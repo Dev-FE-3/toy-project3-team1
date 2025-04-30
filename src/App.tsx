@@ -1,12 +1,26 @@
-import Login from '@/pages/Login/Login'
+import WebVitalsMonitor from '@/shared/components/WebVitalsMonitor/WebVitalsMonitor'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { RouterProvider } from 'react-router-dom'
+import router from './router/router'
+import { AuthProvider } from './shared/model/contexts/AuthContext'
+import { queryClient } from './shared/model/lib/queryClient'
 
 function App() {
   return (
-    <div className="flex justify-center min-h-screen bg-white">
-      <div className="w-[390px] bg-[#0F172A]">
-        <Login />
-      </div>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider
+          router={router}
+          future={{
+            v7_startTransition: true,
+          }}
+        />
+      </AuthProvider>
+
+      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <WebVitalsMonitor /> */}
+    </QueryClientProvider>
   )
 }
 
