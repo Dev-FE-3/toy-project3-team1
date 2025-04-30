@@ -81,9 +81,8 @@ export const resetPassword = async (email: string) => {
 // 로그아웃 함수
 export const useLogout = () => {
   const navigate = useNavigate()
-  const logout = async () => {
+  return async () => {
     try {
-      // 1. Supabase 로그아웃
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error('로그아웃 중 오류:', error)
@@ -93,14 +92,12 @@ export const useLogout = () => {
       // 2. React Query 캐시 전부 초기화
       await queryClient.clear()
 
-      // 3. 홈이나 로그인으로 이동 (히스토리 리셋)
-      navigate('/login', { replace: true }) // ← 히스토리 스택 날림
+      // 3. 로그인으로 이동 (히스토리 리셋)
+      navigate('/login', { replace: true }) // replace : true => 히스토리 스택을 지우고 현재 페이지를 새로 대체
     } catch (error) {
       console.error('로그아웃 실패:', error)
     }
   }
-
-  return logout
 }
 
 // 현재 로그인된 사용자 정보 가져오기
