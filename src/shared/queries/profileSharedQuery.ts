@@ -2,7 +2,7 @@ import { profileSharedService } from '@/shared/services/profileSharedService'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { profileSharedQueryKeys } from './profileSharedQueryKeys'
 
-export function useProfileSharedQuery(userId: string) {
+export function useProfileSharedQuery(userId: string | undefined) {
   return useSuspenseQuery({
     queryKey: profileSharedQueryKeys.image(userId),
     queryFn: async () => {

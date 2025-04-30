@@ -4,7 +4,7 @@ import { checkSupabaseError } from '@/shared/model/utils/checkSupabaseError'
 
 export const profileSharedService = {
   // profile row 조회 (profileId로)
-  async getProfileRow(profileId: string): Promise<{ data: Profile }> {
+  async getProfileRow(profileId: string | undefined): Promise<{ data: Profile }> {
     const { data, error } = await supabase.from('profiles').select('*').eq('id', profileId).single()
     return { data: checkSupabaseError(data, error, 'getProfileRow') }
   },

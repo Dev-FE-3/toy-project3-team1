@@ -7,20 +7,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui/dialog'
-import { UserCard } from '@/shared/components/UserCard/UserCard'
 import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
 import { useToast } from '@/shared/store/toastStore'
 import { useRef, useState } from 'react'
 import { useNicknameField } from '../../hooks/useNicknameField'
 import { useUpdateNickname } from '../../queries/useUpdateNickname'
 import { NicknameField } from './NicknameField'
+import { queryClient } from '@/shared/model/lib/queryClient'
+import { profileSharedQueryKeys } from '@/shared/queries/profileSharedQueryKeys'
+import { Camera } from 'lucide-react'
 
 interface EditProfileModalProps {
   open: boolean
   onClose: () => void
   profileId: string
   currentNickname: string
-  initialImageSrc?: string
 }
 
 export const EditProfileModal = ({
@@ -28,7 +29,6 @@ export const EditProfileModal = ({
   onClose,
   profileId,
   currentNickname,
-  initialImageSrc,
 }: EditProfileModalProps) => {
   const [isSaving, setIsSaving] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -49,7 +49,6 @@ export const EditProfileModal = ({
 
   const { mutateAsync: update } = useUpdateNickname()
   const { data: imageData } = useProfileSharedQuery(profileId)
-  const uploadedUrl = imageData ?? undefined
   const uploadMutation = useUploadAndSaveProfileImageMutation(profileId)
   const { success, error: showError } = useToast()
 
@@ -76,8 +75,11 @@ export const EditProfileModal = ({
         await uploadMutation.mutateAsync({ file })
       }
       await update({ profileId, nickname })
+      await queryClient.invalidateQueries({
+        queryKey: profileSharedQueryKeys.image(profileId),
+      })
       success('프로필이 성공적으로 변경되었습니다.')
-      window.location.reload()
+      onClose()
     } catch (error) {
       console.error('프로필 저장 중 오류 발생:', error)
       showError('프로필 저장에 실패했습니다.')
@@ -94,9 +96,8 @@ export const EditProfileModal = ({
   }
 
   // 미리보기 우선, 없으면 initialImageSrc, 없으면 업로드된 이미지
-  const imageSrc =
-    previewUrl || initialImageSrc || (uploadedUrl ? `${uploadedUrl}?t=${Date.now()}` : undefined)
-
+  const imageSrc = previewUrl || (imageData ? `${imageData}?t=${Date.now()}` : undefined)
+  const fallbackText = nickname?.slice(0, 2).toUpperCase() ?? ''
   // 저장 버튼 비활성화 조건
   const isDisabled =
     !file && (availability !== 'available' || isSaving || isSameAsCurrent || !isValidFormat)
@@ -107,15 +108,25 @@ export const EditProfileModal = ({
         <DialogHeader>
           <DialogTitle className="text-textM text-c50">닉네임 재설정</DialogTitle>
         </DialogHeader>
-
-        <UserCard
-          nickname={nickname}
-          size="large"
-          className="m-auto mb-3"
-          showEditButton={true}
-          onEditClick={handleEditClick}
-          imageSrc={imageSrc}
-        />
+        <div className="relative">
+          {imageSrc && (
+            <img src={imageSrc} className="bg-c600 m-auto h-[130px] w-[130px] rounded-[50%]" />
+          )}
+          {!imageSrc && (
+            <div className="text-c400 bg-c600 text-h2 m-auto flex h-[130px] w-[130px] items-center justify-center rounded-[50%]">
+              {fallbackText}
+            </div>
+          )}
+          <span
+            className="bg-c700/70 text-c100 absolute right-20 bottom-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleEditClick?.()
+            }}
+          >
+            <Camera size={20} />
+          </span>
+        </div>
         <input
           type="file"
           accept="image/*"
