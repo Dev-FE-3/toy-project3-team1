@@ -36,10 +36,6 @@ export default function PlaylistInfo({
           <span>{videoCount}개의 동영상</span>
           <span className="mx-2">•</span>
         </div>
-        {/* <div className="flex items-center">
-          <span>조회수 20</span>
-          <span className="mx-2">•</span>
-        </div> */}
         {/* 플레이리스트 생성일 */}
         <div className="flex items-center">
           {createdAt && <span>{getRelativeTime(createdAt)}</span>}
