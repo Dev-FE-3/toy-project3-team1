@@ -22,7 +22,8 @@ type FormTab = 'content' | 'video'
 
 const PlaylistFormContent = () => {
   const navigate = useNavigate()
-  const { id: playlistId } = useParams<{ id: string }>()
+  const { id: playlistIdParam } = useParams<{ id: string }>()
+  const playlistId = playlistIdParam
   const isEditMode = !!playlistId
   const profileId = useUserStore((state) => state.profileId)
   const { error } = useToast()
@@ -34,7 +35,7 @@ const PlaylistFormContent = () => {
   })
 
   // 수정 모드일 때 기존 데이터 조회
-  const { data: playlist, isLoading: isLoadingPlaylist } = useGetPlaylistQuery(playlistId || '')
+  const { data: playlist } = useGetPlaylistQuery(playlistId || '')
 
   // Form 상태 관리 - mode를 onChange로 설정하여 실시간 검증
   const form = useForm<PlaylistFormValues>({
@@ -163,10 +164,6 @@ const PlaylistFormContent = () => {
     isUpdating: boolean,
   ) => {
     return (activeKey === 'content' ? !title : videos.length === 0) || isSubmitting || isUpdating
-  }
-
-  if (isEditMode && isLoadingPlaylist) {
-    return <div>로딩 중...</div>
   }
 
   return (

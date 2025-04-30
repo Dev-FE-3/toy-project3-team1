@@ -1,4 +1,4 @@
-import { Lock } from 'lucide-react'
+import { Ghost, Lock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import PlaylistMoreMenu from './PlaylistMoreMenu'
@@ -44,7 +44,14 @@ export const Card = ({
           className="relative aspect-video w-full cursor-pointer overflow-hidden"
           onClick={handleClick}
         >
-          <img src={thumbnailUrl} alt={title} className="h-full w-full object-cover" />
+          {!(isSubscribed && !isPublic) ? (
+            <img src={thumbnailUrl} alt={title} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gray-700">
+              <Ghost className="text-c500 mb-2 h-8 w-8" />
+              <span className="text-c500 text-sm font-semibold">비공개</span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/60" />
           {!isPublic && (
             <div className="bg-c100 absolute top-2 right-2 rounded-lg p-1.5">

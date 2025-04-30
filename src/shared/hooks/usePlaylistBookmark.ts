@@ -1,9 +1,9 @@
 import { useGetAuthState } from '@/shared/model/contexts/AuthContext'
+import { usePlaylistBookmarkMutation } from '../queries/usePlaylistBookmarkMutation'
 import {
   usePlaylistBookmarkCount,
   useUserPlaylistBookmark,
 } from '../queries/usePlaylistBookmarkQuery'
-import { usePlaylistBookmarkMutation } from '../queries/usePlaylistBookmarkMutation'
 
 export const usePlaylistBookmark = (playlistId: string) => {
   const { profile } = useGetAuthState()

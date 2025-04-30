@@ -1,98 +1,93 @@
 import { useInfiniteScroll } from '@/pages/PlaylistCollection/hooks'
-import { Playlist } from '@/pages/PlaylistCollection/model'
+import { TabKey } from '@/pages/PlaylistCollection/model'
+import { transformPlaylistForUi } from '@/pages/PlaylistCollection/model/utils/transformers'
+import {
+  usePlaylistCollectionInfiniteQuery,
+  usePlaylistCollectionUnsubscribeMutation,
+} from '@/pages/PlaylistCollection/queries/playlistCollectionQuery'
+import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
+import { useToast } from '@/shared/store/toastStore'
+import { useQueryClient } from '@tanstack/react-query'
 import { Card } from './Card'
 import { CardSkeleton } from './CardSkeleton'
 
 interface CardListProps {
-  playlists: Playlist[]
-  onLoadMore?: () => void
-  hasMore?: boolean
-  isLoading?: boolean
-  isSubscribedTab?: boolean
-  onUnsubscribe?: (playlistId: string) => Promise<void>
-  error?: string
+  profileId: string
+  activeKey: TabKey
 }
 
-export const CardList = ({
-  playlists,
-  onLoadMore,
-  hasMore = false,
-  isLoading = false,
-  isSubscribedTab = false,
-  onUnsubscribe,
-  error,
-}: CardListProps) => {
+export const CardList = ({ profileId, activeKey }: CardListProps) => {
+  const queryClient = useQueryClient()
+  const playlistsQuery = usePlaylistCollectionInfiniteQuery(profileId, activeKey, 12)
+  const unsubscribeMutation = usePlaylistCollectionUnsubscribeMutation()
+  const { success, error: showError } = useToast()
+
+  const playlists = playlistsQuery.data?.pages.flat().map(transformPlaylistForUi) ?? []
+  const isLoading = playlistsQuery.isLoading || playlistsQuery.isFetching
+  const hasMore = playlistsQuery.hasNextPage ?? false
+  const error = playlistsQuery.error?.message
+
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (onLoadMore && !isLoading && !error) {
-        onLoadMore()
+      if (!isLoading && hasMore && !error) {
+        playlistsQuery.fetchNextPage()
       }
     },
     enabled: hasMore && !isLoading && !error,
   })
 
+  const handleUnsubscribe = async (playlistId: string) => {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        unsubscribeMutation.mutate(playlistId, {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        })
+      })
+      queryClient.invalidateQueries({
+        queryKey: playlistCollectionKeys.list(profileId, activeKey),
+      })
+      success('구독이 취소되었습니다.')
+    } catch {
+      showError('구독 취소 중 오류가 발생했습니다.')
+    }
+  }
+
   if (error) {
     return <div className="mt-4 text-center text-red-500">{error}</div>
-  }
-
-  const handleUnsubscribe = (playlistId: string) => {
-    if (onUnsubscribe) {
-      return onUnsubscribe(playlistId)
-    }
-    return Promise.resolve()
-  }
-
-  // 초기 로딩 상태일 때 스켈레톤 UI 표시
-  if (isLoading && playlists.length === 0) {
-    return (
-      <div className="container mx-auto">
-        <div className="grid grid-cols-2 gap-4">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <CardSkeleton key={index} />
-          ))}
-        </div>
-      </div>
-    )
   }
 
   return (
     <div className="container mx-auto">
       <div className="grid grid-cols-2 gap-4">
         {playlists.map((playlist) => (
-          <div key={playlist.id}>
-            <Card
-              id={playlist.id}
-              title={playlist.title}
-              thumbnailUrl={playlist.thumbnailUrl}
-              videoCount={playlist.videoCount}
-              isPublic={playlist.isPublic}
-              isSubscribed={isSubscribedTab}
-              onUnsubscribe={() => handleUnsubscribe(playlist.id)}
-            />
-          </div>
+          <Card
+            key={playlist.id}
+            id={playlist.id}
+            title={playlist.title}
+            thumbnailUrl={playlist.thumbnailUrl}
+            videoCount={playlist.videoCount}
+            isPublic={playlist.isPublic}
+            isSubscribed={activeKey === 'subscribedPlaylists'}
+            onUnsubscribe={() => handleUnsubscribe(playlist.id)}
+          />
         ))}
-
-        {/* 추가 로딩 시 스켈레톤 표시 */}
         {isLoading && hasMore && (
           <>
-            {Array.from({ length: 2 }).map((_, index) => (
-              <CardSkeleton key={`loading-${index}`} />
+            {Array.from({ length: 2 }).map((_, idx) => (
+              <CardSkeleton key={`loading-${idx}`} />
             ))}
           </>
         )}
       </div>
-
-      {/* 무한 스크롤 타겟 */}
       {hasMore && <div ref={targetRef} className="h-4" />}
-
-      {/* 상태 메시지 */}
       {!hasMore && playlists.length > 0 && (
-        <div className="text-c600 mt-3 py-4 text-center">
+        <div className="mt-3 py-4 text-center text-gray-500">
           더 이상 불러올 플레이리스트가 없습니다
         </div>
       )}
       {!hasMore && playlists.length === 0 && (
-        <div className="text-c600 py-4 text-center">플레이리스트가 없습니다</div>
+        <div className="py-4 text-center text-gray-500">플레이리스트가 없습니다</div>
       )}
     </div>
   )

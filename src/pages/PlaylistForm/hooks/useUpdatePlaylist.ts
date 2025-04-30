@@ -42,23 +42,32 @@ export const useUpdatePlaylistForm = ({ playlistId }: UseUpdatePlaylistFormProps
       }
 
       // 3) 썸네일 처리
-      if (data.thumbnail !== undefined) {
-        if (data.thumbnail) {
-          const url = await playlistService.uploadThumbnail(data.thumbnail, profileId, playlistId)
-          await playlistService.updateThumbnailUrl(playlistId, url)
-        } else {
-          await playlistService.removeThumbnail(profileId, playlistId)
-          if (data.videos.length) {
-            await playlistService.updateThumbnailUrl(playlistId, data.videos[0].thumbnailUrl)
-          }
+      const { thumbnail, thumbnailUrl } = data
+      // Supabase 스토리지에 업로드된 썸네일인지 확인
+      const isExistingStorageThumbnail = !!thumbnailUrl?.includes(
+        'storage/v1/object/public/images/playlist',
+      )
+
+      if (thumbnail) {
+        // 새로운 파일 업로드
+        const url = await playlistService.uploadThumbnail(thumbnail, profileId, playlistId)
+        await playlistService.updateThumbnailUrl(playlistId, url)
+      } else if (!isExistingStorageThumbnail) {
+        // 유튜브 썸네일이거나 제거 요청된 경우: 저장소 파일 삭제 후 첫 비디오 썸네일로 설정
+        await playlistService.removeThumbnail(profileId, playlistId)
+        if (data.videos.length) {
+          await playlistService.updateThumbnailUrl(playlistId, data.videos[0].thumbnailUrl)
         }
       }
 
       return true
     },
     onSuccess: () => {
+      // 플레이리스트 목록 및 컬렉션 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: playlistFormKeys.lists() })
       queryClient.invalidateQueries({ queryKey: playlistCollectionKeys.lists() })
+      // 상세 조회 쿼리도 무효화하여 수정 후 다시 fetch
+      queryClient.invalidateQueries({ queryKey: playlistFormKeys.detail(playlistId) })
       // 화면 효과
       success('플레이리스트가 성공적으로 수정되었습니다.')
       navigate('/playlists')

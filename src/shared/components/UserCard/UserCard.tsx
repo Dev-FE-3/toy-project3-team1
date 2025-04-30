@@ -1,15 +1,17 @@
-import Avatar from '@/shared/components/Avatar/Avatar'
-import { AvatarFallback } from '@/shared/components/ui/avatar'
 import { cn } from '@/shared/model/lib/utils'
+import { Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AvatarContainer } from './AvatarContainer'
+import Avatar from '../Avatar/Avatar'
 
 interface UserCardProps {
-  profileId?: string
+  profileId?: string | undefined
   nickname?: string
   size?: 'xsmall' | 'small' | 'medium' | 'large'
   nicknameActive?: boolean
   className?: string
   listCount?: number | null
+  showEditButton?: boolean
 }
 
 export function UserCard({
@@ -21,10 +23,8 @@ export function UserCard({
   listCount,
 }: UserCardProps) {
   const navigate = useNavigate()
-
   const fallbackText = nickname?.slice(0, 2).toUpperCase() ?? ''
   const isLoading = !nickname
-
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (profileId) navigate(`/profile/${profileId}`)
@@ -49,7 +49,7 @@ export function UserCard({
   return (
     <div
       className={cn(
-        'text-captionM flex items-center',
+        'text-captionM flex cursor-pointer items-center',
         size === 'xsmall' && 'text-captionS',
         size === 'small' && 'gap-3',
         size === 'medium' && 'text-h3 gap-[24px]',
@@ -58,9 +58,15 @@ export function UserCard({
       )}
       onClick={handleClick}
     >
-      <Avatar size={size}>
-        <AvatarFallback className="text-c400">{fallbackText}</AvatarFallback>
-      </Avatar>
+      <div className="relative">
+        <Suspense fallback={<Avatar size={size} fallback={fallbackText} />}>
+          <AvatarContainer
+            size={size}
+            profileId={profileId}
+            fallback={fallbackText}
+          ></AvatarContainer>
+        </Suspense>
+      </div>
       {nicknameActive && renderText()}
     </div>
   )

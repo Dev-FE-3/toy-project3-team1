@@ -96,9 +96,10 @@ export const PlaylistInfoForm = () => {
     // 미리보기 생성
     const reader = new FileReader()
     reader.onloadend = () => {
-      setThumbnailPreview(reader.result as string)
+      const dataUrl = reader.result as string
+      setThumbnailPreview(dataUrl)
       setValue('thumbnail', file)
-      setValue('thumbnailUrl', '')
+      setValue('thumbnailUrl', dataUrl)
     }
     reader.readAsDataURL(file)
   }

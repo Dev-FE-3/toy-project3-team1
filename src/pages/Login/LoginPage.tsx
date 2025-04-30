@@ -1,12 +1,12 @@
 import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { signInWithEmail } from '@/shared/model/api/auth'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
-import { signInWithEmail } from '@/shared/model/api/auth'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
 
 const loginSchema = z.object({
   email: z.string().email('올바른 이메일을 입력해주세요.'),
@@ -49,7 +49,10 @@ export default function LoginPage() {
   return (
     <div className="bg-c900 flex min-h-[100dvh] flex-col">
       <div className="mx-auto flex w-full max-w-[390px] flex-1 flex-col p-3">
-        <img src="/images/logo.webp" className="text-c50 text-h2 mx-auto mt-[16vh] mb-[10vh] w-60" />
+        <img
+          src="/images/logo.webp"
+          className="text-c50 text-h2 mx-auto mt-[16vh] mb-[10vh] w-60"
+        />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -115,7 +118,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="bg-c600 text-c200 h-12 w-full"
+              className="bg-c600 text-c200 h-12 w-full cursor-pointer"
               disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? '로그인 중...' : '로그인'}
@@ -129,6 +132,19 @@ export default function LoginPage() {
             회원가입
           </Link>
         </div>
+        <Button
+          type="button"
+          className="bg-dark-green text-c200 mt-4 h-12 w-full cursor-pointer"
+          disabled={form.formState.isSubmitting}
+          onClick={() => {
+            const testCredentials = { email: 'test@test.com', password: 'test@test.com' }
+            form.setValue('email', testCredentials.email)
+            form.setValue('password', testCredentials.password)
+            form.handleSubmit(onSubmit)()
+          }}
+        >
+          테스트 계정으로 접속하기
+        </Button>
       </div>
     </div>
   )

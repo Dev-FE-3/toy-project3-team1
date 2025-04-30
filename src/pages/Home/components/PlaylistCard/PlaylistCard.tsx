@@ -1,14 +1,14 @@
-import { useMemo } from 'react'
+import { Playlist, VideoItem } from '@/pages/Home/model/types'
+import HashTag from '@/shared/components/HashTag/HashTag'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
 import BookmarkIcon from '@/shared/components/stats/BookmarkIcon'
 import LikeIcon from '@/shared/components/stats/LikeIcon'
-import { Playlist, VideoItem } from '@/pages/Home/model/types'
-import CarouselView from './CarouselView'
-import HashTag from '@/shared/components/HashTag/HashTag'
+import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
+import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
 import { cn } from '@/shared/model/lib/utils'
 import { getRelativeTime } from '@/shared/utils/getRelativeTime'
-import { usePlaylistLike } from '@/shared/hooks/usePlaylistLike'
-import { usePlaylistBookmark } from '@/shared/hooks/usePlaylistBookmark'
+import { useMemo } from 'react'
+import CarouselView from './CarouselView'
 
 type PlaylistCardProps = {
   videoItems?: VideoItem[] | undefined

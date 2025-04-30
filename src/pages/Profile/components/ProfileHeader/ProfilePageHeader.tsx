@@ -1,5 +1,6 @@
 import { Button } from '@/shared/components/ui/button'
 import { UserCard } from '@/shared/components/UserCard/UserCard'
+import { useProfileSharedQuery } from '@/shared/queries/profileSharedQuery'
 import { EditProfileModal } from '../modal/EditProfileModal'
 
 interface ProfilePageHeaderProps {
@@ -18,6 +19,7 @@ const ProfilePageHeader = ({
   targetUserProfile,
   playlistCount,
 }: ProfilePageHeaderProps) => {
+  const { data: initialImageUrl } = useProfileSharedQuery(targetUserProfile.id)
   return (
     <div className="mb-[20px]">
       <UserCard
@@ -43,6 +45,7 @@ const ProfilePageHeader = ({
             onClose={() => setEditModalOpen(false)}
             profileId={targetUserProfile.id}
             currentNickname={targetUserProfile.nickname}
+            initialImageUrl={initialImageUrl}
           />
         </>
       )}

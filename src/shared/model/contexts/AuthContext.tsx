@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     profile: null,
   })
   const setProfileId = useUserStore((state) => state.setProfileId)
+  const clearProfile = useUserStore((state) => state.clearProfile)
 
   useEffect(() => {
     // 초기 인증 상태 확인
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           isLoading: false,
           profile: null,
         })
-        setProfileId('') // 에러 시 프로필 ID 초기화
+        clearProfile() // 에러 시 프로필 ID 초기화
       }
     }
 
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (session?.user?.id) {
         setProfileId(session.user.id)
       } else {
-        setProfileId('') // 로그아웃 시 프로필 ID 초기화
+        clearProfile() // 로그아웃 시 프로필 ID 초기화
       }
     })
 
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [setProfileId])
+  }, [setProfileId, clearProfile])
 
   // 로딩 중일 때는 아무것도 렌더링하지 않거나 로딩 표시
   if (state.isLoading) {

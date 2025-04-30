@@ -1,15 +1,17 @@
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
+import { queryClient } from '@/shared/model/lib/queryClient'
+import { useMutation, useSuspenseInfiniteQuery } from '@tanstack/react-query'
 
 import { DBPlaylist } from '@/pages/PlaylistCollection/model'
 import { playlistCollectionKeys } from '@/pages/PlaylistCollection/queries/playlistCollectionQueryKeys'
 import { playlistCollectionService } from '@/pages/PlaylistCollection/services/playlistCollectionService'
+import { LikeBookmarkQueryKeys } from '@/shared/queries/LikeBookmarkQueryKeys'
 
 export const usePlaylistCollectionInfiniteQuery = (
   profileId: string | null,
   activeKey: string,
   pageSize: number,
 ) => {
-  return useInfiniteQuery<DBPlaylist[], Error>({
+  return useSuspenseInfiniteQuery<DBPlaylist[], Error>({
     queryKey: playlistCollectionKeys.list(profileId, activeKey),
     queryFn: async ({ pageParam = 1 }) => {
       if (!profileId) throw new Error('프로필 ID가 필요합니다')
@@ -27,7 +29,6 @@ export const usePlaylistCollectionInfiniteQuery = (
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === pageSize ? allPages.length + 1 : undefined
     },
-    enabled: !!profileId,
     initialPageParam: 1,
   })
 }
@@ -35,5 +36,14 @@ export const usePlaylistCollectionInfiniteQuery = (
 export const usePlaylistCollectionUnsubscribeMutation = () => {
   return useMutation({
     mutationFn: playlistCollectionService.unsubscribePlaylist,
+    onSuccess: (_, playlistId) => {
+      // 북마크 상태 관련 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: LikeBookmarkQueryKeys.bookmarkCount(playlistId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: LikeBookmarkQueryKeys.userBookmark(playlistId),
+      })
+    },
   })
 }

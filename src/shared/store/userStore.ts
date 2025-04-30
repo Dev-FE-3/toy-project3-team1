@@ -1,11 +1,24 @@
 import { create } from 'zustand'
+import { combine, persist } from 'zustand/middleware'
 
-interface UserState {
+// 상태 타입 정의
+interface ProfileState {
   profileId: string | null
-  setProfileId: (id: string) => void
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  profileId: null, // 로그인하지 않은 상태의 초기값
-  setProfileId: (id: string) => set({ profileId: id }),
-}))
+interface ProfileActions {
+  setProfileId: (id: string | null) => void
+  clearProfile: () => void
+}
+
+export const useUserStore = create(
+  persist(
+    combine<ProfileState, ProfileActions>({ profileId: null }, (set) => ({
+      setProfileId: (id) => set({ profileId: id }),
+      clearProfile: () => set({ profileId: null }),
+    })),
+    {
+      name: 'user-profile-store', // localStorage key 이름
+    },
+  ),
+)

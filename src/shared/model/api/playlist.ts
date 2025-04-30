@@ -1,3 +1,5 @@
+import { supabase } from '@/shared/model/api/supabase'
+
 export interface Video {
   id: string
   title: string
@@ -46,4 +48,23 @@ export const getPlaylistById = async (playlistId: string, profileId: string) => 
     console.error('플레이리스트 조회 중 에러:', error)
     throw error
   }
+}
+
+export const getPlaylistByIdWithSupabase = async (playlistId: string) => {
+  const { data, error } = await supabase
+    .from('playlists')
+    .select(
+      `
+      *,
+      playlist_items(*),
+      profiles:profiles(*),
+      subscriber_count,
+      comment_count
+    `,
+    )
+    .eq('id', playlistId)
+    .single()
+
+  if (error) throw new Error('플레이리스트를 불러오는데 실패했습니다.')
+  return data
 }

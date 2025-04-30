@@ -1,12 +1,13 @@
 import { Suspense } from 'react'
 
-import { PlaylistContent, PlaylistLoadingFallback } from '@/pages/PlaylistCollection/components'
+import { PlaylistContent } from '@/pages/PlaylistCollection/components'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { PageLoadingFallback } from '@/shared/components/PageLoadingFallback/PageLoadingFallback'
 
 export const PlaylistCollectionPage = () => {
   return (
     <ErrorBoundary>
-      <Suspense fallback={<PlaylistLoadingFallback />}>
+      <Suspense fallback={<PageLoadingFallback />}>
         <PlaylistContent />
       </Suspense>
     </ErrorBoundary>
